@@ -328,31 +328,31 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
                         for (String query:queries){
                             Log.d("CircleName", "Query:" + query);
-                            twitter4j.Query q = new Query(query);
-                            twitter4j.QueryResult result = twitter.search(q);
-                            Log.d("CircleName", "残りAPI: " + result.getRateLimitStatus().getRemaining());
-                            Log.d("CircleName", "ツイート数: " + result.getTweets().size());
-
-                            searchRateLimit = result.getRateLimitStatus().getRemaining();
-
-                            if (searchRateLimit < 1 || result.getTweets().size() == 0){
-                                break;
-                            } else {
-                                List<twitter4j.Status> statuses = result.getTweets();
-                                String circleName;
-
-                                for (twitter4j.Status status:statuses){
-                                    Long userID = status.getUser().getId();
-                                    circleName = StringMatcher.getCircleName(status);
-
-                                    for (UserDTO user:users){
-                                        if (user.user_id == userID){
-                                            user.circle_name = circleName;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+//                            twitter4j.Query q = new Query(query);
+//                            twitter4j.QueryResult result = twitter.search(q);
+//                            Log.d("CircleName", "残りAPI: " + result.getRateLimitStatus().getRemaining());
+//                            Log.d("CircleName", "ツイート数: " + result.getTweets().size());
+//
+//                            searchRateLimit = result.getRateLimitStatus().getRemaining();
+//
+//                            if (searchRateLimit < 1 || result.getTweets().size() == 0){
+//                                break;
+//                            } else {
+//                                List<twitter4j.Status> statuses = result.getTweets();
+//                                String circleName;
+//
+//                                for (twitter4j.Status status:statuses){
+//                                    Long userID = status.getUser().getId();
+//                                    circleName = StringMatcher.getCircleName(status);
+//
+//                                    for (UserDTO user:users){
+//                                        if (user.user_id == userID){
+//                                            user.circle_name = circleName;
+//                                            break;
+//                                        }
+//                                    }
+//                                }
+//                            }
                         }
                     }
                 } catch (TwitterException ex){

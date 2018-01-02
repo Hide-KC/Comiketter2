@@ -27,7 +27,7 @@
     <ImageButton
         android:id="@+id/profile_image"
         android:layout_width="45dp"
-        android:layout_height="95dp"
+        android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
@@ -45,7 +45,7 @@
         android:layout_marginTop="4dp"
         android:background="@android:color/transparent"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="4"
         android:text="profile_description"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"

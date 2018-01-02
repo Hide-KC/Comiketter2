@@ -15,9 +15,12 @@ import twitter4j.Status;
 //サークル配置の正規表現マッチング
 public class StringMatcher {
     //配置表示パターン。語尾abは無い場合が多い
-    final private static String eventSpacePattern = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])";
+    final private static String EVENT_SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])";
     final private static String AB = ".*(ab)";
     final private static String AOrB = ".*(a|b)";
+
+    //ホールのマッチング
+//    final private static
 
     //コミケ関係の日付記載パターン
     final private static String[] comikeEventPattern = new String[]{
@@ -25,8 +28,8 @@ public class StringMatcher {
             "[月火水木金土]曜?",
             "日曜",
             "初日",
-            "[東西]" + eventSpacePattern,
-            "[CＣ][0-9０-９]{2,3}.*日曜?",
+            "[東西]" + EVENT_SPACE_PATTERN,
+            "[CＣ][0-9０-９]{2,3}.*日曜?"
     };
 
     //どのパターンが何日目にマッチするのかをここで定義。
@@ -92,7 +95,7 @@ public class StringMatcher {
      * @return
      */
     public static String[] getSpace(String name){
-        Pattern patternSpace = Pattern.compile(eventSpacePattern);
+        Pattern patternSpace = Pattern.compile(EVENT_SPACE_PATTERN);
         Matcher matcherSpace = patternSpace.matcher(name);
         if (matcherSpace.find()){
             Pattern patternAB = Pattern.compile(AB);

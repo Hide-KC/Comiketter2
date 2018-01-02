@@ -32,7 +32,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         //タブの数
-        return 3;
+        return 2;
     }
 
     @Override

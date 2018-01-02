@@ -218,7 +218,7 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
         } else {
             day = user.manual_day;
         }
-        convertView.setBackgroundColor(getRowBackColor(day));
+        convertView.setBackgroundColor(getRowBackColor(day, position));
         return convertView;
     }
 
@@ -262,25 +262,42 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
         }
     }
 
-    private int getRowBackColor(Integer day){
+    protected Integer getRowBackColor(Integer day, Integer position){
         Resources res = context.getResources();
-        int color = 0;
+        Integer color;
+        Integer p = position % 2;
         if (day == 1){
-            color = res.getColor(R.color.first_row_back);
+            if (p == 0){
+                color = res.getColor(R.color.first_row_back_1);
+            } else {
+                color = res.getColor(R.color.first_row_back_2);
+            }
         } else if (day == 2){
-            color = res.getColor(R.color.second_row_back);
+            if (p == 0){
+                color = res.getColor(R.color.second_row_back_1);
+            } else {
+                color = res.getColor(R.color.second_row_back_2);
+            }
         } else if (day == 3) {
-            color = res.getColor(R.color.third_row_back);
+            if (p == 0){
+                color = res.getColor(R.color.third_row_back_1);
+            } else {
+                color = res.getColor(R.color.third_row_back_2);
+            }
         } else {
-            color = res.getColor(R.color.unknown_row_back);
+            if (p == 0){
+                color = res.getColor(R.color.unknown_row_back_1);
+            } else {
+                color = res.getColor(R.color.unknown_row_back_2);
+            }
         }
 
         return color;
     }
 
-    private int getHeaderBackColor(Integer day){
+    protected Integer getHeaderBackColor(Integer day){
         Resources res = context.getResources();
-        int color = 0;
+        Integer color;
         if (day == 1){
             color = res.getColor(R.color.first_header_back);
         } else if (day == 2){

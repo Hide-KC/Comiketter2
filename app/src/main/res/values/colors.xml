@@ -14,13 +14,17 @@
     <color name="unohana">#f7fcfe</color>
 
     <color name="first_header_back">#89c3eb</color>
-    <color name="first_row_back">#eaedf7</color>
+    <color name="first_row_back_1">#eaedf7</color>
+    <color name="first_row_back_2">#e1e5f2</color>
     <color name="second_header_back">#c3d825</color>
-    <color name="second_row_back">#e0ebaf</color>
+    <color name="second_row_back_1">#e8eade</color>
+    <color name="second_row_back_2">#e5e8d7</color>
     <color name="third_header_back">#e83929</color>
-    <color name="third_row_back">#fdeff2</color>
+    <color name="third_row_back_1">#fdeff2</color>
+    <color name="third_row_back_2">#fceaee</color>
     <color name="unknown_header_back">#afafb0</color>
-    <color name="unknown_row_back">#dddcd6</color>
+    <color name="unknown_row_back_1">#dddcd6</color>
+    <color name="unknown_row_back_2">#dbd9d0</color>
 
     <color name="header_moji">#180614</color>
 </resources>

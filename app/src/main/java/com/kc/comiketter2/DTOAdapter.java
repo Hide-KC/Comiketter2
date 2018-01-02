@@ -19,13 +19,13 @@ public abstract class DTOAdapter extends ArrayAdapter<UserDTO> {
         Resources res = getContext().getResources();
         int color = 0;
         if (day == 1){
-            color = res.getColor(R.color.first_row_back);
+            color = res.getColor(R.color.first_row_back_1);
         } else if (day == 2){
-            color = res.getColor(R.color.second_row_back);
+            color = res.getColor(R.color.second_row_back_1);
         } else if (day == 3) {
-            color = res.getColor(R.color.third_row_back);
+            color = res.getColor(R.color.third_row_back_1);
         } else {
-            color = res.getColor(R.color.unknown_row_back);
+            color = res.getColor(R.color.unknown_row_back_1);
         }
 
         return color;

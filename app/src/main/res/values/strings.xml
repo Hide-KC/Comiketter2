@@ -21,9 +21,9 @@
     <string name="profile_url">"twitter://user?screen_name="</string>
     <string name="nichime">日目</string>
     <string name="unknown">不明</string>
-    <string name="follow">ふぉろー</string>
-    <string name="pickup">買うよ</string>
-    <string name="achievement">たっせい感</string>
+    <string name="follow">フォロー</string>
+    <string name="pickup">買物リスト</string>
+    <string name="achievement">達成率</string>
     <string name="achieve_ratio">達成率は...</string>
     <string name="search_title">検索</string>
     <string name="circle_name">サークル名</string>
@@ -37,7 +37,7 @@
     <string name="dialog_title">情報を入力</string>
 
     <!--メニュー関係-->
-    <string name="clear">消去</string>
+    <string name="clear">クリア</string>
     <string name="reload">更新</string>
     <string name="search">検索</string>
 

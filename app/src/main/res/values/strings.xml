@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">CircleFinder</string>
+    <string name="txtRenkei">Twitterアカウントと連携を行います。\nよろしいですか？</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!--OAuth認証関係-->
+    <string name="consumer_key">reqGaYmF6UgKSzckijUAU48WB</string>
+    <string name="consumer_secret">9yqqVOFsIfeSjdXEj99fyvqvdPKxAHhmdni4q93AKwGl61quCD</string>
+    <string name="callback_url">twittercallback://twitter</string>
+    <string name="authorize_error">Authorize失敗(´・ω・)</string>
+    <string name="accesstoken_error">AccessToken取得できなかった(´・ω・)</string>
+    <string name="accesstoken_success">AccessTokenゲット(」・ω・)」</string>
+
+    <!--StickyListLayout関係-->
+    <string name="circle_space_hint">スペース</string>
+    <string name="busuu_hint">部数</string>
+    <string name="yosan_hint">予算</string>
+    <string name="memo_hint">メモ</string>
+    <string name="date">日にち</string>
+    <string name="profile_url">"twitter://user?screen_name="</string>
+    <string name="nichime">日目</string>
+    <string name="unknown">不明</string>
+    <string name="follow">ふぉろー</string>
+    <string name="pickup">買うよ</string>
+    <string name="achievement">たっせい感</string>
+    <string name="achieve_ratio">達成率は...</string>
+    <string name="search_title">検索</string>
+    <string name="circle_name">サークル名</string>
+
+    <!--Dialog関係-->
+    <string name="loading">フォロー一覧を取得中です...</string>
+    <string name="cancel_now">Cancel Now...</string>
+    <string name="cancel">cancel</string>
+    <string name="target">対象</string>
+    <string name="yen">円</string>
+    <string name="dialog_title">情報を入力</string>
+
+    <!--メニュー関係-->
+    <string name="clear">消去</string>
+    <string name="reload">更新</string>
+    <string name="search">検索</string>
+
+    <!--ターゲット選択-->
+    <string name="new_release">新刊</string>
+    <string name="new_and_published">新既刊</string>
+    <string name="published">既刊</string>
+    <string name="other">その他</string>
+    <string-array name="target_spinner">
+        <item>@string/new_release</item>
+        <item>@string/new_and_published</item>
+        <item>@string/published</item>
+        <item>@string/other</item>
+    </string-array>
+
+    <!--その他-->
+    <string name="no_client">There are no Twitter client.</string>
+</resources>

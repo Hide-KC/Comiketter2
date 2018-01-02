@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:descendantFocusability="blocksDescendants">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="name"
+        android:textAlignment="viewStart"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/circle_space"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="@+id/profile_image" />
+
+    <ImageButton
+        android:id="@+id/profile_image"
+        android:layout_width="45dp"
+        android:layout_height="95dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:scaleType="fitCenter"
+        android:src="@drawable/image_shape"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/target"
+        android:layout_width="46dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:maxLines="3"
+        android:text="@string/new_and_published"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/busuu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:hint="@string/busuu_hint"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/target"
+        app:layout_constraintStart_toStartOf="@+id/target"
+        app:layout_constraintTop_toBottomOf="@+id/target" />
+
+    <TextView
+        android:id="@+id/yosan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:hint="@string/yosan_hint"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/target"
+        app:layout_constraintStart_toStartOf="@+id/target"
+        app:layout_constraintTop_toBottomOf="@+id/busuu" />
+
+    <TextView
+        android:id="@+id/memo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:hint="@string/memo_hint"
+        android:maxLines="2"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintEnd_toStartOf="@+id/pickup_view"
+        app:layout_constraintStart_toEndOf="@+id/busuu"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/circle_space"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:hint="@string/circle_space_hint"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAlignment="viewEnd"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/pickup_view"
+        app:layout_constraintTop_toTopOf="@+id/name" />
+
+    <ImageView
+        android:id="@+id/pickup_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
+        android:focusableInTouchMode="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profile_image"
+        app:srcCompat="@drawable/pickup_off" />
+
+    <ImageView
+        android:id="@+id/hasgot_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/sumi3_off_transparent" />
+
+    <TextView
+        android:id="@+id/circle_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:hint="@string/circle_name"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/pickup_view"
+        app:layout_constraintStart_toEndOf="@+id/target"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+</android.support.constraint.ConstraintLayout>

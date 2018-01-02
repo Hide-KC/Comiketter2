@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/achievement_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="120dp"
+
+        android:scaleY="5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/achieve_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="32dp"
+        android:text="@string/achieve_ratio"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/achievement_progress"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/hasgot_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="68dp"
+        android:text="TextView"
+        android:textAlignment="viewEnd"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/achievement_progress" />
+
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="68dp"
+        android:text="/"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/achievement_progress"
+        app:layout_constraintStart_toStartOf="@+id/achievement_progress"
+        app:layout_constraintTop_toBottomOf="@+id/achievement_progress" />
+
+    <TextView
+        android:id="@+id/pickup_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="68dp"
+        android:text="TextView"
+        android:textAlignment="viewStart"
+        android:textSize="30sp"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/achievement_progress" />
+
+    <ImageView
+        android:id="@+id/hasgot_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toStartOf="@+id/pickup_count"
+        app:layout_constraintStart_toStartOf="@+id/achievement_progress"
+        app:layout_constraintTop_toBottomOf="@+id/achievement_progress"
+        app:srcCompat="@drawable/sumi3_on_transparent" />
+
+    <ImageView
+        android:id="@+id/pickup_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+
+        app:layout_constraintEnd_toEndOf="@+id/achievement_progress"
+        app:layout_constraintStart_toStartOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/achievement_progress"
+        app:srcCompat="@drawable/pickup_on" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="yanagicha">#a1a46d</color>
+    <color name="konpeki">#007bbb</color>
+    <color name="kurenai">#d7003a</color>
+    <color name="tankou">#f8e58c</color>
+    <color name="wakanairo">#d8e698</color>
+    <color name="zougeiro">#f8f4e6</color>
+    <color name="wakatake">#68be8d</color>
+    <color name="unohana">#f7fcfe</color>
+
+    <color name="first_header_back">#89c3eb</color>
+    <color name="first_row_back">#eaedf7</color>
+    <color name="second_header_back">#c3d825</color>
+    <color name="second_row_back">#e0ebaf</color>
+    <color name="third_header_back">#e83929</color>
+    <color name="third_row_back">#fdeff2</color>
+    <color name="unknown_header_back">#afafb0</color>
+    <color name="unknown_row_back">#dddcd6</color>
+
+    <color name="header_moji">#180614</color>
+</resources>

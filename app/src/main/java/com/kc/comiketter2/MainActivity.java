@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
             //認証済みの場合
             if (savedInstanceState == null){
                 Log.d("Comiketter","AccessToken有り");
-                Toast.makeText(this, "AccessToken有り",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Twitter連携済",Toast.LENGTH_SHORT).show();
             } else {
                 taskID = savedInstanceState.getInt("task_id");
                 Log.d("Comiketter","taskID = " + taskID);

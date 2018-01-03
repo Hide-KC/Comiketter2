@@ -22,7 +22,7 @@ public class StringMatcher {
     final private static String AOrB = ".*(a|b)";
 
     //ホールHashMap
-    final private static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){
+    final public static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){
         {
             put(1, "東1");
             put(2, "東2");

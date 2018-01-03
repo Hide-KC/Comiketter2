@@ -12,6 +12,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by HIDE on 2017/11/12.
@@ -20,6 +21,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public final String USER_INFO = "user_info";
     public final String OPTIONAL_INFO = "optional_info";
+    public final String HOLE_NAMES = "hole_names";
 
     //ユーザ情報テーブルの作成クエリ
     private final String USER_QUERY = "create table " + USER_INFO + " ("
@@ -47,10 +49,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "pickup integer, "
             + "hasgot integer )";
 
+    private final String HOLE_NAME_QUERY = "create table " + HOLE_NAMES + " ("
+            + "hole_id integer primary key not null, "
+            + "name text not null )";
+
     private static DatabaseHelper helper;
+    private static final Integer DB_VERSION = 2; //DBスキーマを変更した場合、これをインクリメントする
 
     private DatabaseHelper(Context context){
-        super(context, "usersDB", null, 1);
+        super(context, "usersDB", null, DB_VERSION);
     }
 
     public static DatabaseHelper getInstance(Context context){
@@ -64,11 +71,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(USER_QUERY);
         sqLiteDatabase.execSQL(OPTIONAL_QUERY);
+        sqLiteDatabase.execSQL(HOLE_NAME_QUERY);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        // DBバージョンアップ時のデータ移行を実装
+        if (oldVersion == 1 && newVersion == 2){
+            //OPTIONAL_INFOテーブルへのhole_id列追加、HOLE_NAMESテーブルの追加
+            database.execSQL(HOLE_NAME_QUERY);
+            database.execSQL(
+                    "alter table " + OPTIONAL_INFO + " add hole_id text"
+            );
 
+            for (Integer key:StringMatcher.holeHashMap.keySet()){
+                ContentValues cv = new ContentValues();
+                cv.put("hole_id", StringMatcher.holeHashMap.get(key));
+                database.insert(HOLE_NAMES, null, cv);
+            }
+        }
     }
 
     public void updateUserInfo(List<UserDTO> users){
@@ -195,7 +216,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
             user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
             user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
-            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole"));
+            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
             user.target = cursor.getInt(cursor.getColumnIndex("target"));
             user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
             user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));

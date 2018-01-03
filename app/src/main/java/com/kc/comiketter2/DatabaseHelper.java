@@ -86,7 +86,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             for (Integer key:StringMatcher.holeHashMap.keySet()){
                 ContentValues cv = new ContentValues();
-                cv.put("hole_id", StringMatcher.holeHashMap.get(key));
+                cv.put("hole_id", key);
+                cv.put("name", StringMatcher.holeHashMap.get(key));
                 database.insert(HOLE_NAMES, null, cv);
             }
         }

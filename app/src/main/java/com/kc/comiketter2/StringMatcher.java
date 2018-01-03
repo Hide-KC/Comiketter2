@@ -3,6 +3,8 @@ package com.kc.comiketter2;
 import android.util.Log;
 
 import java.text.Normalizer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +21,40 @@ public class StringMatcher {
     final private static String AB = ".*(ab)";
     final private static String AOrB = ".*(a|b)";
 
-    //ホールのマッチング
-//    final private static
+    //ホールHashMap
+    final private static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){
+        {
+            put(1, "東1");
+            put(2, "東2");
+            put(3, "東3");
+            put(4, "東4");
+            put(5, "東5");
+            put(6, "東6");
+            put(7, "東7");
+            put(8, "東8");
+//            put(101, "西1");
+//            put(102, "西2");
+//            put(103, "西3");
+//            put(104, "西4");
+        }
+    };
+
+    final private static String[] HOLE_SPACE_PATTERN = new String[]{
+            "A[01-36]|[B-L]", //東１
+            "A[37-53]|M-Z]", //東２
+            "A[54-89]|[ア-サ]", //東３
+            "シ[54-89]|[ム-ロ]", //東４
+            "シ[37-53]|[ネ-ミ]", //東５
+            "シ[01-36]|[ス-ヌ]", //東６
+            "[あ-の]", //東７
+            "[ま-も]", //東８
+//            "", //西１
+//            "", //西２
+//            "", //西３
+//            "", //西４
+
+
+    };
 
     //コミケ関係の日付記載パターン
     final private static String[] comikeEventPattern = new String[]{
@@ -169,5 +203,12 @@ public class StringMatcher {
             Log.d("CircleName",  "status :" + status.getText());
             return null;
         }
+    }
+
+    public static String getHoleNumber(String[] circleSpace){
+        StringBuilder builder = new StringBuilder();
+        builder.append(circleSpace[0]).append(circleSpace[1]).append(circleSpace[2]);
+
+        return null;
     }
 }

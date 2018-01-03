@@ -39,13 +39,14 @@ public class StringMatcher {
         }
     };
 
-    final private static String[] HOLE_SPACE_PATTERN = new String[]{
-            "A[01-36]|[B-L]", //東１
-            "A[37-53]|M-Z]", //東２
-            "A[54-89]|[ア-サ]", //東３
-            "シ[54-89]|[ム-ロ]", //東４
-            "シ[37-53]|[ネ-ミ]", //東５
-            "シ[01-36]|[ス-ヌ]", //東６
+    final private static String[] HOLE_PATTERN = new String[]{
+            "", //ダミーデータ
+            "A0[1-9]|A[1-2][0-9]|A3[0-6]|[B-L]", //東１
+            "A3[7-9]|A4[0-9]|A5[0-3]|[M-Z]", //東２
+            "A5[4-9]|A[6-8][0-9]|[ア-サ]", //東３
+            "シ5[4-9]|シ[6-8][0-9]|[ム-ロ]", //東４
+            "シ3[7-9]|シ4[0-9]|シ5[0-3]|[ネ-ミ]", //東５
+            "シ0[1-9]|シ[1-2][0-9]|シ3[0-6]|[ス-ヌ]", //東６
             "[あ-の]", //東７
             "[ま-も]", //東８
 //            "", //西１
@@ -128,7 +129,7 @@ public class StringMatcher {
      * @param name
      * @return
      */
-    public static String[] getSpace(String name){
+    public static String getSpace(String name){
         Pattern patternSpace = Pattern.compile(EVENT_SPACE_PATTERN);
         Matcher matcherSpace = patternSpace.matcher(name);
         if (matcherSpace.find()){
@@ -161,7 +162,9 @@ public class StringMatcher {
 
             Log.d("Space", match[0] + match[1] + match[2]);
 
-            return match;
+            StringBuilder builder = new StringBuilder();
+            builder.append(match[0]).append(match[1]).append(match[2]);
+            return builder.toString();
         } else {
             return null;
         }
@@ -205,10 +208,19 @@ public class StringMatcher {
         }
     }
 
-    public static String getHoleNumber(String[] circleSpace){
-        StringBuilder builder = new StringBuilder();
-        builder.append(circleSpace[0]).append(circleSpace[1]).append(circleSpace[2]);
+    public static Integer getHoleID(String circleSpace){
+        for (Integer hole_i = 1; hole_i < HOLE_PATTERN.length; hole_i++){
+            Pattern pattern = Pattern.compile(HOLE_PATTERN[hole_i]);
+            Matcher matcher = pattern.matcher(circleSpace);
+            if (matcher.find()){
+                return hole_i;
+            }
+        }
 
         return null;
+    }
+
+    public static String getHoleName(Integer holeID){
+        return holeHashMap.get(holeID); //キーが無ければnullが返る
     }
 }

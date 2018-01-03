@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "manual_day integer, "
             + "circle_name text, "
             + "circle_space text, "
+            + "hole_id integer, "
             + "target integer, "
             + "busuu integer, "
             + "yosan integer, "
@@ -127,17 +128,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     //user_i == 0　は自身のアカウントのため、１からスタート
                     if (user_i > 0){
                         Integer autoDay = StringMatcher.getParticipateDay(user.name);
-                        String[] spaces = StringMatcher.getSpace(user.name);
-                        String circleSpace = null;
-                        if (spaces != null){
-                            circleSpace = spaces[0]+spaces[1]+spaces[2];
-                        }
+                        String space = StringMatcher.getSpace(user.name);
+                        Integer holeID = 0;
 
                         ContentValues instantValues = new ContentValues();
                         instantValues.put("_id", user.user_id);
-                        if (circleSpace != null){
+                        if (space != null){
+                            holeID = StringMatcher.getHoleID(space);
                             instantValues.put("auto_day", autoDay);
-                            instantValues.put("circle_space", circleSpace);
+                            instantValues.put("circle_space", space);
                         } else {
                             instantValues.put("auto_day", 0);
                             instantValues.put("circle_space", "");
@@ -158,7 +157,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             if (user.circle_name != null){
                                 args.put("circle_name", user.circle_name);
                             }
-                            args.put("circle_space", circleSpace);
+                            args.put("hole_id", holeID);
+                            args.put("circle_space", space);
                             writable.update(OPTIONAL_INFO, args, filter, null);
                         }
                     }
@@ -195,6 +195,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
             user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
             user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
+            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole"));
             user.target = cursor.getInt(cursor.getColumnIndex("target"));
             user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
             user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));
@@ -230,6 +231,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
         user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
         user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
+        user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
         user.target = cursor.getInt(cursor.getColumnIndex("target"));
         user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
         user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));

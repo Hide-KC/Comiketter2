@@ -17,6 +17,7 @@ public class UserDTO {
     public Integer manual_day = 0;
     public String circle_name = null;
     public String circle_space = null;
+    public Integer hole_id = null;
     public Integer target = 0;
     public Integer busuu = 0;
     public Integer yosan = 0;

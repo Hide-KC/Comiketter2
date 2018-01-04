@@ -79,10 +79,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // DBバージョンアップ時のデータ移行を実装
         if (oldVersion == 1 && newVersion == 2){
             //OPTIONAL_INFOテーブルへのhole_id列追加、HOLE_NAMESテーブルの追加
-            database.execSQL(HOLE_NAME_QUERY);
-            database.execSQL(
-                    "alter table " + OPTIONAL_INFO + " add hole_id text"
-            );
+            try {
+                database.execSQL(HOLE_NAME_QUERY);
+                database.execSQL(
+                        "alter table " + OPTIONAL_INFO + " add hole_id text"
+                );
+            } catch (SQLiteException ex){
+                ex.printStackTrace();
+            }
 
             for (Integer key:StringMatcher.holeHashMap.keySet()){
                 ContentValues cv = new ContentValues();

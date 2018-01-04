@@ -22,8 +22,8 @@
         android:singleLine="true"
         android:text="name"
         android:textAlignment="viewStart"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/circle_space"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/hole_name"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/profile_image" />
 
@@ -60,7 +60,7 @@
         android:id="@+id/busuu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:hint="@string/busuu_hint"
@@ -76,7 +76,7 @@
         android:id="@+id/yosan"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         android:hint="@string/yosan_hint"
         android:scrollHorizontally="true"
         android:singleLine="true"
@@ -107,7 +107,7 @@
 
     <TextView
         android:id="@+id/circle_space"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:focusable="false"
@@ -116,9 +116,9 @@
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textAlignment="viewEnd"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/pickup_view"
-        app:layout_constraintTop_toTopOf="@+id/name" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintEnd_toStartOf="@+id/pickup_view" />
 
     <ImageView
         android:id="@+id/pickup_view"
@@ -163,5 +163,15 @@
         app:layout_constraintEnd_toStartOf="@+id/pickup_view"
         app:layout_constraintStart_toEndOf="@+id/target"
         app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/hole_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:text="    "
+        android:textAlignment="viewEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintEnd_toStartOf="@+id/circle_space" />
 
 </android.support.constraint.ConstraintLayout>

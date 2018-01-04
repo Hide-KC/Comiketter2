@@ -126,6 +126,14 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
         //名前の設定
         holder.name.setText(user.name);
 
+        //ホールの設定
+        String holeName = StringMatcher.getHoleName(user.hole_id);
+        if (holeName != null){
+            holder.hole_name.setText(holeName);
+        } else {
+            holder.hole_name.setText("");
+        }
+
         //サークルスペースの設定
         holder.circle_space.setText(user.circle_space);
 
@@ -242,6 +250,7 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
         TextView yosan;
         TextView memo;
         TextView target;
+        TextView hole_name;
 
         ImageView pickup_view;
         ImageView check_view;
@@ -256,6 +265,7 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
             busuu = view.findViewById(R.id.busuu);
             yosan = view.findViewById(R.id.yosan);
             memo = view.findViewById(R.id.memo);
+            hole_name = view.findViewById(R.id.hole_name);
 
             pickup_view = view.findViewById(R.id.pickup_view);
             check_view = view.findViewById(R.id.hasgot_view);

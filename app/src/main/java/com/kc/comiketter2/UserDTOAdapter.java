@@ -118,6 +118,14 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
         //名前の設定
         holder.name.setText(user.name);
 
+        //ホールの設定
+        String holeName = StringMatcher.getHoleName(user.hole_id);
+        if (holeName != null){
+            holder.hole_name.setText(holeName);
+        } else {
+            holder.hole_name.setText("");
+        }
+
         //サークルスペースの設定
         holder.circle_space.setText(user.circle_space);
 
@@ -184,6 +192,7 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
         ImageView pickup_view;
         TextView circle_space;
         TextView circle_name;
+        TextView hole_name;
 
         // コンストラクタ内でidバインドを行なうとスッキリします
         public ItemViewHolder(View view) {
@@ -193,6 +202,7 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
             pickup_view = view.findViewById(R.id.pickup_view);
             circle_space = view.findViewById(R.id.circle_space);
             circle_name = view.findViewById(R.id.circle_name);
+            hole_name = view.findViewById(R.id.hole_name);
         }
     }
 

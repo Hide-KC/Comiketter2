@@ -124,8 +124,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String filter = "_id = " + registeredIDs.get(user_i);
                     ContentValues cv = new ContentValues();
                     cv.put("auto_day", 0);
-                    cv.put("circle_name", "");
                     cv.put("circle_space", "");
+                    cv.put("hole_id", 0);
                     writable.update(OPTIONAL_INFO, cv, filter, null);
                 }
 
@@ -161,6 +161,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         instantValues.put("_id", user.user_id);
                         if (space != null){
                             holeID = StringMatcher.getHoleID(space);
+                            Log.d("Hole", user.name + " " + space + " " + StringMatcher.holeHashMap.get(holeID));
+                            instantValues.put("hole_id", holeID);
                             instantValues.put("auto_day", autoDay);
                             instantValues.put("circle_space", space);
                         } else {
@@ -183,6 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             if (user.circle_name != null){
                                 args.put("circle_name", user.circle_name);
                             }
+
                             args.put("hole_id", holeID);
                             args.put("circle_space", space);
                             writable.update(OPTIONAL_INFO, args, filter, null);
@@ -205,7 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
 
         String query1 = "select * from " + USER_INFO + " inner join " + OPTIONAL_INFO + " on " + USER_INFO + "._id = " + OPTIONAL_INFO + "._id";
-        String query2 = "select * from ( " + query1 + " ) u order by u.auto_day ASC, u.manual_day ASC, u.circle_space ASC;";
+        String query2 = "select * from ( " + query1 + " ) u order by u.auto_day ASC, u.manual_day ASC, u.hole_id ASC, u.circle_space ASC;";
 
         Cursor cursor = database.rawQuery(query2, null);
 

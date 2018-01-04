@@ -19,8 +19,8 @@
         android:singleLine="true"
         android:text="name"
         android:textAlignment="viewStart"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/circle_space"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/hole_name"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="@+id/profile_image" />
 
@@ -75,9 +75,9 @@
         android:layout_marginEnd="8dp"
         android:text="@string/circle_space_hint"
         android:textAlignment="viewEnd"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/pickup_view"
-        app:layout_constraintTop_toTopOf="@+id/name" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintEnd_toStartOf="@+id/pickup_view" />
 
     <TextView
         android:id="@+id/circle_name"
@@ -94,5 +94,15 @@
         app:layout_constraintEnd_toStartOf="@+id/pickup_view"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/hole_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="2dp"
+        android:text="    "
+        android:textAlignment="viewEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintEnd_toStartOf="@+id/circle_space" />
 
 </android.support.constraint.ConstraintLayout>

@@ -61,11 +61,13 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                 int id = item.getItemId();
 
                 if (id == R.id.toolbar_reload){
-                    getFriendIDs();
-                    return true;
+                    if (TwitterUtils.loadAccessToken(MainActivity.this) == null){
+                        Toast.makeText(MainActivity.this, "Twitterと連携できません。", Toast.LENGTH_SHORT).show();
+                    } else {
+                        getFriendIDs();
+                    }
                 } else if (id == R.id.toolbar_clear){
                     clearOptionalInfo();
-                    return true;
                 } else {
 
                 }

@@ -77,22 +77,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         // DBバージョンアップ時のデータ移行を実装
-        if (oldVersion == 1 && newVersion == 2){
-            //OPTIONAL_INFOテーブルへのhole_id列追加、HOLE_NAMESテーブルの追加
-            try {
-                database.execSQL(HOLE_NAME_QUERY);
-                database.execSQL(
-                        "alter table " + OPTIONAL_INFO + " add hole_id text"
-                );
-            } catch (SQLiteException ex){
-                ex.printStackTrace();
-            }
+        if (oldVersion < newVersion){
+            if (oldVersion == 1 && newVersion == 2){
+                //OPTIONAL_INFOテーブルへのhole_id列追加、HOLE_NAMESテーブルの追加
+                try {
+                    database.execSQL(HOLE_NAME_QUERY);
+                    database.execSQL(
+                            "alter table " + OPTIONAL_INFO + " add hole_id text"
+                    );
+                } catch (SQLiteException ex){
+                    ex.printStackTrace();
+                }
 
-            for (Integer key:StringMatcher.holeHashMap.keySet()){
-                ContentValues cv = new ContentValues();
-                cv.put("hole_id", key);
-                cv.put("name", StringMatcher.holeHashMap.get(key));
-                database.insert(HOLE_NAMES, null, cv);
+                for (Integer key:StringMatcher.holeHashMap.keySet()){
+                    ContentValues cv = new ContentValues();
+                    cv.put("hole_id", key);
+                    cv.put("name", StringMatcher.holeHashMap.get(key));
+                    database.insert(HOLE_NAMES, null, cv);
+                }
             }
         }
     }

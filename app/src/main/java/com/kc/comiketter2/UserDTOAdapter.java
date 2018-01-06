@@ -173,6 +173,8 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
             day = user.manual_day;
         }
         convertView.setBackgroundColor(getRowBackColor(day, position));
+        //pickup_viewに背景色を設定
+        holder.pickup_view.setBackgroundColor(getRowBackColor(day, position));
 
         return convertView;
     }

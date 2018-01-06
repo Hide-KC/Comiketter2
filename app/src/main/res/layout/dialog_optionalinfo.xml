@@ -33,15 +33,13 @@
 
     <TextView
         android:id="@+id/circle_space"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="2dp"
         android:text="space"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/profile_image" />
+        app:layout_constraintBottom_toBottomOf="@+id/hole_name"
+        app:layout_constraintStart_toEndOf="@+id/hole_name" />
 
     <TextView
         android:id="@+id/target"
@@ -170,5 +168,14 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/yosan_value"
         app:layout_constraintStart_toEndOf="@+id/yosan_value" />
+
+    <TextView
+        android:id="@+id/hole_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintStart_toEndOf="@+id/profile_image" />
 
 </android.support.constraint.ConstraintLayout>

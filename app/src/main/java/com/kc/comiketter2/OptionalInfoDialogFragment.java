@@ -56,6 +56,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         //ビューを取得
         ImageView profile_image = view.findViewById(R.id.profile_image);
         TextView name = view.findViewById(R.id.name);
+        TextView hole_name = view.findViewById(R.id.hole_name);
         TextView circle_space = view.findViewById(R.id.circle_space);
         final Spinner target = view.findViewById(R.id.target_spinner);
         final TextView busuu = view.findViewById(R.id.busuu_value);
@@ -67,6 +68,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         //ビューに値をセット
         Glide.with(this).load(user.profile_image_url).into(profile_image);
         name.setText(user.name);
+        hole_name.setText(StringMatcher.holeHashMap.get(user.hole_id));
         circle_space.setText(user.circle_space);
         if (user.target != null){
             target.setSelection(user.target);

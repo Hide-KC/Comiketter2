@@ -333,12 +333,16 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                             }
                         }
 
+                        if (queries.size() > 175){
+                                Toast.makeText(weakActivity.get(), "サークル名取得対象が多すぎるので、全て取得はできません……", Toast.LENGTH_SHORT).show();
+                        }
+
                         //検索APIのRateLimitが180しかない……
                         Integer searchRateLimit = 180;
 
-                        for (String query:queries){
-                            Log.d("CircleName", "Query:" + query);
-                            twitter4j.Query q = new Query(query);
+                        for (Integer q_i = 0; q_i < searchRateLimit; q_i++){
+                            Log.d("CircleName", "Query:" + queries.get(q_i));
+                            twitter4j.Query q = new Query(queries.get(q_i));
                             twitter4j.QueryResult result = twitter.search(q);
                             Log.d("CircleName", "残りAPI: " + result.getRateLimitStatus().getRemaining());
                             Log.d("CircleName", "ツイート数: " + result.getTweets().size());

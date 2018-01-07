@@ -104,7 +104,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/yosan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/busuu"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/circle_name" />
 
     <TextView
         android:id="@+id/circle_space"
@@ -157,7 +157,7 @@
         android:layout_marginTop="4dp"
         android:hint="@string/circle_name"
         android:textSize="12sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/target"
         app:layout_constraintTop_toBottomOf="@+id/name" />

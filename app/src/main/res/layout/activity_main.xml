@@ -20,12 +20,10 @@
 
         <ImageButton
             android:id="@+id/navigation_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:background="@drawable/shadow"
-            android:src="@drawable/image_overlay"
-            android:scaleX="1.2"
-            android:scaleY="1.2"/>
+            android:src="@drawable/image_overlay" />
 
         <Space
             android:layout_width="10dp"
@@ -62,11 +60,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Left" />
-
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Center" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"

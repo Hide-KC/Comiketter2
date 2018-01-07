@@ -319,17 +319,16 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                         //検索クエリをユーザ全員分生成する
                         List<String> queries = new ArrayList<>();
                         //検索クエリの生成
-                        String[] instantQueries = new String[]{"", "exclude:retweets since:" + TourakuDay + " ◎貴サークル"};
                         StringBuilder builder = new StringBuilder("");
-                        String instantQuery = "exclude:retweets since:" + TourakuDay + " ◎貴サークル";
+                        String optionalQuery = "exclude:retweets since:" + TourakuDay + " ◎貴サークル";
 
                         //０は自分のアカウントなので注意
                         for (Integer user_i = 1; user_i < users.size(); user_i++){
                             //文字数は500文字以内にする。超えると拒否される
                             //スクリーン名の制限は2018-01-01現在15文字＋from等加算で２１文字余裕を見る
                             builder.append("from:" + users.get(user_i).screen_name + " OR ");
-                            if (builder.length() + instantQueries[1].length() > 479 || user_i == users.size() - 1){
-                                queries.add(builder.substring(0, builder.length() - 3) + instantQuery);
+                            if (builder.length() + optionalQuery.length() > 479 || user_i == users.size() - 1){
+                                queries.add(builder.substring(0, builder.length() - 3) + optionalQuery);
                                 builder.setLength(0);
                             }
                         }

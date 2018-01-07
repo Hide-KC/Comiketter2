@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -16,6 +17,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -163,6 +165,12 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
         if (profile_image_url != null){
             ImageButton btn = findViewById(R.id.navigation_icon);
             Glide.with(this).load(profile_image_url).into(btn);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("Toolbar", "NavigationIcon Clicked");
+                }
+            });
         }
 
     }

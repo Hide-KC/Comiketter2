@@ -3,7 +3,8 @@
     package="com.kc.comiketter2">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/circlefinder_icon"
@@ -23,17 +24,19 @@
         </activity>
         <activity
             android:name=".ConfirmOAuthActivity"
-            android:launchMode="singleTask"
-            >
+            android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="twitter"
-                    android:scheme="twittercallback"/>
+                    android:scheme="twittercallback" />
             </intent-filter>
         </activity>
+        <activity android:name=".SearchUserActivity"></activity>
     </application>
 
 </manifest>

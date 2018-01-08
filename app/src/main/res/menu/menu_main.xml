@@ -9,7 +9,13 @@
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
-        android:visible="true"/>
+        android:visible="false"/>
+    <item
+        android:id="@+id/toolbar_search_sub"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/search"
+        app:showAsAction="always"/>
+
     <item
         android:id="@+id/toolbar_reload"
         android:icon="@drawable/reload"

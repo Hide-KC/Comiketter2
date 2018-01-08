@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -24,12 +23,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.lang.ref.WeakReference;
-import java.sql.Date;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import twitter4j.IDs;
 import twitter4j.Query;
 import twitter4j.RateLimitStatus;
@@ -59,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
+        //TabLayoutの設定
+        final TabLayout tabLayout = findViewById(R.id.tab_layout);
+        final ViewPager viewPager = findViewById(R.id.view_pager);
+
         toolbar.inflateMenu(R.menu.menu_main);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                     }
                 } else if (id == R.id.toolbar_clear){
                     clearOptionalInfo();
+                } else if (id == R.id.toolbar_search_sub) {
+                    startSearchActivity();
                 } else {
 
                 }
@@ -89,6 +92,22 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                FragmentManager manager = getSupportFragmentManager();
+                Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + tabLayout.getSelectedTabPosition());
+                StickyListHeadersListView sticky = null;
+                if (tabLayout.getSelectedTabPosition() <= 1){
+                    sticky = fragment.getView().findViewById(R.id.sticky_list);
+                }
+
+                if (sticky == null){
+                    Log.d("Comiketter", "sticky == null");
+                } else {
+                    if (newText.equals("")){
+
+                    } else {
+
+                    }
+                }
                 return false;
             }
         });
@@ -111,9 +130,6 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
         }
 
-        //TabLayoutの設定
-        final TabLayout tabLayout = findViewById(R.id.tab_layout);
-        final ViewPager viewPager = findViewById(R.id.view_pager);
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -433,6 +449,11 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
         //DBのオプションテーブルの入力可能部分を消去
         ClearDialogFragment dialog = ClearDialogFragment.newInstance();
         dialog.show(getSupportFragmentManager(), "clear_confirmation");
+    }
+
+    private void startSearchActivity(){
+        //サーチ画面を展開
+        startActivity(new Intent(this, com.kc.comiketter2.SearchUserActivity.class));
     }
 
     @Override

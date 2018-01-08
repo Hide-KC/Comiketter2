@@ -9,7 +9,7 @@
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"
-        android:visible="false"/>
+        android:visible="true"/>
     <item
         android:id="@+id/toolbar_reload"
         android:icon="@drawable/reload"

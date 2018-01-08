@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
 import java.util.List;
@@ -25,10 +24,10 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //layoutファイルからViewオブジェクトを生成
-        View view = inflater.inflate(R.layout.follow_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_sticky_list, container, false);
 
         //StickyListビューを取得
-        StickyListHeadersListView sticky = view.findViewById(R.id.follow_list);
+        StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
 
         //Adapterをいったんお掃除
         ArrayAdapter<UserDTO> adapter = (ArrayAdapter<UserDTO>) sticky.getAdapter();
@@ -69,7 +68,7 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
         Log.d("Comiketter", "FollowList Update");
 
         View view = this.getView();
-        final StickyListHeadersListView sticky = view.findViewById(R.id.follow_list);
+        final StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
         final ArrayAdapter<UserDTO> adapter = new UserDTOAdapter(getActivity());
 
         AsyncTask<Void, UserDTO, ArrayAdapter<UserDTO>> task = new AsyncTask<Void, UserDTO, ArrayAdapter<UserDTO>>() {
@@ -121,7 +120,7 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
     public void selectionToTop() {
         View view = getView();
         if (view != null){
-            StickyListHeadersListView sticky = view.findViewById(R.id.follow_list);
+            StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
             sticky.setSelection(0);
 
             Bundle args = getArguments();
@@ -135,7 +134,7 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
     public void saveScrollY() {
         View view = getView();
         if (view != null) {
-            StickyListHeadersListView sticky = view.findViewById(R.id.follow_list);
+            StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
 
             Bundle args = getArguments();
             if (args != null){

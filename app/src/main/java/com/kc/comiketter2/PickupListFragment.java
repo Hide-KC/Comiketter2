@@ -26,10 +26,10 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //layoutファイルからViewオブジェクトを生成
-        View view = inflater.inflate(R.layout.pickup_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_sticky_list, container, false);
 
         //StickyListビューを取得
-        final StickyListHeadersListView sticky = view.findViewById(R.id.pickup_list);
+        final StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
 
         //Adapterをいったんお掃除
         ArrayAdapter<UserDTO> instantAdapter = (ArrayAdapter<UserDTO>) sticky.getAdapter();
@@ -90,7 +90,7 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
         Log.d("Comiketter", "PickupList Update");
 
         View view = this.getView();
-        final StickyListHeadersListView sticky = view.findViewById(R.id.pickup_list);
+        final StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
         final ArrayAdapter<UserDTO> adapter = new PickUpDTOAdapter(getActivity());
 
         AsyncTask<Void, UserDTO, ArrayAdapter<UserDTO>> task = new AsyncTask<Void, UserDTO, ArrayAdapter<UserDTO>>() {
@@ -142,7 +142,7 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
     public void selectionToTop() {
         View view = getView();
         if (view != null){
-            StickyListHeadersListView sticky = view.findViewById(R.id.pickup_list);
+            StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
             sticky.setSelection(0);
 
             Bundle args = getArguments();
@@ -156,7 +156,7 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
     public void saveScrollY() {
         View view = getView();
         if (view != null){
-            StickyListHeadersListView sticky = view.findViewById(R.id.pickup_list);
+            StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
 
             Bundle args = getArguments();
             if (args != null){

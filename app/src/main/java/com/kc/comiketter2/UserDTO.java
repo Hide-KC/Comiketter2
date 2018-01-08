@@ -16,12 +16,12 @@ public class UserDTO {
     public Integer auto_day = 0;
     public Integer manual_day = 0;
     public String circle_name = "";
-    public String circle_space = null;
-    public Integer hole_id = null;
+    public String circle_space = "";
+    public Integer hole_id = 0;
     public Integer target = 0;
     public Integer busuu = 0;
     public Integer yosan = 0;
-    public String memo = null;
+    public String memo = "";
     public Integer pickup = 0;
     public Integer hasgot = 0;
 

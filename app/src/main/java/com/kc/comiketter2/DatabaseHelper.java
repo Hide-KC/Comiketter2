@@ -262,6 +262,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
         user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
         user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
+        user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
         user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
         user.target = cursor.getInt(cursor.getColumnIndex("target"));
         user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));

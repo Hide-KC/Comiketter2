@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -54,10 +55,11 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         view = inflater.inflate(R.layout.dialog_optionalinfo, null);
 
         //ビューを取得
-        ImageView profile_image = view.findViewById(R.id.profile_image);
+        ImageView profileImage = view.findViewById(R.id.profile_image);
         TextView name = view.findViewById(R.id.name);
-        TextView hole_name = view.findViewById(R.id.hole_name);
-        TextView circle_space = view.findViewById(R.id.circle_space);
+        TextView holeName = view.findViewById(R.id.hole_name);
+        final EditText circleName = view.findViewById(R.id.circle_name);
+        TextView circleSpace = view.findViewById(R.id.circle_space);
         final Spinner target = view.findViewById(R.id.target_spinner);
         final TextView busuu = view.findViewById(R.id.busuu_value);
         ImageView plus = view.findViewById(R.id.plus);
@@ -66,10 +68,11 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         final EditText memo = view.findViewById(R.id.memo_edit);
 
         //ビューに値をセット
-        Glide.with(this).load(user.profile_image_url).into(profile_image);
+        Glide.with(this).load(user.profile_image_url).into(profileImage);
         name.setText(user.name);
-        hole_name.setText(StringMatcher.getHoleName(user.hole_id));
-        circle_space.setText(user.circle_space);
+        holeName.setText(StringMatcher.getHoleName(user.hole_id));
+        circleName.setText(user.circle_name);
+        circleSpace.setText(user.circle_space);
         if (user.target != null){
             target.setSelection(user.target);
         } else {
@@ -80,9 +83,11 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         if (user.busuu == null){
             busuu.setText(0);
         } else {
-            busuu.setText("" + user.busuu);
+            busuu.setText(String.valueOf(user.busuu));
         }
-        yosan.setText("" + user.yosan);
+        if (user.yosan > 0){
+            yosan.setText(String.valueOf(user.yosan));
+        }
         memo.setText(user.memo);
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,12 +133,16 @@ public class OptionalInfoDialogFragment extends DialogFragment {
 
                         //予算が数値変換出来ないときはエラーキャッチ
                         try{
-                            helper.setValue(helper.OPTIONAL_INFO, userID, "yosan", Integer.valueOf(yosan.getText().toString()));
+                            Integer y = Integer.valueOf(yosan.getText().toString());
+                            helper.setValue(helper.OPTIONAL_INFO, userID, "yosan", y);
                         } catch (NumberFormatException ex){
                             ex.printStackTrace();
+                            helper.setValue(helper.OPTIONAL_INFO, userID, "yosan", 0);
                         }
 
                         helper.setValue(helper.OPTIONAL_INFO, userID, "memo", memo.getText().toString());
+                        helper.setValue(helper.OPTIONAL_INFO, userID, "circle_name", circleName.getText().toString());
+                        Log.d("DialogFragment", circleName.getText().toString());
                         dialogInterface.dismiss();
                     }
                 });

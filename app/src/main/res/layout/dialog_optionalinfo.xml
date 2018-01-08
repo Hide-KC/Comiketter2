@@ -76,7 +76,7 @@
 
     <Spinner
         android:id="@+id/target_spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:entries="@array/target_spinner"
@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="1000"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/yosan"
@@ -111,8 +111,8 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/yosan_value"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/minus"
-        app:layout_constraintTop_toTopOf="@+id/target_spinner" />
+        app:layout_constraintStart_toEndOf="@+id/target_spinner"
+        app:layout_constraintTop_toTopOf="@+id/minus" />
 
     <TextView
         android:id="@+id/busuu_value"
@@ -177,5 +177,21 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintStart_toEndOf="@+id/profile_image" />
+
+    <EditText
+        android:id="@+id/circle_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/circle_name"
+        android:textSize="16sp"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/target_spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/target_spinner"
+        app:layout_constraintTop_toTopOf="@+id/target_spinner" />
 
 </android.support.constraint.ConstraintLayout>

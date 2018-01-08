@@ -5,6 +5,7 @@ import android.util.Log;
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,8 +23,9 @@ public class StringMatcher {
     final private static String AOrB = ".*(a|b)";
 
     //ホールHashMap
-    final public static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){
+    final private static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){
         {
+            put(0, "");
             put(1, "東1");
             put(2, "東2");
             put(3, "東3");
@@ -222,5 +224,9 @@ public class StringMatcher {
 
     public static String getHoleName(Integer holeID){
         return holeHashMap.get(holeID); //キーが無ければnullが返る
+    }
+
+    public static Set<Integer> getMapKeys(){
+        return holeHashMap.keySet();
     }
 }

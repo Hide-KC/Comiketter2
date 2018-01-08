@@ -89,10 +89,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     ex.printStackTrace();
                 }
 
-                for (Integer key:StringMatcher.holeHashMap.keySet()){
+                for (Integer key:StringMatcher.getMapKeys()){
                     ContentValues cv = new ContentValues();
                     cv.put("hole_id", key);
-                    cv.put("name", StringMatcher.holeHashMap.get(key));
+                    cv.put("name", StringMatcher.getHoleName(key));
                     database.insert(HOLE_NAMES, null, cv);
                 }
             }
@@ -163,7 +163,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         instantValues.put("_id", user.user_id);
                         if (space != null){
                             holeID = StringMatcher.getHoleID(space);
-                            Log.d("Hole", user.name + " " + space + " " + StringMatcher.holeHashMap.get(holeID));
+                            Log.d("Hole", user.name + " " + space + " " + StringMatcher.getHoleName(holeID));
                             instantValues.put("hole_id", holeID);
                             instantValues.put("auto_day", autoDay);
                             instantValues.put("circle_space", space);

@@ -68,7 +68,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         //ビューに値をセット
         Glide.with(this).load(user.profile_image_url).into(profile_image);
         name.setText(user.name);
-        hole_name.setText(StringMatcher.holeHashMap.get(user.hole_id));
+        hole_name.setText(StringMatcher.getHoleName(user.hole_id));
         circle_space.setText(user.circle_space);
         if (user.target != null){
             target.setSelection(user.target);

@@ -24,6 +24,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.lang.ref.WeakReference;
+import java.sql.Date;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -340,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                         //検索APIのRateLimitが180しかない……
                         Integer searchRateLimit = 180;
 
-                        for (Integer q_i = 0; q_i < searchRateLimit; q_i++){
+                        for (Integer q_i = 0; q_i < queries.size(); q_i++){
                             Log.d("CircleName", "Query:" + queries.get(q_i));
                             twitter4j.Query q = new Query(queries.get(q_i));
                             twitter4j.QueryResult result = twitter.search(q);

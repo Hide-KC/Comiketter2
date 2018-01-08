@@ -47,7 +47,7 @@ public class ClearDialogFragment extends DialogFragment {
                         //何もしないで閉じる
                     }
                 })
-                .setMessage("ユーザ入力情報をクリアします。");
+                .setMessage(getString(R.string.clear_message));
 
         return dialogBuilder.create();
     }

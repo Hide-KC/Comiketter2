@@ -8,10 +8,10 @@ import twitter4j.User;
 
 public class UserDTO {
     public Long user_id = 0L;
-    public String name = null;
-    public String screen_name = null;
-    public String profile_image_url = null;
-    public String profile_description = null;
+    public String name = "";
+    public String screen_name = "";
+    public String profile_image_url = "";
+    public String profile_description = "";
 
     public Integer auto_day = 0;
     public Integer manual_day = 0;

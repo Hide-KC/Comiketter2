@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,7 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while (eol){
             UserDTO user = new UserDTO();
             user.user_id = cursor.getLong(cursor.getColumnIndex("_id"));
-            user.name = cursor.getString(cursor.getColumnIndex("name")).replaceAll("':", ":");
+            user.name = cursor.getString(cursor.getColumnIndex("name"));
             user.screen_name = cursor.getString(cursor.getColumnIndex("screen_name"));
             user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url")).replaceAll("':", ":");
             user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
@@ -255,7 +256,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         user.user_id = cursor.getLong(cursor.getColumnIndex("_id"));
-        user.name = cursor.getString(cursor.getColumnIndex("name")).replaceAll("':", ":");
+        user.name = cursor.getString(cursor.getColumnIndex("name"));
         user.screen_name = cursor.getString(cursor.getColumnIndex("screen_name"));
         user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url")).replaceAll("':", ":");
         user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
@@ -337,6 +338,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
 
+    }
+
+    public ArrayList<UserDTO> search(String word){
+        //name,screenName,description,circleNameから検索
+        //正規表現的なマッチングにしたい
+        StringBuilder builder = new StringBuilder();
+        ArrayList<UserDTO> users = new ArrayList<>();
+
+        //パーセント記号はエスケープの対象
+        if (word.contains("%")){
+            word = word.replaceAll("%", "$%");
+        } else if (word.equals("")){
+            return users;
+        }
+
+        builder.append("'%").append(word).append("%'");
+
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("select * from ( ")
+                .append("select * from ").append(USER_INFO).append(" inner join ").append(OPTIONAL_INFO).append(" on ").append(USER_INFO).append("._id = ").append(OPTIONAL_INFO).append("._id") //内部結合
+                .append(" ) u where u.name like ").append(builder.toString())
+                .append(" or ")
+                .append("u.screen_name like ").append(builder.toString())
+                .append(" or ")
+                .append("u.circle_name like ").append(builder.toString()) //orで条件増やす場合はここ！
+                .append(" escape '$';");
+
+
+        SQLiteDatabase readable = getReadableDatabase();
+        Cursor cursor = readable.rawQuery(queryBuilder.toString(), null);
+
+        boolean eol = cursor.moveToFirst();
+        while (eol){
+            UserDTO user = new UserDTO();
+            user.name = cursor.getString(cursor.getColumnIndex("name"));
+            user.screen_name = cursor.getString(cursor.getColumnIndex("screen_name"));
+            user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url"));
+            user.pickup = cursor.getInt(cursor.getColumnIndex("pickup"));
+            user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
+            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
+            user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
+            users.add(user);
+            eol = cursor.moveToNext();
+        }
+
+        cursor.close();
+        return users;
     }
 
 }

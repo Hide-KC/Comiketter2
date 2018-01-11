@@ -27,6 +27,7 @@ public class SearchResultAdapter extends ArrayAdapter<UserDTO> {
     private Context context;
     private LayoutInflater mInflater;
 
+
     public SearchResultAdapter(Context context){
         super(context, android.R.layout.simple_list_item_1);
         this.context = context;
@@ -50,6 +51,8 @@ public class SearchResultAdapter extends ArrayAdapter<UserDTO> {
         //Adapterに渡された各値を格納します。
         //Userオブジェクトの取得
         final UserDTO user = getItem(position);
+
+        holder.user_id = user.user_id;
 
         //アイコン画像の設定
         Glide.with(context).load(user.profile_image_url).into(holder.profile_image);
@@ -103,6 +106,7 @@ public class SearchResultAdapter extends ArrayAdapter<UserDTO> {
     }
 
     public static class ItemViewHolder{
+        Long user_id;
         ImageButton profile_image;
         TextView name;
         TextView screenName;

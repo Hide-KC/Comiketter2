@@ -372,6 +372,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         boolean eol = cursor.moveToFirst();
         while (eol){
             UserDTO user = new UserDTO();
+            user.user_id = cursor.getLong(cursor.getColumnIndex("_id"));
             user.name = cursor.getString(cursor.getColumnIndex("name"));
             user.screen_name = cursor.getString(cursor.getColumnIndex("screen_name"));
             user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url"));

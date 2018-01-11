@@ -50,6 +50,16 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
     private static final String TourakuDay = "2017-11-02";
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SearchUserActivity.REQUEST_CODE && data != null && resultCode == RESULT_OK){
+            Log.d("Comiketter", "update");
+            onPageSelected(0);
+            onPageSelected(1);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -453,7 +463,9 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
     private void startSearchActivity(){
         //サーチ画面を展開
-        startActivity(new Intent(this, com.kc.comiketter2.SearchUserActivity.class));
+        Intent intent = new Intent(this, com.kc.comiketter2.SearchUserActivity.class);
+
+        startActivityForResult(intent, SearchUserActivity.REQUEST_CODE);
     }
 
     @Override

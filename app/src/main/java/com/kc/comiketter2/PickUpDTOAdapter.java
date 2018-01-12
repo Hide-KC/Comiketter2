@@ -56,8 +56,10 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
             holder = (HeaderViewHolder)convertView.getTag();
         }
 
-        if (getHeaderId(position) == 9){
+        if (getHeaderId(position) == 9) {
             holder.textView.setText(context.getString(R.string.unknown));
+        } else if (getHeaderId(position) == 99){
+            holder.textView.setText(context.getString(R.string.other));
         } else {
             holder.textView.setText(getHeaderId(position) + context.getString(R.string.nichime));
         }
@@ -300,11 +302,17 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
             } else {
                 color = res.getColor(R.color.third_row_back_2);
             }
-        } else {
+        } else if (day == 9) {
             if (p == 0){
                 color = res.getColor(R.color.unknown_row_back_1);
             } else {
                 color = res.getColor(R.color.unknown_row_back_2);
+            }
+        } else {
+            if (p == 0){
+                color = res.getColor(R.color.other_row_back_1);
+            } else {
+                color = res.getColor(R.color.other_row_back_2);
             }
         }
 
@@ -320,8 +328,10 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
             color = res.getColor(R.color.second_header_back);
         } else if (day == 3) {
             color = res.getColor(R.color.third_header_back);
-        } else {
+        } else if (day == 9){
             color = res.getColor(R.color.unknown_header_back);
+        } else {
+            color = res.getColor(R.color.other_header_back);
         }
 
         return color;

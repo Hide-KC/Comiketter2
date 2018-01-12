@@ -162,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                         ContentValues instantValues = new ContentValues();
                         instantValues.put("_id", user.user_id);
-                        if (space != null){
+                        if (space != null && autoDay != 99){
                             holeID = StringMatcher.getHoleID(space);
                             Log.d("Hole", user.name + " " + space + " " + StringMatcher.getHoleName(holeID));
                             instantValues.put("hole_id", holeID);
@@ -185,7 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             ContentValues args = new ContentValues();
                             args.put("auto_day", autoDay);
                             //当落発表ツイが流れてしまうとnullになってしまうためnullチェック
-                            if (user.circle_name != null){
+                            if (!user.circle_name.equals("")){
                                 args.put("circle_name", user.circle_name);
                             }
 
@@ -211,7 +211,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
 
         String query1 = "select * from " + USER_INFO + " inner join " + OPTIONAL_INFO + " on " + USER_INFO + "._id = " + OPTIONAL_INFO + "._id";
-        String query2 = "select * from ( " + query1 + " ) u order by u.auto_day ASC, u.manual_day ASC, u.hole_id ASC, u.circle_space ASC;";
+        String query2 = "select * from ( " + query1 + " ) u order by u.auto_day ASC, u.manual_day ASC, u.hole_id ASC, u.circle_space ASC, u.screen_name ASC;";
 
         Cursor cursor = database.rawQuery(query2, null);
 

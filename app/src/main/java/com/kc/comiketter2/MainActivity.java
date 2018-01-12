@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
     //→TaskManagerクラスを作成。
     private MyAsyncTask<Void, Integer, List<User>> task = null;
     private Integer taskID = -1;
-    private SearchView searchView;
     private static final String TourakuDay = "2017-11-02";
 
     @Override

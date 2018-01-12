@@ -185,7 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             ContentValues args = new ContentValues();
                             args.put("auto_day", autoDay);
                             //当落発表ツイが流れてしまうとnullになってしまうためnullチェック
-                            if (user.circle_name != null){
+                            if (!user.circle_name.equals("")){
                                 args.put("circle_name", user.circle_name);
                             }
 

@@ -84,9 +84,9 @@ public class StringMatcher {
         //イベント名パターンを持っているか
         if (getSpace(name) != null){
             //イベント名でフィルタ、イベント名を抽出
-            String eventSpace = getEventName(name, comikeEventPattern);
-            if (eventSpace != null){
-                return eventSpace;
+            String eventName = getEventName(name, comikeEventPattern);
+            if (eventName != null){
+                return eventName;
             } else {
                 return null;
             }
@@ -174,23 +174,28 @@ public class StringMatcher {
 
     /**
      * 参加日を取得
-     * 自動判別できない場合は「９」を返す
+     * 参加者かつ自動判別できない場合→「９」を返す
+     * 非参加者→「９９」を返す
      * @param name
      * @return
      */
     public static Integer getParticipateDay(String name){
-        String[] dateArray = new String[]{"", firstDay, secondDay, thirdDay};
-
-        for(Integer i_date = 1; i_date < dateArray.length; i_date++){
-            Pattern pattern = Pattern.compile(dateArray[i_date]);
-            Matcher matcher = pattern.matcher(name);
-            if (matcher.find()){
-                return i_date;
-            }
-        }
-
         //見つからなかったときは9（不明日）を返す。
-        return 9;
+        //非参加者のときは99（非参加）を返す
+        if (getEventName(name) == null){
+            return 99;
+        } else {
+            String[] dateArray = new String[]{"", firstDay, secondDay, thirdDay};
+            for(Integer i_date = 1; i_date < dateArray.length; i_date++){
+                Pattern pattern = Pattern.compile(dateArray[i_date]);
+                Matcher matcher = pattern.matcher(name);
+                if (matcher.find()){
+                    return i_date;
+                }
+            }
+
+            return 9;
+        }
     }
 
     /**

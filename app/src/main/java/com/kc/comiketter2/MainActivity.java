@@ -52,9 +52,8 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SearchUserActivity.REQUEST_CODE && data != null && resultCode == RESULT_OK){
-            Log.d("Comiketter", "update");
-            onPageSelected(0);
-            onPageSelected(1);
+            TabLayout tabLayout = findViewById(R.id.tab_layout);
+            onPageSelected(tabLayout.getSelectedTabPosition());
         }
     }
 
@@ -322,11 +321,11 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
                         for (User user:userResponseList){
                             //正規表現に一致するユーザのみ抽出。
-                            if (StringMatcher.getEventName(user.getName()) != null){
+//                            if (StringMatcher.getEventName(user.getName()) != null){
                                 Log.d("Comiketter", user.getName());
                                 UserDTO userDTO = new UserDTO(user);
                                 users.add(userDTO);
-                            }
+//                            }
                         }
 
                         publishProgress(1, i * 100 + j);
@@ -354,7 +353,10 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                         for (Integer user_i = 1; user_i < users.size(); user_i++){
                             //文字数は500文字以内にする。超えると拒否される
                             //スクリーン名の制限は2018-01-01現在15文字＋from等加算で２１文字余裕を見る
-                            builder.append("from:" + users.get(user_i).screen_name + " OR ");
+                            if (StringMatcher.getEventName(users.get(user_i).name) != null){
+                                builder.append("from:" + users.get(user_i).screen_name + " OR ");
+                            }
+
                             if (builder.length() + optionalQuery.length() > 479 || user_i == users.size() - 1){
                                 queries.add(builder.substring(0, builder.length() - 3) + optionalQuery);
                                 builder.setLength(0);

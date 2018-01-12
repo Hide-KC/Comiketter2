@@ -25,6 +25,9 @@
     <color name="unknown_header_back">#afafb0</color>
     <color name="unknown_row_back_1">#dddcd6</color>
     <color name="unknown_row_back_2">#dbd9d0</color>
+    <color name="other_header_back">#afafb0</color>
+    <color name="other_row_back_1">#dddcd6</color>
+    <color name="other_row_back_2">#dbd9d0</color>
 
     <color name="header_moji">#180614</color>
 </resources>

@@ -44,9 +44,9 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
             List<UserDTO> users = helper.getUserList();
 
             for (UserDTO user : users){
-                if (user.auto_day > 0) {
+//                if (user.auto_day > 0) {
                     adapter.add(user);
-                }
+//                }
             }
             view.setTag(FOLLOW_LIST);
         } else {
@@ -84,9 +84,9 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
                 List<UserDTO> users = helper.getUserList();
 
                 for (Integer user_i = 0; user_i < users.size(); user_i++){
-                    if (users.get(user_i).auto_day > 0){
+//                    if (users.get(user_i).auto_day > 0){
                         adapter.add(users.get(user_i));
-                    }
+//                    }
                 }
 
                 return adapter;

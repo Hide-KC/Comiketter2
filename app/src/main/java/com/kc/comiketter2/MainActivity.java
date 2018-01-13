@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                 List<Long> idsList = new ArrayList<>();
                 IDs ids = null;
                 Long myUserID = TwitterUtils.loadAccessToken(context).getUserId();
+                DatabaseHelper helper = DatabaseHelper.getInstance(context);
 
                 try {
                     //自身のプロフィールを取得
@@ -321,11 +322,11 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
                         for (User user:userResponseList){
                             //正規表現に一致するユーザのみ抽出。
-//                            if (StringMatcher.getEventName(user.getName()) != null){
+                            if (StringMatcher.getEventName(user.getName()) != null || helper.isExisted(user.getId())){
                                 Log.d("Comiketter", user.getName());
                                 UserDTO userDTO = new UserDTO(user);
                                 users.add(userDTO);
-//                            }
+                            }
                         }
 
                         publishProgress(1, i * 100 + j);

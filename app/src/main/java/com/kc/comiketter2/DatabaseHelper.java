@@ -126,7 +126,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     //当落発表時くらいしかキャッチするタイミングがないため。
                     String filter = "_id = " + registeredIDs.get(user_i);
                     ContentValues cv = new ContentValues();
-                    cv.put("auto_day", 0);
+                    cv.put("auto_day", 99);
                     cv.put("circle_space", "");
                     cv.put("hole_id", 0);
                     writable.update(OPTIONAL_INFO, cv, filter, null);
@@ -211,7 +211,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
 
         String query1 = "select * from " + USER_INFO + " inner join " + OPTIONAL_INFO + " on " + USER_INFO + "._id = " + OPTIONAL_INFO + "._id";
-        String query2 = "select * from ( " + query1 + " ) u order by u.auto_day ASC, u.manual_day ASC, u.hole_id ASC, u.circle_space ASC, u.screen_name ASC;";
+        String query2 = "select * from ( " + query1 + " ) u order by u.auto_day ASC, u.manual_day ASC, u.hole_id ASC, u.circle_space ASC;";
 
         Cursor cursor = database.rawQuery(query2, null);
 
@@ -340,11 +340,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<UserDTO> search(String word){
+    public List<UserDTO> search(String word){
         //name,screenName,description,circleNameから検索
         //正規表現的なマッチングにしたい
         StringBuilder builder = new StringBuilder();
-        ArrayList<UserDTO> users = new ArrayList<>();
+        List<UserDTO> users = new ArrayList<>();
 
         //パーセント記号はエスケープの対象
         if (word.contains("%")){
@@ -386,6 +386,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return users;
+    }
+
+    public Boolean isExisted(Long userID){
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("select _id from ").append(USER_INFO).append(" where _id = ").append(userID).append(";");
+
+        SQLiteDatabase readable = getReadableDatabase();
+        Cursor cursor = readable.rawQuery(queryBuilder.toString(), null);
+
+        Boolean ret;
+        if (cursor.getCount() == 0){
+            ret = false;
+        } else {
+            ret = true;
+        }
+
+        cursor.close();
+        return ret;
+
     }
 
 }

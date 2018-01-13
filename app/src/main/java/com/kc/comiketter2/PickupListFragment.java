@@ -46,7 +46,8 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
             List<UserDTO> users = helper.getUserList();
 
             for (UserDTO user : users){
-                if (user.auto_day > 0 && user.pickup == 1){
+//                if (user.auto_day > 0 && user.pickup == 1){
+                if (user.pickup == 1){
                     adapter.add(user);
                 }
             }
@@ -106,7 +107,8 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
                 List<UserDTO> users = helper.getUserList();
 
                 for (Integer user_i = 0; user_i < users.size(); user_i++){
-                    if (users.get(user_i).pickup == 1 && users.get(user_i).auto_day > 0){
+                    //                if (user.auto_day > 0 && user.pickup == 1){
+                    if (users.get(user_i).pickup == 1){
                         adapter.add(users.get(user_i));
                     }
                 }

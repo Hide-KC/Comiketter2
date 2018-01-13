@@ -83,11 +83,13 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
     // getHeaderIdを参考にしましょう
     public int getHeaderItem(int position){
         UserDTO user = getItem(position);
-        if (user.manual_day != 0){
-            return user.manual_day;
-        } else {
-            return user.auto_day;
-        }
+        return user.auto_day;
+
+//        if (user.manual_day != 0){
+//            return user.manual_day;
+//        } else {
+//            return user.auto_day;
+//        }
     }
 
     @NonNull

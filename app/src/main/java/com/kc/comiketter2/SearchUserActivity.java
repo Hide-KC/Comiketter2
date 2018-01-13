@@ -60,11 +60,16 @@ public class SearchUserActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String word = charSequence.toString();
-                if (word.contains("?") || word.contains("？")){
-                    Toast.makeText(SearchUserActivity.this, "？は使用できません。", Toast.LENGTH_SHORT).show();
-                    word = word.replace("?", "");
-                    word = word.replace("？", "");
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String word = editable.toString();
+                if (word.contains("?") || word.contains("？")||word.contains("'")||word.contains("’")){
+                    Toast.makeText(SearchUserActivity.this, "使用できない文字です。", Toast.LENGTH_SHORT).show();
+                    editable.delete(word.length()-1, word.length());
+                    word = editable.toString();
                 }
 
                 //DatabaseHelper#searchを呼ぶ
@@ -81,11 +86,6 @@ public class SearchUserActivity extends AppCompatActivity {
                 for(Integer user_i = 0; user_i < users.size(); user_i++){
                     adapter.add(users.get(user_i));
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
             }
         });
 

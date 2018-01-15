@@ -66,11 +66,6 @@ public class SearchUserActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String word = editable.toString();
-                if (word.contains("?") || word.contains("？")||word.contains("'")||word.contains("’")){
-                    Toast.makeText(SearchUserActivity.this, "使用できない文字です。", Toast.LENGTH_SHORT).show();
-                    editable.delete(word.length()-1, word.length());
-                    word = editable.toString();
-                }
 
                 //DatabaseHelper#searchを呼ぶ
                 DatabaseHelper helper = DatabaseHelper.getInstance(SearchUserActivity.this);

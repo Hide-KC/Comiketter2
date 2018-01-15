@@ -343,16 +343,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<UserDTO> search(String word){
         //name,screenName,description,circleNameから検索
         //正規表現的なマッチングにしたい
-        StringBuilder builder = new StringBuilder();
         List<UserDTO> users = new ArrayList<>();
-
-        //パーセント記号はエスケープの対象
-        if (word.contains("%")){
-            word = word.replaceAll("%", "$%");
-        } else if (word.equals("")){
+        if (word.equals("")){
             return users;
+        } else {
+            word = word.replace("'", "''");
         }
 
+        StringBuilder builder = new StringBuilder();
         builder.append("'%").append(word).append("%'");
 
         StringBuilder queryBuilder = new StringBuilder();
@@ -363,8 +361,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 .append("u.screen_name like ").append(builder.toString())
                 .append(" or ")
                 .append("u.circle_name like ").append(builder.toString()) //orで条件増やす場合はここ！
-                .append(" escape '$';");
-
+                .append(";");
 
         SQLiteDatabase readable = getReadableDatabase();
         Cursor cursor = readable.rawQuery(queryBuilder.toString(), null);

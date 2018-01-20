@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -61,6 +63,30 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //TwitterUtils.deleteAccessToken(this);
+
+        if (TwitterUtils.loadAccessToken(this) == null){
+            //OAuth認証画面
+            startActivity(new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class));
+        } else {
+            //認証済みの場合
+            if (savedInstanceState == null){
+                Log.d("Comiketter","AccessToken有り");
+                Toast.makeText(this, "Twitter連携済",Toast.LENGTH_SHORT).show();
+            } else {
+                taskID = savedInstanceState.getInt("task_id");
+                Log.d("Comiketter","taskID = " + taskID);
+            }
+        }
+
+        //DrawerLayoutの設定
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        ListView listView = findViewById(R.id.drawer_list);
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -120,23 +146,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
             }
         });
 
-        //TwitterUtils.deleteAccessToken(this);
 
-        if (TwitterUtils.loadAccessToken(this) == null){
-            //OAuth認証画面
-            startActivity(new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class));
-        } else {
-            //認証済みの場合
-            if (savedInstanceState == null){
-                Log.d("Comiketter","AccessToken有り");
-                Toast.makeText(this, "Twitter連携済",Toast.LENGTH_SHORT).show();
-            } else {
-                taskID = savedInstanceState.getInt("task_id");
-                Log.d("Comiketter","taskID = " + taskID);
-            }
-
-
-        }
 
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);

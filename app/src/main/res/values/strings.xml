@@ -59,7 +59,10 @@
 
     <!--SearchActivity-->
     <string name="search_activity">アカウントを検索</string>
-    <string name="search_word">名前など</string>
+    <string name="search_word">名前orスクリーン名orサークル名</string>
+
+    <!--DrawerLayout-->
+    <string name="all_account">すべての参加サークル</string>
 
     <!--その他-->
     <string name="no_client">There are no Twitter client.</string>

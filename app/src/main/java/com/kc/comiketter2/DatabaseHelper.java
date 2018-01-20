@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -23,6 +24,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public final String USER_INFO = "user_info";
     public final String OPTIONAL_INFO = "optional_info";
     public final String HOLE_NAMES = "hole_names";
+    public final String MULTI_ACCOUNTS = "multi_accounts";
+    public final String LIST_INFO = "list_info";
+    public final String LIST_MEMBERS = "list_members";
 
     //ユーザ情報テーブルの作成クエリ
     private final String USER_QUERY = "create table " + USER_INFO + " ("
@@ -30,7 +34,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "name text not null, "
             + "screen_name text not null, "
             + "profile_image_url text, "
-            + "profile_description text )";
+            + "profile_description text, "
+            + "is_followed integer not null, "
+            + "list_id integer )";
 
     //付加情報テーブルの作成クエリ
     //auto_day : StringMatcherで自動判別した日付
@@ -54,6 +60,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "hole_id integer primary key not null, "
             + "name text not null )";
 
+    //「_id」が他のと違いユーザーIDではないので注意（単純な列挙）。
+    private final String MULTI_ACCOUNT_QUERY = "create table " + MULTI_ACCOUNTS + " ("
+            + "_id integer primary key not null, "
+            + "name text not null, "
+            + "screen_name text not null, "
+            + "profile_image_url text, "
+            + "profile_description text )";
+
+    private final String LIST_INFO_QUERY = "create table " + LIST_INFO + " ("
+            + "_id integer primary key not null, "
+            + "name string not null, "
+            + "my_id integer not null )";
+
+    //関連実体
+    private final String LIST_MEMBERS_QUERY = "create table " + LIST_MEMBERS + " ("
+            + "_id integer primary key autoincrement, "
+            + "list_id integer not null, "
+            + "user_id integer not null )";
+
+
     private static DatabaseHelper helper;
     private static final Integer DB_VERSION = 2; //DBスキーマを変更した場合、これをインクリメントする
 
@@ -69,10 +95,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(USER_QUERY);
-        sqLiteDatabase.execSQL(OPTIONAL_QUERY);
-        sqLiteDatabase.execSQL(HOLE_NAME_QUERY);
+    public void onCreate(SQLiteDatabase database) {
+        database.execSQL(USER_QUERY);
+        database.execSQL(OPTIONAL_QUERY);
+        database.execSQL(MULTI_ACCOUNT_QUERY);
+        database.execSQL(LIST_INFO_QUERY);
+        database.execSQL(LIST_MEMBERS_QUERY);
+        database.execSQL(HOLE_NAME_QUERY);
     }
 
     @Override
@@ -95,6 +124,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     cv.put("hole_id", key);
                     cv.put("name", StringMatcher.getHoleName(key));
                     database.insert(HOLE_NAMES, null, cv);
+                }
+            } else if (oldVersion == 2 && newVersion == 3){
+                //複アカ、リスト対応
+                database.beginTransaction();
+                {
+                    try {
+                        database.execSQL(MULTI_ACCOUNT_QUERY);
+                        database.execSQL(LIST_INFO_QUERY);
+                        database.execSQL(LIST_MEMBERS_QUERY);
+                        database.execSQL(
+                                "alter table " + USER_INFO + " add isfollowed integer not null"
+                        );
+                        database.setTransactionSuccessful();
+                    } catch (SQLiteException ex){
+                        ex.printStackTrace();
+                    } finally {
+                        database.endTransaction();
+                        database.close();
+                    }
                 }
             }
         }
@@ -206,14 +254,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //複数アカウント用、リスト対応用
+    //listID = 0ならば、そのmyIDのすべての参加サークルを返す
+    public List<UserDTO> getUserList(Long myID, Integer listID){
+        List<UserDTO> users = new ArrayList<>();
+        SQLiteDatabase readable = getReadableDatabase();
+
+        StringBuilder queryBuilder1 = new StringBuilder();
+        StringBuilder queryBuilder2 = new StringBuilder();
+
+        //query1
+        queryBuilder1.append("select * from ").append(USER_INFO).append(" inner join ").append(OPTIONAL_INFO).append(" on ").append(USER_INFO).append("._id = ").append(OPTIONAL_INFO).append("._id");
+        //query2
+        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u where u._id = ").append(myID).append(" ");
+
+        if (listID == 0){
+            //すべての参加サークル（フォローしているアカウントのみ）
+            //query2
+            queryBuilder2.append("and u.is_followed = 1");
+        } else {
+            //指定リストの参加サークル
+            //query2
+            queryBuilder2.append("and u.list_id = ").append(listID);
+        }
+
+        queryBuilder2.append(" order by u.auto_day ASC, u.hole_id ASC, u.circle_space ASC;");
+
+        //query出力
+        query = queryBuilder2.toString();
+
+        Cursor cursor = readable.rawQuery(queryBuilder2.toString(), null);
+
+        boolean eol = cursor.moveToFirst();
+        while (eol){
+            UserDTO user = new UserDTO();
+            user.user_id = cursor.getLong(cursor.getColumnIndex("_id"));
+            user.name = cursor.getString(cursor.getColumnIndex("name"));
+            user.screen_name = cursor.getString(cursor.getColumnIndex("screen_name"));
+            user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url")).replaceAll("':", ":");
+            user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
+            user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
+            user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
+            user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
+            user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
+            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
+            user.target = cursor.getInt(cursor.getColumnIndex("target"));
+            user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
+            user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));
+            user.memo = cursor.getString(cursor.getColumnIndex("memo"));
+            user.pickup = cursor.getInt(cursor.getColumnIndex("pickup"));
+            user.hasgot = cursor.getInt(cursor.getColumnIndex("hasgot"));
+
+            users.add(user);
+            eol = cursor.moveToNext();
+        }
+
+        cursor.close();
+
+
+        return users;
+    }
+
     public List<UserDTO> getUserList(){
         List<UserDTO> users = new ArrayList<>();
         SQLiteDatabase database = getReadableDatabase();
 
-        String query1 = "select * from " + USER_INFO + " inner join " + OPTIONAL_INFO + " on " + USER_INFO + "._id = " + OPTIONAL_INFO + "._id";
-        String query2 = "select * from ( " + query1 + " ) u order by u.auto_day ASC, u.manual_day ASC, u.hole_id ASC, u.circle_space ASC;";
+        StringBuilder queryBuilder1 = new StringBuilder();
+        StringBuilder queryBuilder2 = new StringBuilder();
 
-        Cursor cursor = database.rawQuery(query2, null);
+        //query1
+        queryBuilder1.append("select * from ").append(USER_INFO).append(" inner join ").append(OPTIONAL_INFO).append(" on ").append(USER_INFO).append("._id = ").append(OPTIONAL_INFO).append("._id");
+        //query2
+        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u order by u.auto_day ASC, u.hole_id ASC, u.circle_space ASC;");
+
+        Cursor cursor = database.rawQuery(queryBuilder2.toString(), null);
 
         boolean eol = cursor.moveToFirst();
         while (eol){
@@ -404,4 +518,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //リストID、名前一覧の取得。０の場合も有り
+    public List<ListDTO> getLists(Long myID){
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("select * from ").append(LIST_INFO).append(" where my_id = ").append(myID).append(";");
+
+        SQLiteDatabase readable = getReadableDatabase();
+        Cursor cursor = readable.rawQuery(queryBuilder.toString(), null);
+
+        List<ListDTO> list = new ArrayList<>();
+
+        Boolean eol = cursor.moveToFirst();
+        while (eol){
+            ListDTO listDTO = new ListDTO();
+            listDTO.listID = cursor.getInt(cursor.getColumnIndex("_id"));
+            listDTO.name = cursor.getString(cursor.getColumnIndex("name"));
+            list.add(listDTO);
+            eol = cursor.moveToNext();
+        }
+
+        cursor.close();
+        return list;
+    }
 }

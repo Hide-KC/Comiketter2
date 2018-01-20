@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
     private MyAsyncTask<Void, Integer, List<User>> task = null;
     private Integer taskID = -1;
     private static final String TourakuDay = "2017-11-02";
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -82,11 +85,35 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
         //DrawerLayoutの設定
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        ListView listView = findViewById(R.id.drawer_list);
+        ListView listView = drawerLayout.findViewById(R.id.include_drawer).findViewById(R.id.left_drawer);
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
+        ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
+        ListDTO listDTO = new ListDTO();
+        listDTO.name = "test list item";
+        listDTO.selected = true;
+        listDTOAdapter.add(listDTO);
+        listView.setAdapter(listDTOAdapter);
 
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                null,
+                R.string.busuu_hint,
+                R.string.yosan_hint
+        ){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                setTitle("test open");
+            }
 
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                setTitle(R.string.app_name);
+            }
+        };
+
+        drawerLayout.addDrawerListener(drawerToggle);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -206,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                 @Override
                 public void onClick(View view) {
                     Log.d("Toolbar", "NavigationIcon Clicked");
+
                 }
             });
         }

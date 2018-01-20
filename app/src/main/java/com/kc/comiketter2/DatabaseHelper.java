@@ -34,9 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "name text not null, "
             + "screen_name text not null, "
             + "profile_image_url text, "
-            + "profile_description text, "
-            + "is_followed integer not null, "
-            + "list_id integer )";
+            + "profile_description text )";
 
     //付加情報テーブルの作成クエリ
     //auto_day : StringMatcherで自動判別した日付
@@ -192,14 +190,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             + "profile_description) "
                             + "Values (?, ?, ?, ?, ?)";
 
-                    SQLiteStatement replaceUserinfo = writable.compileStatement(replaceQuery);
-                    replaceUserinfo.bindLong(1, user.user_id);
-                    replaceUserinfo.bindString(2, user.name);
-                    replaceUserinfo.bindString(3, user.screen_name);
-                    replaceUserinfo.bindString(4, user.profile_image_url);
-                    replaceUserinfo.bindString(5, user.profile_description);
+                    SQLiteStatement replaceUserInfo = writable.compileStatement(replaceQuery);
+                    replaceUserInfo.bindLong(1, user.user_id);
+                    replaceUserInfo.bindString(2, user.name);
+                    replaceUserInfo.bindString(3, user.screen_name);
+                    replaceUserInfo.bindString(4, user.profile_image_url);
+                    replaceUserInfo.bindString(5, user.profile_description);
 
-                    replaceUserinfo.execute();
+                    replaceUserInfo.execute();
 
                     //OPTIONAL_INFO query
                     //user_i == 0　は自身のアカウントのため、１からスタート
@@ -279,9 +277,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         queryBuilder2.append(" order by u.auto_day ASC, u.hole_id ASC, u.circle_space ASC;");
-
-        //query出力
-        query = queryBuilder2.toString();
 
         Cursor cursor = readable.rawQuery(queryBuilder2.toString(), null);
 

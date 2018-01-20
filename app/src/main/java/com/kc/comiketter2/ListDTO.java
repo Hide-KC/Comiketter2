@@ -6,6 +6,7 @@ package com.kc.comiketter2;
 
 public class ListDTO {
     public Integer listID = 0;
+    public Boolean selected = false;
     public String name = "";
 
     public ListDTO(){

@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +21,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
     private MyAsyncTask<Void, Integer, List<User>> task = null;
     private Integer taskID = -1;
     private static final String TourakuDay = "2017-11-02";
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -61,6 +67,59 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //TwitterUtils.deleteAccessToken(this);
+
+        if (TwitterUtils.loadAccessToken(this) == null){
+            //OAuth認証画面
+            startActivity(new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class));
+        } else {
+            //認証済みの場合
+            if (savedInstanceState == null){
+                Log.d("Comiketter","AccessToken有り");
+                Toast.makeText(this, "Twitter連携済",Toast.LENGTH_SHORT).show();
+            } else {
+                taskID = savedInstanceState.getInt("task_id");
+                Log.d("Comiketter","taskID = " + taskID);
+            }
+        }
+
+        //DrawerLayoutの設定
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        ConstraintLayout constraintLayout = drawerLayout.findViewById(R.id.include_drawer);
+        ListView listView = constraintLayout.findViewById(R.id.left_drawer);
+        ImageView icon = constraintLayout.findViewById(R.id.header_layout).findViewById(R.id.my_icon);
+        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
+        String profile_image_url = prefMyself.getString("profile_image_url", null);
+        Glide.with(this).load(profile_image_url).into(icon);
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+
+        ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
+        ListDTO listDTO = new ListDTO();
+        listDTO.name = "test list item";
+        listDTO.selected = true;
+        listDTOAdapter.add(listDTO);
+        listView.setAdapter(listDTOAdapter);
+
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                null,
+                R.string.busuu_hint,
+                R.string.yosan_hint
+        ){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                setTitle("test open");
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                setTitle(R.string.app_name);
+            }
+        };
+
+        drawerLayout.addDrawerListener(drawerToggle);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -120,23 +179,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
             }
         });
 
-        //TwitterUtils.deleteAccessToken(this);
 
-        if (TwitterUtils.loadAccessToken(this) == null){
-            //OAuth認証画面
-            startActivity(new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class));
-        } else {
-            //認証済みの場合
-            if (savedInstanceState == null){
-                Log.d("Comiketter","AccessToken有り");
-                Toast.makeText(this, "Twitter連携済",Toast.LENGTH_SHORT).show();
-            } else {
-                taskID = savedInstanceState.getInt("task_id");
-                Log.d("Comiketter","taskID = " + taskID);
-            }
-
-
-        }
 
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -187,8 +230,8 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
         tabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
 
-        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
-        String profile_image_url = prefMyself.getString("profile_image_url", null);
+//        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
+//        String profile_image_url = prefMyself.getString("profile_image_url", null);
         if (profile_image_url != null){
             ImageButton btn = findViewById(R.id.navigation_icon);
             Glide.with(this).load(profile_image_url).into(btn);
@@ -196,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                 @Override
                 public void onClick(View view) {
                     Log.d("Toolbar", "NavigationIcon Clicked");
+
                 }
             });
         }

@@ -55,6 +55,13 @@ public class TwitterUtils {
         editor.apply();
     }
 
+    //選択しているアカウントのAccessTokenを返す
+    public static AccessToken loadAccessToken(Context context, Long myID){
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        String token = preferences.getString()
+        return null;
+    }
+
     /**
      * AccessTokenをプリファレンスから読込み。
      * 保存されていない場合はnullを返す。

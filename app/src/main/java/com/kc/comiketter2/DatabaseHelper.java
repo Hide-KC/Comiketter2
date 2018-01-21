@@ -8,13 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by HIDE on 2017/11/12.
@@ -26,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public final String HOLE_NAMES = "hole_names";
     public final String MULTI_ACCOUNTS = "multi_accounts";
     public final String LIST_INFO = "list_info";
-    public final String LIST_MEMBERS = "list_members";
+    public final String RELATION_INFO = "relation_info";
 
     //ユーザ情報テーブルの作成クエリ
     private final String USER_QUERY = "create table " + USER_INFO + " ("
@@ -58,23 +55,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "hole_id integer primary key not null, "
             + "name text not null )";
 
-    //「_id」が他のと違いユーザーIDではないので注意（単純な列挙）。
+    //_id：my_id
     private final String MULTI_ACCOUNT_QUERY = "create table " + MULTI_ACCOUNTS + " ("
             + "_id integer primary key not null, "
             + "name text not null, "
             + "screen_name text not null, "
-            + "profile_image_url text, "
-            + "profile_description text )";
+            + "profile_image_url text )";
 
+    //_id：list_id
     private final String LIST_INFO_QUERY = "create table " + LIST_INFO + " ("
             + "_id integer primary key not null, "
             + "name string not null, "
             + "my_id integer not null )";
 
-    //関連実体
-    private final String LIST_MEMBERS_QUERY = "create table " + LIST_MEMBERS + " ("
+    //relation_id＝０でフォロー、list_idでリストID
+    //フォローやリスト１件ごとに登録。
+    private final String RELATION_INFO_QUERY = "create table " + RELATION_INFO + " ("
             + "_id integer primary key autoincrement, "
-            + "list_id integer not null, "
+            + "my_id integer not null, "
+            + "relation_id integer not null, "
             + "user_id integer not null )";
 
 
@@ -98,7 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.execSQL(OPTIONAL_QUERY);
         database.execSQL(MULTI_ACCOUNT_QUERY);
         database.execSQL(LIST_INFO_QUERY);
-        database.execSQL(LIST_MEMBERS_QUERY);
+        database.execSQL(RELATION_INFO_QUERY);
         database.execSQL(HOLE_NAME_QUERY);
     }
 
@@ -130,10 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     try {
                         database.execSQL(MULTI_ACCOUNT_QUERY);
                         database.execSQL(LIST_INFO_QUERY);
-                        database.execSQL(LIST_MEMBERS_QUERY);
-                        database.execSQL(
-                                "alter table " + USER_INFO + " add isfollowed integer not null"
-                        );
+                        database.execSQL(RELATION_INFO_QUERY);
                         database.setTransactionSuccessful();
                     } catch (SQLiteException ex){
                         ex.printStackTrace();

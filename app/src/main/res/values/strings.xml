@@ -62,7 +62,9 @@
     <string name="search_word">名前orスクリーン名orサークル名</string>
 
     <!--DrawerLayout-->
-    <string name="all_account">すべての参加サークル</string>
+    <string name="total_yosan">選択中リストの予算</string>
+    <string name="all_account">フォローリスト</string>
+
 
     <!--その他-->
     <string name="no_client">There are no Twitter client.</string>

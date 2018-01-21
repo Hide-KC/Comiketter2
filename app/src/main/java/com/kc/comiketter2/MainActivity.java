@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -85,7 +86,12 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
         //DrawerLayoutの設定
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        ListView listView = drawerLayout.findViewById(R.id.include_drawer).findViewById(R.id.left_drawer);
+        ConstraintLayout constraintLayout = drawerLayout.findViewById(R.id.include_drawer);
+        ListView listView = constraintLayout.findViewById(R.id.left_drawer);
+        ImageView icon = constraintLayout.findViewById(R.id.header_layout).findViewById(R.id.my_icon);
+        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
+        String profile_image_url = prefMyself.getString("profile_image_url", null);
+        Glide.with(this).load(profile_image_url).into(icon);
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
         ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
@@ -224,8 +230,8 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
         tabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
 
-        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
-        String profile_image_url = prefMyself.getString("profile_image_url", null);
+//        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
+//        String profile_image_url = prefMyself.getString("profile_image_url", null);
         if (profile_image_url != null){
             ImageButton btn = findViewById(R.id.navigation_icon);
             Glide.with(this).load(profile_image_url).into(btn);

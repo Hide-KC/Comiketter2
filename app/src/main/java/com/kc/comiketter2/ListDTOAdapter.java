@@ -46,7 +46,7 @@ public class ListDTOAdapter extends ArrayAdapter<ListDTO> {
         if (listDTO.selected){
             holder.check.setImageResource(R.drawable.check);
         } else {
-            holder.check.setImageResource(R.drawable.non_check);
+            holder.check.setImageResource(R.drawable.uncheck);
         }
 
         return convertView;

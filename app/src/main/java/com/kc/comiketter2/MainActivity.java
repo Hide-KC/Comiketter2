@@ -91,7 +91,9 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
         ImageView icon = constraintLayout.findViewById(R.id.header_layout).findViewById(R.id.my_icon);
         SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
         String profile_image_url = prefMyself.getString("profile_image_url", null);
-        Glide.with(this).load(profile_image_url).into(icon);
+        if (profile_image_url != null){
+            Glide.with(this).load(profile_image_url).into(icon);
+        }
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
         ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);

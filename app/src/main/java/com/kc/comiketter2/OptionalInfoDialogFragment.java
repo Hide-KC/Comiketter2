@@ -73,14 +73,14 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         holeName.setText(StringMatcher.getHoleName(user.hole_id));
         circleName.setText(user.circle_name);
         circleSpace.setText(user.circle_space);
-        if (user.target != null){
+        if (user.target > 0){
             target.setSelection(user.target);
         } else {
             target.setSelection(0);
         }
 
         //nullチェックは基本しなくてOK（部数のみカウントアップのため必要）
-        if (user.busuu == null){
+        if (user.busuu == 0){
             busuu.setText(0);
         } else {
             busuu.setText(String.valueOf(user.busuu));

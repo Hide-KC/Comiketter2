@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,36 +91,39 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+
         //DrawerLayoutの設定
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
         ListView listView = includeDrawer.findViewById(R.id.left_drawer);
 
         SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
-        String profile_image_url = prefMyself.getString("profile_image_url", null);
-        if (profile_image_url != null){
+        long myID = prefMyself.getLong("my_id", 0);
+        if (myID != 0){
             //アイコンの設定
             ConstraintLayout headerLayout = includeDrawer.findViewById(R.id.header_layout);
             ImageView icon = headerLayout.findViewById(R.id.my_icon);
-            Glide.with(this).load(profile_image_url).into(icon);
+            Glide.with(this).load(prefMyself.getString("profile_image_url", null)).into(icon);
 
             //アカウント名の設定
             TextView name = headerLayout.findViewById(R.id.my_name);
             name.setText(prefMyself.getString("name", null));
 
             //スピナーの設定
+            Spinner spinner = headerLayout.findViewById(R.id.account_spinner);
 
             //総予算の設定
 
         }
-        DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
         ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
-        ListDTO listDTO = new ListDTO();
-        listDTO.name = "test list item";
-        listDTO.subscribed = true;
-        listDTOAdapter.add(listDTO);
-        listView.setAdapter(listDTOAdapter);
+        List<ListDTO> listDTOs = helper.getLists(myID);
+        if (listDTOs != null){
+            for (int list_i = 0; list_i < listDTOs.size(); list_i++){
+                listDTOAdapter.add(listDTOs.get(list_i));
+            }
+        }
 
         drawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -249,9 +253,9 @@ public class MainActivity extends AppCompatActivity
 
 //        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
 //        String profile_image_url = prefMyself.getString("profile_image_url", null);
-        if (profile_image_url != null){
+        if (myID != 0){
             ImageButton btn = findViewById(R.id.navigation_icon);
-            Glide.with(this).load(profile_image_url).into(btn);
+            Glide.with(this).load(prefMyself.getString("profile_image_url", null)).into(btn);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -547,7 +551,7 @@ public class MainActivity extends AppCompatActivity
                     UserDTO myself = users.get(0);
                     SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefMyself.edit();
-                    editor.putLong("_id", myself.user_id);
+                    editor.putLong("my_id", myself.user_id);
                     editor.putString("name", myself.name);
                     editor.putString("screen_name", myself.screen_name);
                     editor.putString("profile_image_url", myself.profile_image_url);

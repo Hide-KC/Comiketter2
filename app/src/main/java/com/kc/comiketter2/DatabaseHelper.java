@@ -60,7 +60,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "_id integer primary key not null, "
             + "name text not null, "
             + "screen_name text not null, "
-            + "profile_image_url text )";
+            + "profile_image_url text, "
+            + "token unique text, "
+            + "token_secret unique text )";
 
     //_id：list_id
     //subscribed：リスト自体はDatabaseに登録しておき、購読メソッド実行で１を代入
@@ -248,6 +250,145 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 writable.close();
             }
         }
+    }
+
+    /**
+     * relationID=0:フォロー、relationID=listID:リスト入り
+     * @param relationID
+     * @param users
+     */
+    public void updateUserInfo(int relationID, List<UserDTO> users){
+        UserDTO myAccount = users.get(0);
+
+        //登録済みID一覧を取得
+        SQLiteDatabase readable = getReadableDatabase();
+        String q = "select _id from " + OPTIONAL_INFO + ";";
+        Cursor cursor = readable.rawQuery(q, null);
+
+        List<Long> registeredIDs = new ArrayList<>();
+
+        boolean eol = cursor.moveToFirst();
+        while (eol){
+            registeredIDs.add(cursor.getLong(cursor.getColumnIndex("_id")));
+            eol = cursor.moveToNext();
+        }
+
+        cursor.close();
+        readable.close();
+
+        SQLiteDatabase writable = getWritableDatabase();
+        writable.beginTransaction();
+        {
+            try {
+                //自アカ情報の更新
+                ContentValues args = new ContentValues();
+                args.put("name", myAccount.name);
+                args.put("screen_name", myAccount.screen_name);
+                args.put("profile_image_url", myAccount.profile_image_url);
+                writable.update(MULTI_ACCOUNTS, args, String.valueOf(myAccount.user_id), null);
+                users.remove(0);
+
+                //更新前準備。スペース、日付をリセットする。サークル名はリセットしない。当落発表時くらいしかキャッチするタイミングがないため。
+                for (int user_i = 0; user_i < registeredIDs.size(); user_i++){
+                    String filter = "_id = " + registeredIDs.get(user_i);
+                    ContentValues cv = new ContentValues();
+                    cv.put("auto_day", 99);
+                    cv.put("circle_space", "");
+                    cv.put("hole_id", 0);
+                    writable.update(OPTIONAL_INFO, cv, filter, null);
+                }
+
+                //RELATION_INFO query
+                //RELATION_INFOテーブルより、一度削除
+                String relationDelete = "my_id = ? and relation_id = ?";
+                String[] deleteArgs = new String[]{ String.valueOf(myAccount.user_id), String.valueOf(relationID)};
+                writable.delete(RELATION_INFO, relationDelete, deleteArgs);
+
+                for (int user_i = 0; user_i < registeredIDs.size(); user_i++){
+                    UserDTO user = users.get(user_i);
+
+                    //USER_INFO query
+                    String replaceQuery = "Insert or Replace into " + USER_INFO + " ("
+                            + "_id, "
+                            + "name, "
+                            + "screen_name, "
+                            + "profile_image_url, "
+                            + "profile_description) "
+                            + "Values (?, ?, ?, ?, ?)";
+
+                    SQLiteStatement replaceUserInfo = writable.compileStatement(replaceQuery);
+                    replaceUserInfo.bindLong(1, user.user_id);
+                    replaceUserInfo.bindString(2, user.name);
+                    replaceUserInfo.bindString(3, user.screen_name);
+                    replaceUserInfo.bindString(4, user.profile_image_url);
+                    replaceUserInfo.bindString(5, user.profile_description);
+
+                    replaceUserInfo.execute();
+
+                    //OPTIONAL_INFO query
+                    Integer autoDay = StringMatcher.getParticipateDay(user.name);
+                    String space = StringMatcher.getSpace(user.name);
+                    Integer holeID = 0;
+
+                    ContentValues instantValues = new ContentValues();
+                    instantValues.put("_id", user.user_id);
+                    if (space != null && autoDay != 99){
+                        holeID = StringMatcher.getHoleID(space);
+                        Log.d("Hole", user.name + " " + space + " " + StringMatcher.getHoleName(holeID));
+                        instantValues.put("hole_id", holeID);
+                        instantValues.put("auto_day", autoDay);
+                        instantValues.put("circle_space", space);
+                    } else {
+                        instantValues.put("auto_day", 0);
+                        instantValues.put("circle_space", "");
+                    }
+
+                    if (user.circle_name != null){
+                        instantValues.put("circle_name", user.circle_name);
+                    } else {
+                        instantValues.put("circle_name", "");
+                    }
+
+                    int id = (int) writable.insertWithOnConflict(OPTIONAL_INFO, null, instantValues, SQLiteDatabase.CONFLICT_IGNORE);
+                    if (id == -1){
+                        String filter = "_id = " + user.user_id;
+                        ContentValues args2 = new ContentValues();
+                        args2.put("auto_day", autoDay);
+                        //当落発表ツイが流れてしまうとnullになってしまうためnullチェック
+                        if (!user.circle_name.equals("")){
+                            args2.put("circle_name", user.circle_name);
+                        }
+
+                        args2.put("hole_id", holeID);
+                        args2.put("circle_space", space);
+                        writable.update(OPTIONAL_INFO, args2, filter, null);
+                    }
+
+                    //RELATION_INFO Insert
+                    ContentValues relationCV = new ContentValues();
+                    relationCV.put("my_id", myAccount.user_id);
+                    relationCV.put("user_id", user.user_id);
+                    relationCV.put("relation_id", relationID);
+                    writable.insert(RELATION_INFO, null, relationCV);
+                }
+
+                writable.setTransactionSuccessful();
+            } catch (SQLiteException e){
+                e.printStackTrace();
+            } finally {
+                writable.endTransaction();
+                writable.close();
+            }
+        }
+
+
+
+
+
+
+        users.remove(0);
+
+
     }
 
     //複数アカウント用、リスト対応用
@@ -528,6 +669,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ListDTO listDTO = new ListDTO();
             listDTO.listID = cursor.getInt(cursor.getColumnIndex("_id"));
             listDTO.name = cursor.getString(cursor.getColumnIndex("name"));
+            if (cursor.getInt(cursor.getColumnIndex("subscribed")) == 0){
+                listDTO.subscribed = false;
+            } else {
+                listDTO.subscribed = true;
+            }
             list.add(listDTO);
             eol = cursor.moveToNext();
         }

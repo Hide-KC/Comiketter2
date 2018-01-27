@@ -64,6 +64,8 @@
     <!--DrawerLayout-->
     <string name="total_yosan">選択中リストの予算</string>
     <string name="all_account">フォローリスト</string>
+    <string name="account_name">アカウント名</string>
+    <string name="zero_yen">0円</string>
 
 
     <!--その他-->

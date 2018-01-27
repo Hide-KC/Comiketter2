@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,7 +43,12 @@ import twitter4j.User;
 
 //import android.support.v4.app.Fragment;
 
-public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyncTaskCallback, UserLoadDialogFragment.IDialogControl, ViewPager.OnPageChangeListener, ClearDialogFragment.Callback{
+public class MainActivity extends AppCompatActivity
+        implements MyAsyncTask.IAsyncTaskCallback,
+        UserLoadDialogFragment.IDialogControl,
+        ViewPager.OnPageChangeListener,
+        ClearDialogFragment.Callback,
+        IObserver{
     //画面回転時、 task == null（onCreate） となってしまうので、
     //とりあえず TwitterUtils.task に参照を退避するようにしている。
     //task,dialogで弱参照しているActivity,DialogFragmentが軒並み参照先を失ってしまうので、
@@ -86,20 +92,32 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
 
         //DrawerLayoutの設定
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        ConstraintLayout constraintLayout = drawerLayout.findViewById(R.id.include_drawer);
-        ListView listView = constraintLayout.findViewById(R.id.left_drawer);
-        ImageView icon = constraintLayout.findViewById(R.id.header_layout).findViewById(R.id.my_icon);
+        ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
+        ListView listView = includeDrawer.findViewById(R.id.left_drawer);
+
         SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
         String profile_image_url = prefMyself.getString("profile_image_url", null);
         if (profile_image_url != null){
+            //アイコンの設定
+            ConstraintLayout headerLayout = includeDrawer.findViewById(R.id.header_layout);
+            ImageView icon = headerLayout.findViewById(R.id.my_icon);
             Glide.with(this).load(profile_image_url).into(icon);
+
+            //アカウント名の設定
+            TextView name = headerLayout.findViewById(R.id.my_name);
+            name.setText(prefMyself.getString("name", null));
+
+            //スピナーの設定
+
+            //総予算の設定
+
         }
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
         ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
         ListDTO listDTO = new ListDTO();
         listDTO.name = "test list item";
-        listDTO.selected = true;
+        listDTO.subscribed = true;
         listDTOAdapter.add(listDTO);
         listView.setAdapter(listDTOAdapter);
 
@@ -180,9 +198,6 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
                 return false;
             }
         });
-
-
-
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -625,5 +640,10 @@ public class MainActivity extends AppCompatActivity implements MyAsyncTask.IAsyn
             helper.clearOptionalInfo();
             ((IObserver)fragment).update();
         }
+    }
+
+    @Override
+    public void update() {
+        //DrawerLayout, Toolbar, ViewPagerの表示更新
     }
 }

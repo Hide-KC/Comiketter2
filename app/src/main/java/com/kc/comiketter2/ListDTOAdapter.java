@@ -43,7 +43,7 @@ public class ListDTOAdapter extends ArrayAdapter<ListDTO> {
         final ListDTO listDTO = getItem(position);
         holder.name.setText(listDTO.name);
 
-        if (listDTO.selected){
+        if (listDTO.subscribed){
             holder.check.setImageResource(R.drawable.check);
         } else {
             holder.check.setImageResource(R.drawable.uncheck);

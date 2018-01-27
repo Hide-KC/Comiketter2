@@ -63,10 +63,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "profile_image_url text )";
 
     //_id：list_id
+    //subscribed：リスト自体はDatabaseに登録しておき、購読メソッド実行で１を代入
     private final String LIST_INFO_QUERY = "create table " + LIST_INFO + " ("
             + "_id integer primary key not null, "
             + "name string not null, "
-            + "my_id integer not null )";
+            + "my_id integer not null, "
+            + "subscribed integer not null )";
 
     //relation_id＝０でフォロー、list_idでリストID
     //フォローやリスト１件ごとに登録。
@@ -382,10 +384,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return user;
     }
 
+    @Deprecated
     public void setValue(String tableName, Long userID, String columnName, Integer value){
         setValue(tableName, userID, columnName, String.valueOf(value));
     }
 
+    @Deprecated
     public void setValue(String tableName, Long userID, String columnName, String value){
         SQLiteDatabase database = getWritableDatabase();
 
@@ -530,5 +534,96 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return list;
+    }
+
+    //リストの購読
+    public void subscribeList(Integer listID){
+        ContentValues args = new ContentValues();
+        args.put("subscribed", 1);
+        String filter = String.valueOf(listID);
+
+        SQLiteDatabase writable = getWritableDatabase();
+        try{
+            writable.update(LIST_INFO, args, filter, null);
+        } catch (SQLiteException e){
+            e.printStackTrace();
+        } finally {
+            writable.close();
+        }
+    }
+
+    //リストの購読解除
+    public void quitList(Integer listID){
+        ContentValues args = new ContentValues();
+        args.put("subscribed", 0);
+        String filter = String.valueOf(listID);
+
+        SQLiteDatabase writable = getWritableDatabase();
+        try{
+            writable.update(LIST_INFO, args, filter, null);
+        } catch (SQLiteException e){
+            e.printStackTrace();
+        } finally {
+            writable.close();
+        }
+    }
+
+    //リスト一覧の更新。リストの登録・解除を含む
+    public void updateLists(Long myID, List<ListDTO> listDTOs){
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("select _id, name, subscribed from ").append(LIST_INFO).append(" where my_id = ").append(myID).append(";");
+
+        SQLiteDatabase readable = getReadableDatabase();
+        Cursor cursor = readable.rawQuery(queryBuilder.toString(), null);
+        Boolean eol = cursor.moveToFirst();
+
+        while (eol){
+            //購読中list_idと一致するものがlistDTOs中にある場合、購読中に設定しておく
+            int subscribed = cursor.getInt(cursor.getColumnIndex("subscribed"));
+            if (subscribed == 1){
+                int listID = cursor.getInt(cursor.getColumnIndex("list_id"));
+                for (ListDTO listDTO:listDTOs){
+                    if (listDTO.listID == listID){
+                        listDTO.subscribed = true;
+                        break;
+                    }
+                }
+            }
+            eol = cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        SQLiteDatabase writable = getWritableDatabase();
+        try{
+            writable.beginTransaction();
+            {
+                //一旦LIST_INFOから対象アカのリストを削除
+                queryBuilder.setLength(0);
+                queryBuilder.append("delete from ").append(LIST_INFO).append(" where my_id = ").append(myID).append(";");
+                writable.execSQL(queryBuilder.toString());
+
+                //再度追加
+                for(ListDTO listDTO:listDTOs){
+                    ContentValues args = new ContentValues();
+                    args.put("_id", listDTO.listID);
+                    args.put("name", listDTO.name);
+                    args.put("my_id", myID);
+                    if (listDTO.subscribed){
+                        args.put("subscribed", 1);
+                    } else {
+                        args.put("subscribed", 0);
+                    }
+                    writable.insert(LIST_INFO, null, args);
+                }
+            }
+            writable.setTransactionSuccessful();
+        } catch (SQLiteException e){
+            e.printStackTrace();
+        } finally {
+            writable.endTransaction();
+            writable.close();
+        }
+
     }
 }

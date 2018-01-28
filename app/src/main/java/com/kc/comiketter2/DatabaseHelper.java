@@ -13,6 +13,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import twitter4j.User;
+import twitter4j.UserList;
+
 /**
  * Created by HIDE on 2017/11/12.
  */
@@ -61,8 +64,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "name text not null, "
             + "screen_name text not null, "
             + "profile_image_url text, "
-            + "token unique text, "
-            + "token_secret unique text )";
+            + "token text, "
+            + "token_secret text, "
+            + "unique (token, token_secret))";
 
     //_id：list_id
     //subscribed：リスト自体はDatabaseに登録しておき、購読メソッド実行で１を代入
@@ -657,14 +661,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //リストID、名前一覧の取得。０の場合も有り
     public List<ListDTO> getLists(Long myID){
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("select * from ").append(LIST_INFO).append(" where my_id = ").append(myID).append(";");
+        queryBuilder.append("select * from ").append(LIST_INFO).append(" where my_id = ").append(myID).append(" order by _id DESC;");
 
         SQLiteDatabase readable = getReadableDatabase();
         Cursor cursor = readable.rawQuery(queryBuilder.toString(), null);
 
         List<ListDTO> list = new ArrayList<>();
 
-        Boolean eol = cursor.moveToFirst();
+        boolean eol = cursor.moveToFirst();
         while (eol){
             ListDTO listDTO = new ListDTO();
             listDTO.listID = cursor.getInt(cursor.getColumnIndex("_id"));

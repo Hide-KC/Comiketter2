@@ -81,7 +81,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
 
         //nullチェックは基本しなくてOK（部数のみカウントアップのため必要）
         if (user.busuu == 0){
-            busuu.setText(0);
+            busuu.setText(String.valueOf(0));
         } else {
             busuu.setText(String.valueOf(user.busuu));
         }

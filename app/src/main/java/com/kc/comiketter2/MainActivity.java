@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -41,6 +43,7 @@ import twitter4j.ResponseList;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
+import twitter4j.UserList;
 
 //import android.support.v4.app.Fragment;
 
@@ -97,6 +100,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
         ListView listView = includeDrawer.findViewById(R.id.left_drawer);
+        Button subscribeList = includeDrawer.findViewById(R.id.subscribeList);
+        subscribeList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //購読リスト選択ダイアログを表示
+            }
+        });
 
         SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
         long myID = prefMyself.getLong("my_id", 0);
@@ -122,8 +132,12 @@ public class MainActivity extends AppCompatActivity
         if (listDTOs != null){
             for (int list_i = 0; list_i < listDTOs.size(); list_i++){
                 listDTOAdapter.add(listDTOs.get(list_i));
+//                if (listDTOs.get(list_i).subscribed){
+//                    listDTOAdapter.add(listDTOs.get(list_i));
+//                }
             }
         }
+        listView.setAdapter(listDTOAdapter);
 
         drawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -145,63 +159,39 @@ public class MainActivity extends AppCompatActivity
 
         drawerLayout.addDrawerListener(drawerToggle);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
 
         //TabLayoutの設定
         final TabLayout tabLayout = findViewById(R.id.tab_layout);
         final ViewPager viewPager = findViewById(R.id.view_pager);
 
-        toolbar.inflateMenu(R.menu.menu_main);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.toolbar_reload){
-                    if (TwitterUtils.loadAccessToken(MainActivity.this) == null){
-                        Toast.makeText(MainActivity.this, "Twitterと連携できません。", Toast.LENGTH_SHORT).show();
-                    } else {
-                        getFriendIDs();
-                    }
-                } else if (id == R.id.toolbar_clear){
-                    clearOptionalInfo();
-                } else if (id == R.id.toolbar_search_sub) {
-                    startSearchActivity();
-                } else {
-
-                }
-                return true;
-            }
-        });
-
-        SearchView searchView = (SearchView) toolbar.getMenu().findItem(R.id.toolbar_search).getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                FragmentManager manager = getSupportFragmentManager();
-                Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + tabLayout.getSelectedTabPosition());
-                StickyListHeadersListView sticky = null;
-                if (tabLayout.getSelectedTabPosition() <= 1){
-                    sticky = fragment.getView().findViewById(R.id.sticky_list);
-                }
-
-                if (sticky == null){
-                    Log.d("Comiketter", "sticky == null");
-                } else {
-                    if (newText.equals("")){
-
-                    } else {
-
-                    }
-                }
-                return false;
-            }
-        });
+//        SearchView searchView = (SearchView) toolbar.getMenu().findItem(R.id.toolbar_search).getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                FragmentManager manager = getSupportFragmentManager();
+//                Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + tabLayout.getSelectedTabPosition());
+//                StickyListHeadersListView sticky = null;
+//                if (tabLayout.getSelectedTabPosition() <= 1){
+//                    sticky = fragment.getView().findViewById(R.id.sticky_list);
+//                }
+//
+//                if (sticky == null){
+//                    Log.d("Comiketter", "sticky == null");
+//                } else {
+//                    if (newText.equals("")){
+//
+//                    } else {
+//
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -250,7 +240,32 @@ public class MainActivity extends AppCompatActivity
 
         tabLayout.addOnTabSelectedListener(onTabSelectedListener);
 
+        //ToolBarの設定
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.menu_main);
+        setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.menu_main);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
 
+                if (id == R.id.toolbar_reload){
+                    if (TwitterUtils.loadAccessToken(MainActivity.this) == null){
+                        Toast.makeText(MainActivity.this, "Twitterと連携できません。", Toast.LENGTH_SHORT).show();
+                    } else {
+                        getFriendIDs();
+                    }
+                } else if (id == R.id.toolbar_clear){
+                    clearOptionalInfo();
+                } else if (id == R.id.toolbar_search_sub) {
+                    startSearchActivity();
+                } else {
+
+                }
+                return true;
+            }
+        });
 //        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
 //        String profile_image_url = prefMyself.getString("profile_image_url", null);
         if (myID != 0){
@@ -322,7 +337,7 @@ public class MainActivity extends AppCompatActivity
                 List<UserDTO> users = new ArrayList<>();
                 List<Long> idsList = new ArrayList<>();
                 IDs ids = null;
-                Long myUserID = TwitterUtils.loadAccessToken(context).getUserId();
+                long myID = TwitterUtils.loadAccessToken(context).getUserId();
                 DatabaseHelper helper = DatabaseHelper.getInstance(context);
 
                 try {
@@ -331,11 +346,21 @@ public class MainActivity extends AppCompatActivity
                     UserDTO myselfDTO = new UserDTO(myself);
                     users.add(myselfDTO);
 
+                    //リスト一覧の取得
+                    List<UserList> userLists = twitter.getUserLists(myID);
+                    List<ListDTO> listDTOs = new ArrayList<>();
+                    for (UserList userList:userLists){
+                        ListDTO listDTO = new ListDTO();
+                        listDTO.listID = userList.getId();
+                        listDTO.name = userList.getName();
+                        listDTOs.add(listDTO);
+                    }
+                    helper.updateLists(myID, listDTOs);
+
                     //フォローユーザID一覧を取得
                     Long cursor = -1L;
-
                     do {
-                        ids = twitter.getFriendsIDs(myUserID, cursor);
+                        ids = twitter.getFriendsIDs(myID, cursor);
 
                         if (ids != null){
                             for (Long id:ids.getIDs()){

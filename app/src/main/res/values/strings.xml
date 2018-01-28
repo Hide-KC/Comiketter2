@@ -32,7 +32,7 @@
     <string name="circle_name">サークル名</string>
 
     <!--Dialog関係-->
-    <string name="loading">フォロー一覧を取得中です...</string>
+    <string name="loading">データ取得中です...</string>
     <string name="cancel_now">Cancel Now...</string>
     <string name="cancel">cancel</string>
     <string name="target">対象</string>
@@ -66,6 +66,7 @@
     <string name="all_account">フォロー一覧</string>
     <string name="account_name">アカウント名</string>
     <string name="zero_yen">0円</string>
+    <string name="subscribe_list">リストを追加</string>
 
     <!--その他-->
     <string name="no_client">There are no Twitter client.</string>

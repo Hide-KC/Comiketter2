@@ -100,6 +100,8 @@
         android:layout_height="40dp"
         android:text="@string/subscribe_list"
         android:textSize="14sp"
+        android:background="@drawable/ripple"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

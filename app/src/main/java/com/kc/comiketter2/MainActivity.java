@@ -4,23 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,7 +37,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import twitter4j.IDs;
 import twitter4j.Query;
 import twitter4j.RateLimitStatus;
@@ -44,8 +45,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 import twitter4j.UserList;
-
-//import android.support.v4.app.Fragment;
 
 public class MainActivity extends AppCompatActivity
         implements MyAsyncTask.IAsyncTaskCallback,
@@ -56,8 +55,7 @@ public class MainActivity extends AppCompatActivity
     //画面回転時、 task == null（onCreate） となってしまうので、
     //とりあえず TwitterUtils.task に参照を退避するようにしている。
     //task,dialogで弱参照しているActivity,DialogFragmentが軒並み参照先を失ってしまうので、
-    //相互にコールバック持たせてMainで参照を持たせてやってる。スパゲッティ。
-    //やばみ。
+    //相互にコールバック持たせてMainで参照を持たせてやってる。
     //→TaskManagerクラスを作成。
     private MyAsyncTask<Void, Integer, List<User>> task = null;
     private Integer taskID = -1;
@@ -70,6 +68,17 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == SearchUserActivity.REQUEST_CODE && data != null && resultCode == RESULT_OK){
             TabLayout tabLayout = findViewById(R.id.tab_layout);
             onPageSelected(tabLayout.getSelectedTabPosition());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            //drawer is opened
+            drawerLayout.closeDrawer(Gravity.LEFT);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -94,12 +103,11 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
         //DrawerLayoutの設定
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
-        ListView listView = includeDrawer.findViewById(R.id.left_drawer);
+        final ListView leftDrawer = includeDrawer.findViewById(R.id.left_drawer);
         Button subscribeList = includeDrawer.findViewById(R.id.subscribeList);
         subscribeList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +136,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
+        //フォロー一覧
+        ListDTO followDTO = new ListDTO();
+        followDTO.name = getString(R.string.all_follow);
+        followDTO.subscribed = true;
+        listDTOAdapter.add(followDTO);
+
+        final DatabaseHelper helper = DatabaseHelper.getInstance(this);
         List<ListDTO> listDTOs = helper.getLists(myID);
         if (listDTOs != null){
             for (int list_i = 0; list_i < listDTOs.size(); list_i++){
@@ -137,7 +152,27 @@ public class MainActivity extends AppCompatActivity
 //                }
             }
         }
-        listView.setAdapter(listDTOAdapter);
+        leftDrawer.setAdapter(listDTOAdapter);
+        leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //リストクリック時の処理
+                ListDTOAdapter adapter = (ListDTOAdapter) leftDrawer.getAdapter();
+
+                ListDTO listDTO = adapter.getItem(i);
+                listDTO.subscribed = true;
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putLong("selected_list_id", listDTO.listID);
+                editor.apply();
+
+                contentsUpdate();
+                MainActivity.this.onBackPressed();
+                Log.d("ListItemClicked", listDTO.listID + " " + listDTO.name);
+
+            }
+        });
 
         drawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -148,17 +183,18 @@ public class MainActivity extends AppCompatActivity
         ){
             @Override
             public void onDrawerOpened(View drawerView) {
+                Log.d("DrawerToggle", "Opened");
                 setTitle("test open");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
+                Log.d("DrawerToggle", "Closed");
                 setTitle(R.string.app_name);
             }
         };
 
         drawerLayout.addDrawerListener(drawerToggle);
-
 
         //TabLayoutの設定
         final TabLayout tabLayout = findViewById(R.id.tab_layout);
@@ -243,8 +279,6 @@ public class MainActivity extends AppCompatActivity
         //ToolBarの設定
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_main);
-        setSupportActionBar(toolbar);
-        toolbar.inflateMenu(R.menu.menu_main);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -275,7 +309,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     Log.d("Toolbar", "NavigationIcon Clicked");
-
+                    drawerLayout.openDrawer(Gravity.LEFT);
                 }
             });
         }
@@ -674,5 +708,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void update() {
         //DrawerLayout, Toolbar, ViewPagerの表示更新
+    }
+
+    public void contentsUpdate(){
+        //ViewPager内コンテンツの更新
     }
 }

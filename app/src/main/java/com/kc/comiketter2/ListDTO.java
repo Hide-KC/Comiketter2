@@ -7,6 +7,7 @@ package com.kc.comiketter2;
 public class ListDTO {
     public long listID = 0;
     public boolean subscribed = false;
+    public String slug = "";
     public String name = "";
 
     public ListDTO(){

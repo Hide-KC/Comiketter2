@@ -13,8 +13,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import twitter4j.User;
-import twitter4j.UserList;
+import twitter4j.auth.AccessToken;
 
 /**
  * Created by HIDE on 2017/11/12.
@@ -59,10 +58,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "name text not null )";
 
     //_id：my_id
+    //storeAccessTokenの関係で_id以外はNULL制約かけられない
     private final String MULTI_ACCOUNT_QUERY = "create table " + MULTI_ACCOUNTS + " ("
             + "_id integer primary key not null, "
-            + "name text not null, "
-            + "screen_name text not null, "
+            + "name text, "
+            + "screen_name text, "
             + "profile_image_url text, "
             + "token text, "
             + "token_secret text, "
@@ -76,7 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "my_id integer not null, "
             + "subscribed integer not null )";
 
-    //relation_id＝０でフォロー、list_idでリストID
+    //relation_id=0でフォロー、=list_idでリストID
     //フォローやリスト１件ごとに登録。
     private final String RELATION_INFO_QUERY = "create table " + RELATION_INFO + " ("
             + "_id integer primary key autoincrement, "
@@ -86,7 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static DatabaseHelper helper;
-    private static final Integer DB_VERSION = 2; //DBスキーマを変更した場合、これをインクリメントする
+    private static final Integer DB_VERSION = 3; //DBスキーマを変更した場合、これをインクリメントする
 
     private DatabaseHelper(Context context){
         super(context, "usersDB", null, DB_VERSION);
@@ -143,7 +143,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         ex.printStackTrace();
                     } finally {
                         database.endTransaction();
-                        database.close();
                     }
                 }
             }
@@ -261,13 +260,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param relationID
      * @param users
      */
-    public void updateUserInfo(int relationID, List<UserDTO> users){
+    public void updateUserInfo(long relationID, List<UserDTO> users){
         UserDTO myAccount = users.get(0);
 
-        //登録済みID一覧を取得
+        //登録済みID一覧を取得。Relation_Infoテーブルと結合
         SQLiteDatabase readable = getReadableDatabase();
-        String q = "select _id from " + OPTIONAL_INFO + ";";
-        Cursor cursor = readable.rawQuery(q, null);
+        StringBuilder query1 = new StringBuilder();
+        StringBuilder query2 = new StringBuilder();
+        query1.append("select * from ").append(OPTIONAL_INFO).append(" inner join ").append(RELATION_INFO).append(" on ").append(OPTIONAL_INFO).append("._id = ").append(RELATION_INFO).append(".user_id");
+        query2.append("select * from ( ").append(query1).append(" ) u where relation_id = ").append(relationID).append(";");
+        Cursor cursor = readable.rawQuery(query2.toString(), null);
 
         List<Long> registeredIDs = new ArrayList<>();
 
@@ -286,11 +288,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             try {
                 //自アカ情報の更新
                 ContentValues args = new ContentValues();
+                args.put("_id", myAccount.user_id);
                 args.put("name", myAccount.name);
                 args.put("screen_name", myAccount.screen_name);
                 args.put("profile_image_url", myAccount.profile_image_url);
-                writable.update(MULTI_ACCOUNTS, args, String.valueOf(myAccount.user_id), null);
-                users.remove(0);
+                args.put("token", myAccount.token);
+                args.put("token_secret", myAccount.token_secret);
+                int conflictMYID = (int)writable.insertWithOnConflict(MULTI_ACCOUNTS, null, args, SQLiteDatabase.CONFLICT_IGNORE);
+                if (conflictMYID != -1){
+                    //競合発生
+                    String filter = "_id = " + myAccount.user_id;
+                    ContentValues args2 = new ContentValues();
+                    args2.put("name", myAccount.name);
+                    args2.put("screen_name", myAccount.screen_name);
+                    args2.put("profile_image_url", myAccount.profile_image_url);
+                    writable.update(MULTI_ACCOUNTS, args2, filter, null);
+                }
 
                 //更新前準備。スペース、日付をリセットする。サークル名はリセットしない。当落発表時くらいしかキャッチするタイミングがないため。
                 for (int user_i = 0; user_i < registeredIDs.size(); user_i++){
@@ -308,7 +321,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String[] deleteArgs = new String[]{ String.valueOf(myAccount.user_id), String.valueOf(relationID)};
                 writable.delete(RELATION_INFO, relationDelete, deleteArgs);
 
-                for (int user_i = 0; user_i < registeredIDs.size(); user_i++){
+                for (int user_i = 1; user_i < users.size(); user_i++){
                     UserDTO user = users.get(user_i);
 
                     //USER_INFO query
@@ -353,19 +366,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         instantValues.put("circle_name", "");
                     }
 
-                    int id = (int) writable.insertWithOnConflict(OPTIONAL_INFO, null, instantValues, SQLiteDatabase.CONFLICT_IGNORE);
-                    if (id == -1){
+                    int conflictOPID = (int) writable.insertWithOnConflict(OPTIONAL_INFO, null, instantValues, SQLiteDatabase.CONFLICT_IGNORE);
+                    if (conflictOPID == -1){
                         String filter = "_id = " + user.user_id;
-                        ContentValues args2 = new ContentValues();
-                        args2.put("auto_day", autoDay);
+                        ContentValues instantValues2 = new ContentValues();
+                        instantValues2.put("auto_day", autoDay);
                         //当落発表ツイが流れてしまうとnullになってしまうためnullチェック
                         if (!user.circle_name.equals("")){
-                            args2.put("circle_name", user.circle_name);
+                            instantValues2.put("circle_name", user.circle_name);
                         }
 
-                        args2.put("hole_id", holeID);
-                        args2.put("circle_space", space);
-                        writable.update(OPTIONAL_INFO, args2, filter, null);
+                        instantValues2.put("hole_id", holeID);
+                        instantValues2.put("circle_space", space);
+                        writable.update(OPTIONAL_INFO, instantValues2, filter, null);
                     }
 
                     //RELATION_INFO Insert
@@ -384,44 +397,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 writable.close();
             }
         }
-
-
-
-
-
-
-        users.remove(0);
-
-
     }
 
     //複数アカウント用、リスト対応用
     //listID = 0ならば、そのmyIDのすべての参加サークルを返す
-    public List<UserDTO> getUserList(Long myID, Integer listID){
+    public List<UserDTO> getUserList(long myID, long listID){
         List<UserDTO> users = new ArrayList<>();
         SQLiteDatabase readable = getReadableDatabase();
 
         StringBuilder queryBuilder1 = new StringBuilder();
         StringBuilder queryBuilder2 = new StringBuilder();
+        StringBuilder queryBuilder3 = new StringBuilder();
 
         //query1
         queryBuilder1.append("select * from ").append(USER_INFO).append(" inner join ").append(OPTIONAL_INFO).append(" on ").append(USER_INFO).append("._id = ").append(OPTIONAL_INFO).append("._id");
         //query2
-        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u where u._id = ").append(myID).append(" ");
+        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u inner join ").append(RELATION_INFO).append(" on u._id = ").append(RELATION_INFO).append(".user_id");
+        //query3
+        queryBuilder3.append("select * from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID);
+        queryBuilder3.append(" order by v.auto_day ASC, v.hole_id ASC, v.circle_space ASC;");
 
-        if (listID == 0){
-            //すべての参加サークル（フォローしているアカウントのみ）
-            //query2
-            queryBuilder2.append("and u.is_followed = 1");
-        } else {
-            //指定リストの参加サークル
-            //query2
-            queryBuilder2.append("and u.list_id = ").append(listID);
-        }
-
-        queryBuilder2.append(" order by u.auto_day ASC, u.hole_id ASC, u.circle_space ASC;");
-
-        Cursor cursor = readable.rawQuery(queryBuilder2.toString(), null);
+        Cursor cursor = readable.rawQuery(queryBuilder3.toString(), null);
 
         boolean eol = cursor.moveToFirst();
         while (eol){
@@ -659,7 +655,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //リストID、名前一覧の取得。０の場合も有り
-    public List<ListDTO> getLists(Long myID){
+    public List<ListDTO> getLists(long myID){
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("select * from ").append(LIST_INFO).append(" where my_id = ").append(myID).append(" order by _id DESC;");
 
@@ -671,7 +667,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         boolean eol = cursor.moveToFirst();
         while (eol){
             ListDTO listDTO = new ListDTO();
-            listDTO.listID = cursor.getInt(cursor.getColumnIndex("_id"));
+            listDTO.listID = cursor.getLong(cursor.getColumnIndex("_id"));
             listDTO.name = cursor.getString(cursor.getColumnIndex("name"));
             if (cursor.getInt(cursor.getColumnIndex("subscribed")) == 0){
                 listDTO.subscribed = false;
@@ -775,5 +771,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             writable.close();
         }
 
+    }
+
+    public AccessToken getAccessTokenArray(long myID){
+        SQLiteDatabase readable = getReadableDatabase();
+        String query = "select token, token_secret from " + MULTI_ACCOUNTS + " where _id = " + myID + ";";
+        Cursor cursor = readable.rawQuery(query, null);
+
+        if (cursor.getCount() == 0){
+            cursor.close();
+            return null;
+        } else {
+            String[] array = new String[2];
+            array[0] = cursor.getString(0);
+            array[1] = cursor.getString(1);
+            cursor.close();
+            return new AccessToken(array[0], array[1]);
+        }
+    }
+
+    public void storeMyAccount(UserDTO myAccount){
+        SQLiteDatabase writable = getWritableDatabase();
+        ContentValues args = new ContentValues();
+        args.put("_id", myAccount.user_id);
+        args.put("name", myAccount.name);
+        args.put("screen_name", myAccount.screen_name);
+        args.put("profile_image_url", myAccount.profile_image_url);
+        args.put("token", myAccount.token);
+        args.put("token_secret", myAccount.token_secret);
+        writable.insertWithOnConflict(MULTI_ACCOUNTS, null, args, SQLiteDatabase.CONFLICT_REPLACE);
     }
 }

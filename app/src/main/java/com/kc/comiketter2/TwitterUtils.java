@@ -4,12 +4,15 @@ package com.kc.comiketter2;
  * Created by HIDE on 2017/11/05.
  */
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
@@ -55,8 +58,37 @@ public class TwitterUtils {
         editor.apply();
     }
 
+    /**
+     * AccessTokenを獲得できたAccountをDBに保存。
+     * @param context
+     * @param accessToken
+     */
+    public static void storeMyAccount(final Context context, AccessToken accessToken){
+        AsyncTask<AccessToken, Void, Void> task = new AsyncTask<AccessToken, Void, Void>() {
+            @Override
+            protected Void doInBackground(AccessToken... accessTokens) {
+                AccessToken token = accessTokens[0];
+                Twitter twitter = TwitterUtils.getTwitter(context);
+                try {
+                    //自身のプロフィールを取得
+                    User myAccount = twitter.verifyCredentials();
+                    UserDTO myAccountDTO = new UserDTO(myAccount);
+                    myAccountDTO.token = token.getToken();
+                    myAccountDTO.token_secret = token.getTokenSecret();
+                    DatabaseHelper helper = DatabaseHelper.getInstance(context);
+                    helper.storeMyAccount(myAccountDTO);
+                } catch (TwitterException e){
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        task.execute(accessToken);
+    }
+
     //選択しているアカウントのAccessTokenを返す
-    public static AccessToken loadAccessToken(Context context, Long myID){
+    public static AccessToken loadAccessToken(Context context, long myID){
 //        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 //        String token = preferences.getString()
         return null;

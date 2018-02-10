@@ -38,12 +38,7 @@ public class MultiTwitterUtils {
 
     static public AccessToken loadAccessToken(Context context, long myID){
         DatabaseHelper helper = DatabaseHelper.getInstance(context);
-        String[] array = helper.getAccessTokenArray(myID);
-        if (array != null){
-            return new AccessToken(array[0], array[1]);
-        } else {
-            return null;
-        }
+        return helper.getAccessTokenArray(myID);
     }
 
     static public void storeAccessToken(Context context, long myID, AccessToken token){

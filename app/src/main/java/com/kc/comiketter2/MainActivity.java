@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.IDs;
+import twitter4j.PagableResponseList;
 import twitter4j.Query;
 import twitter4j.RateLimitStatus;
 import twitter4j.ResponseList;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity
     private Integer taskID = -1;
     private static final String TourakuDay = "2017-11-02";
     private ActionBarDrawerToggle drawerToggle;
+    public static final String MY_ID = "my_id";
+    public static final String SELECTED_LIST_ID = "selected_list_id";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -87,11 +90,22 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TwitterUtils.deleteAccessToken(this);
+        final DatabaseHelper helper = DatabaseHelper.getInstance(this);
 
         if (TwitterUtils.loadAccessToken(this) == null){
             //OAuth認証画面
             startActivity(new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class));
+//            if (TwitterUtils.loadAccessToken(this) == null){
+//                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                try {
+//                    editor.putLong(MY_ID, TwitterUtils.getTwitter(this).getId());
+//                } catch (TwitterException e){
+//                    e.printStackTrace();
+//                } finally {
+//                    editor.apply();
+//                }
+//            }
         } else {
             //認証済みの場合
             if (savedInstanceState == null){
@@ -102,7 +116,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d("Comiketter","taskID = " + taskID);
             }
         }
-
 
         //DrawerLayoutの設定
         final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
@@ -142,7 +155,6 @@ public class MainActivity extends AppCompatActivity
         followDTO.subscribed = true;
         listDTOAdapter.add(followDTO);
 
-        final DatabaseHelper helper = DatabaseHelper.getInstance(this);
         List<ListDTO> listDTOs = helper.getLists(myID);
         if (listDTOs != null){
             for (int list_i = 0; list_i < listDTOs.size(); list_i++){
@@ -157,20 +169,24 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //リストクリック時の処理
+                //単垢対応モード。複アカになったらリファクタ必要かも。
                 ListDTOAdapter adapter = (ListDTOAdapter) leftDrawer.getAdapter();
+
+                for (int list_i = 0; list_i < adapter.getCount(); list_i++){
+                    adapter.getItem(list_i).subscribed = false;
+                }
 
                 ListDTO listDTO = adapter.getItem(i);
                 listDTO.subscribed = true;
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong("selected_list_id", listDTO.listID);
+                editor.putLong(SELECTED_LIST_ID, listDTO.listID);
                 editor.apply();
 
-                contentsUpdate();
+                onPositiveButtonClicked();
                 MainActivity.this.onBackPressed();
                 Log.d("ListItemClicked", listDTO.listID + " " + listDTO.name);
-
             }
         });
 
@@ -354,7 +370,7 @@ public class MainActivity extends AppCompatActivity
     private void getFriendIDs(){
         final Context context = this;
 
-        MyAsyncTask<Void, Integer, List<UserDTO>> task = new MyAsyncTask<Void,Integer,List<UserDTO>>(this){
+        MyAsyncTask<Long, Integer, List<UserDTO>> task = new MyAsyncTask<Long,Integer,List<UserDTO>>(this){
             @Override
             protected void onPreExecute() {
                 //ダイアログを表示
@@ -365,19 +381,26 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            protected List<UserDTO> doInBackground(Void... params) {
+            protected List<UserDTO> doInBackground(Long... params) {
+                targetID = params[0];
                 Twitter twitter = TwitterUtils.getTwitter(context);
 
                 List<UserDTO> users = new ArrayList<>();
                 List<Long> idsList = new ArrayList<>();
                 IDs ids = null;
-                long myID = TwitterUtils.loadAccessToken(context).getUserId();
                 DatabaseHelper helper = DatabaseHelper.getInstance(context);
 
                 try {
                     //自身のプロフィールを取得
                     User myself = twitter.verifyCredentials();
+                    myID = myself.getId();
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putLong(MY_ID, myID);
+                    editor.apply();
                     UserDTO myselfDTO = new UserDTO(myself);
+                    myselfDTO.token = twitter.getOAuthAccessToken().getToken();
+                    myselfDTO.token_secret = twitter.getOAuthAccessToken().getTokenSecret();
                     users.add(myselfDTO);
 
                     //リスト一覧の取得
@@ -386,145 +409,187 @@ public class MainActivity extends AppCompatActivity
                     for (UserList userList:userLists){
                         ListDTO listDTO = new ListDTO();
                         listDTO.listID = userList.getId();
+                        listDTO.slug = userList.getSlug();
                         listDTO.name = userList.getName();
                         listDTOs.add(listDTO);
                     }
                     helper.updateLists(myID, listDTOs);
 
-                    //フォローユーザID一覧を取得
-                    Long cursor = -1L;
-                    do {
-                        ids = twitter.getFriendsIDs(myID, cursor);
+                    //targetID=0ならフォロー一覧を、!=0ならリストメンバー一覧を取得
+                    if (targetID == 0){
+                        Long cursor = -1L;
+                        do {
+                            ids = twitter.getFriendsIDs(myID, cursor);
 
-                        if (ids != null){
-                            for (Long id:ids.getIDs()){
-                                idsList.add(id);
+                            if (ids != null){
+                                for (Long id:ids.getIDs()){
+                                    idsList.add(id);
+                                }
+
+                                RateLimitStatus rateLimit = ids.getRateLimitStatus();
+                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
+
+                                if (rateLimit.getRemaining() <= 0){
+                                    Log.d("Comiketter2", "API切れです。");
+                                    break;
+                                }
+
+                            } else {
+                                Log.d("Comiketter2", "フォローID一覧が取得できませんでした。");
+                                return null;
+                            }
+                        } while (ids.hasNext());
+
+                        //ユーザIDが０個だったら抜ける
+                        if (idsList.size() <= 0) {
+                            return null;
+                        } else {
+                            publishProgress(0, idsList.size());
+                        }
+
+                        if (this.isCancelled()) return null;
+
+                        //Userオブジェクトを取得
+                        Integer max = idsList.size() / 100;
+                        for (Integer i = 0; i < max + 1 ; i++){
+                            ResponseList<User> userResponseList = null;
+                            Integer j = 0;
+                            long[] array = new long[100];
+
+                            while (true){
+                                //arrayが100埋まるまでidsListからユーザIDをコピー
+                                if (i * 100 + j < idsList.size()){
+                                    array[j] = idsList.get(i * 100 + j);
+                                } else break;
+
+                                j++;
+                                //j == 99で0~99までインデックス埋まる
+                                if (j >= 100) break;
                             }
 
-                            RateLimitStatus rateLimit = ids.getRateLimitStatus();
+                            userResponseList = twitter.lookupUsers(array);
+
+                            for (User user:userResponseList){
+                                //正規表現に一致するユーザのみ抽出。
+                                if (StringMatcher.getEventName(user.getName()) != null || helper.isExisted(user.getId())){
+                                    Log.d("Comiketter", user.getName());
+                                    UserDTO userDTO = new UserDTO(user);
+                                    users.add(userDTO);
+                                }
+                            }
+
+                            publishProgress(1, i * 100 + j);
+
+                            RateLimitStatus rateLimit = userResponseList.getRateLimitStatus();
                             Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
 
                             if (rateLimit.getRemaining() <= 0){
                                 Log.d("Comiketter2", "API切れです。");
-                                break;
                             }
 
-                        } else {
-                            Log.d("Comiketter2", "フォローID一覧が取得できませんでした。");
-                            return null;
-                        }
-                    } while (ids.hasNext());
-
-                    //ユーザIDが０個だったら抜ける
-                    if (idsList.size() <= 0) {
-                        return null;
-                    } else {
-                        publishProgress(0, idsList.size());
-                    }
-
-                    if (this.isCancelled()) return null;
-
-                    //Userオブジェクトを取得
-                    Integer max = idsList.size() / 100;
-                    for (Integer i = 0; i < max + 1 ; i++){
-                        ResponseList<User> userResponseList = null;
-                        Integer j = 0;
-                        long[] array = new long[100];
-
-                        while (true){
-                            //arrayが100埋まるまでidsListからユーザIDをコピー
-                            if (i * 100 + j < idsList.size()){
-                                array[j] = idsList.get(i * 100 + j);
-                            } else break;
-
-                            j++;
-                            //j == 99で0~99までインデックス埋まる
-                            if (j >= 100) break;
+                            if (this.isCancelled()) return users;
                         }
 
-                        userResponseList = TwitterUtils.getTwitter(context).lookupUsers(array);
+                        //ここの時点でusersリストはサークル名以外ある程度できている。
+                        //サークル名を取得するため、screenNameをOrで繋げて一気に検索をかける
+                        if (users.size() > 2){
+                            //検索クエリをユーザ全員分生成する
+                            List<String> queries = new ArrayList<>();
+                            //検索クエリの生成
+                            StringBuilder builder = new StringBuilder("");
+                            String optionalQuery = "exclude:retweets since:" + TourakuDay + " ◎貴サークル";
 
-                        for (User user:userResponseList){
-                            //正規表現に一致するユーザのみ抽出。
-                            if (StringMatcher.getEventName(user.getName()) != null || helper.isExisted(user.getId())){
-                                Log.d("Comiketter", user.getName());
-                                UserDTO userDTO = new UserDTO(user);
-                                users.add(userDTO);
-                            }
-                        }
+                            //０は自分のアカウントなので注意
+                            for (Integer user_i = 1; user_i < users.size(); user_i++){
+                                //文字数は500文字以内にする。超えると拒否される
+                                //スクリーン名の制限は2018-01-01現在15文字＋from等加算で２１文字余裕を見る
+                                if (StringMatcher.getEventName(users.get(user_i).name) != null){
+                                    builder.append("from:" + users.get(user_i).screen_name + " OR ");
+                                }
 
-                        publishProgress(1, i * 100 + j);
-
-                        RateLimitStatus rateLimit = userResponseList.getRateLimitStatus();
-                        Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
-
-                        if (rateLimit.getRemaining() <= 0){
-                            Log.d("Comiketter2", "API切れです。");
-                        }
-
-                        if (this.isCancelled()) return users;
-                    }
-
-                    //ここの時点でusersリストはサークル名以外ある程度できている。
-                    //サークル名を取得するため、screenNameをOrで繋げて一気に検索をかける
-                    if (users.size() > 2){
-                        //検索クエリをユーザ全員分生成する
-                        List<String> queries = new ArrayList<>();
-                        //検索クエリの生成
-                        StringBuilder builder = new StringBuilder("");
-                        String optionalQuery = "exclude:retweets since:" + TourakuDay + " ◎貴サークル";
-
-                        //０は自分のアカウントなので注意
-                        for (Integer user_i = 1; user_i < users.size(); user_i++){
-                            //文字数は500文字以内にする。超えると拒否される
-                            //スクリーン名の制限は2018-01-01現在15文字＋from等加算で２１文字余裕を見る
-                            if (StringMatcher.getEventName(users.get(user_i).name) != null){
-                                builder.append("from:" + users.get(user_i).screen_name + " OR ");
+                                if (builder.length() + optionalQuery.length() > 479 || user_i == users.size() - 1){
+                                    queries.add(builder.substring(0, builder.length() - 3) + optionalQuery);
+                                    builder.setLength(0);
+                                }
                             }
 
-                            if (builder.length() + optionalQuery.length() > 479 || user_i == users.size() - 1){
-                                queries.add(builder.substring(0, builder.length() - 3) + optionalQuery);
-                                builder.setLength(0);
-                            }
-                        }
-
-                        if (queries.size() > 175){
+                            if (queries.size() > 175){
                                 Toast.makeText(weakActivity.get(), "サークル名取得対象が多すぎるので、全て取得はできません……", Toast.LENGTH_SHORT).show();
-                        }
+                            }
 
-                        //検索APIのRateLimitが180しかない……
-                        Integer searchRateLimit = 180;
+                            //検索APIのRateLimitが180しかない……
+                            Integer searchRateLimit = 180;
 
-                        for (Integer q_i = 0; q_i < queries.size(); q_i++){
-                            Log.d("CircleName", "Query:" + queries.get(q_i));
-                            twitter4j.Query q = new Query(queries.get(q_i));
-                            twitter4j.QueryResult result = twitter.search(q);
-                            Log.d("CircleName", "残りAPI: " + result.getRateLimitStatus().getRemaining());
-                            Log.d("CircleName", "ツイート数: " + result.getTweets().size());
+                            for (Integer q_i = 0; q_i < queries.size(); q_i++){
+                                Log.d("CircleName", "Query:" + queries.get(q_i));
+                                twitter4j.Query q = new Query(queries.get(q_i));
+                                twitter4j.QueryResult result = twitter.search(q);
+                                Log.d("CircleName", "残りAPI: " + result.getRateLimitStatus().getRemaining());
+                                Log.d("CircleName", "ツイート数: " + result.getTweets().size());
 
-                            searchRateLimit = result.getRateLimitStatus().getRemaining();
+                                searchRateLimit = result.getRateLimitStatus().getRemaining();
 
-                            if (searchRateLimit < 1) {
-                                break;
-                            } else if (result.getTweets().size() == 0) {
-                                continue;
-                            } else {
-                                List<twitter4j.Status> statuses = result.getTweets();
-                                String circleName;
+                                if (searchRateLimit < 1) {
+                                    break;
+                                } else if (result.getTweets().size() == 0) {
+                                    continue;
+                                } else {
+                                    List<twitter4j.Status> statuses = result.getTweets();
+                                    String circleName;
 
-                                for (twitter4j.Status status:statuses){
-                                    Long userID = status.getUser().getId();
-                                    circleName = StringMatcher.getCircleName(status);
+                                    for (twitter4j.Status status:statuses){
+                                        Long userID = status.getUser().getId();
+                                        circleName = StringMatcher.getCircleName(status);
 
-                                    for (UserDTO user:users){
-                                        if (user.user_id == userID){
-                                            user.circle_name = circleName;
-                                            break;
+                                        for (UserDTO user:users){
+                                            if (user.user_id == userID){
+                                                user.circle_name = circleName;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                    } else {
+                        //リストの更新の場合
+                        PagableResponseList<User> members;
+                        Long cursor = -1L;
+                        do {
+                            members = twitter.getUserListMembers(targetID, cursor);
+
+                            if (members != null){
+                                for (User member:members){
+                                    //正規表現に一致するユーザのみ抽出。
+                                    if (StringMatcher.getEventName(member.getName()) != null || helper.isExisted(member.getId())){
+                                        Log.d("Comiketter", member.getName());
+                                        UserDTO userDTO = new UserDTO(member);
+                                        users.add(userDTO);
+                                    }
+                                }
+
+                                RateLimitStatus rateLimit = members.getRateLimitStatus();
+                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
+
+                                if (rateLimit.getRemaining() <= 0){
+                                    Log.d("Comiketter2", "API切れです。");
+                                    break;
+                                }
+
+                            } else {
+                                Log.d("Comiketter2", "フォローID一覧が取得できませんでした。");
+                                return null;
+                            }
+                        } while (members.hasNext());
+
+                        //リストメンバーが０個だったら抜ける
+                        if (users.size() <= 0) {
+                            return null;
+                        } else {
+                            publishProgress(0, members.size());
+                        }
+
+                        if (this.isCancelled()) return null;
                     }
                 } catch (TwitterException ex){
                     ex.printStackTrace();
@@ -533,7 +598,6 @@ public class MainActivity extends AppCompatActivity
                 } finally {
                     idsList.clear();
                 }
-
                 return users;
             }
 
@@ -575,10 +639,12 @@ public class MainActivity extends AppCompatActivity
 
         //TaskManagerにタスクを登録
         TaskManager manager = TaskManager.getInstance();
-        Integer taskID = manager.put(task);
+        int taskID = manager.put(task);
         //フィールドにtaskIDを保持
         this.taskID = taskID;
-        task.execute();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        long listID = preferences.getLong(SELECTED_LIST_ID, 0);
+        task.execute(listID);
     }
 
     private void clearOptionalInfo(){
@@ -598,42 +664,34 @@ public class MainActivity extends AppCompatActivity
     public void onComplete(Object result) {
         //AsyncTask完了後のコールバック
         if (result instanceof List){
-            if (((List) result).get(0) instanceof UserDTO){
-                //result == List<UserDTO>
-                List<UserDTO> users = (List<UserDTO>)result;
+            List<UserDTO> users = (List<UserDTO>)result;
+            Toast.makeText(this, "Finish!", Toast.LENGTH_SHORT).show();
+            Log.d("Comiketter2", "処理終了！");
+            Log.d("Comiketter2", "users.size() = " + users.size());
 
-                if (users.size() > 0){
-                    Toast.makeText(this, "Finish!", Toast.LENGTH_SHORT).show();
-                    Log.d("Comiketter2", "処理終了！");
-                    Log.d("Comiketter2", "users.size() = " + users.size());
+            if (users.size() > 0){
+                DatabaseHelper helper = DatabaseHelper.getInstance(this);
+                //データの更新
+                UserDTO myself = users.get(0);
+                SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefMyself.edit();
+                editor.putLong("my_id", myself.user_id);
+                editor.putString("name", myself.name);
+                editor.putString("screen_name", myself.screen_name);
+                editor.putString("profile_image_url", myself.profile_image_url);
+                editor.apply();
 
-                    UserDTO myself = users.get(0);
-                    SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefMyself.edit();
-                    editor.putLong("my_id", myself.user_id);
-                    editor.putString("name", myself.name);
-                    editor.putString("screen_name", myself.screen_name);
-                    editor.putString("profile_image_url", myself.profile_image_url);
-                    editor.apply();
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                long listID = preferences.getLong(SELECTED_LIST_ID, 0);
+                helper.updateUserInfo(listID, users);
 
-                    DatabaseHelper helper = DatabaseHelper.getInstance(this);
-                    helper.updateUserInfo(users);
-
-                    ImageButton btn = findViewById(R.id.navigation_icon);
-                    Glide.with(this).load(myself.profile_image_url).into(btn);
-
-                    TabLayout tabLayout = findViewById(R.id.tab_layout);
-                    onPageSelected(tabLayout.getSelectedTabPosition());
-                } else {
-                    return;
-                }
+                ImageButton btn = findViewById(R.id.navigation_icon);
+                Glide.with(this).load(myself.profile_image_url).into(btn);
+                TabLayout tabLayout = findViewById(R.id.tab_layout);
+                onPageSelected(tabLayout.getSelectedTabPosition());
             } else {
-                //result == List<?>
+
             }
-
-
-
-
         } else {
 
         }
@@ -708,9 +766,5 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void update() {
         //DrawerLayout, Toolbar, ViewPagerの表示更新
-    }
-
-    public void contentsUpdate(){
-        //ViewPager内コンテンツの更新
     }
 }

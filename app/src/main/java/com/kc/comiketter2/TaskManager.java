@@ -19,7 +19,7 @@ public class TaskManager {
         return manager;
     }
 
-    public Integer put(AsyncTask task){
+    public int put(AsyncTask task){
         Log.d("Comiketter2", String.valueOf(taskList.size()));
         taskList.put(taskList.size(), task);
         return taskList.size() - 1;

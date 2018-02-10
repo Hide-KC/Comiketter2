@@ -12,6 +12,8 @@ public class UserDTO {
     public String screen_name = "";
     public String profile_image_url = "";
     public String profile_description = "";
+    public String token = "";
+    public String token_secret = "";
 
     public int auto_day = 0;
     public int manual_day = 0;

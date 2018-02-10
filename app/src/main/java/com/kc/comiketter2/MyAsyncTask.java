@@ -13,6 +13,9 @@ public class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Pro
 
     public WeakReference<Activity> weakActivity;
     public WeakReference<UserLoadDialogFragment> weakDialog;
+    public long myID = 0;
+    public long targetID = 0;
+    public String slug = "";
 
     public interface IAsyncTaskCallback{
         void onComplete(Object result);

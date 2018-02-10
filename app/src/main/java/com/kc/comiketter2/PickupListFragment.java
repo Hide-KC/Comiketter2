@@ -1,7 +1,9 @@
 package com.kc.comiketter2;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -94,17 +96,20 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
         final StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
         final ArrayAdapter<UserDTO> adapter = new PickUpDTOAdapter(getActivity());
 
-        AsyncTask<Void, UserDTO, ArrayAdapter<UserDTO>> task = new AsyncTask<Void, UserDTO, ArrayAdapter<UserDTO>>() {
+        AsyncTask<Long, UserDTO, ArrayAdapter<UserDTO>> task = new AsyncTask<Long, UserDTO, ArrayAdapter<UserDTO>>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
             }
 
             @Override
-            protected ArrayAdapter<UserDTO> doInBackground(Void... voids) {
+            protected ArrayAdapter<UserDTO> doInBackground(Long... params) {
+                long myID = params[0];
+                long listID = params[1];
+
                 DatabaseHelper helper = DatabaseHelper.getInstance(getActivity());
                 //PickupListアダプターの実装
-                List<UserDTO> users = helper.getUserList();
+                List<UserDTO> users = helper.getUserList(myID, listID);
 
                 for (Integer user_i = 0; user_i < users.size(); user_i++){
                     //                if (user.auto_day > 0 && user.pickup == 1){
@@ -136,8 +141,11 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
             }
         };
 
-        task.execute();
-
+        //myIDとlistIDを持ってくる
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        long myID = preferences.getLong(MainActivity.MY_ID, 0);
+        long listID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
+        task.execute(myID, listID);
     }
 
     @Override

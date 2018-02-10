@@ -72,8 +72,13 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
     // getItemにならい、Header版も作る優しさが持てるといいですね
     // getHeaderIdを参考にしましょう
     public int getHeaderItem(int position){
-        UserDTO user = getItem(position);
-        return user.auto_day;
+        if (position < this.getCount()){
+            UserDTO user = getItem(position);
+            return user.auto_day;
+        } else {
+            return 0;
+        }
+
 
 //        if (user.manual_day != 0){
 //            return user.manual_day;

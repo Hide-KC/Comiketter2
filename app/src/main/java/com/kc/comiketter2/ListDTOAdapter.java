@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by HIDE on 2018/01/20.
  */
@@ -50,6 +52,14 @@ public class ListDTOAdapter extends ArrayAdapter<ListDTO> {
         }
 
         return convertView;
+    }
+
+    public ArrayList<ListDTO> toArrayList(){
+        ArrayList<ListDTO> listDTOs = new ArrayList<>();
+        for (int i = 0; i < this.getCount(); i++){
+            listDTOs.add(this.getItem(i));
+        }
+        return listDTOs;
     }
 
     public static class ItemViewHolder{

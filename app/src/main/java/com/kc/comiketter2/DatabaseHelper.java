@@ -2,12 +2,14 @@ package com.kc.comiketter2;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -136,7 +138,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 {
                     try {
                         database.execSQL(MULTI_ACCOUNT_QUERY);
+                    } catch (SQLiteException ex){
+                        ex.printStackTrace();
+                    }
+
+                    try {
                         database.execSQL(LIST_INFO_QUERY);
+                    } catch (SQLiteException ex){
+                        ex.printStackTrace();
+                    }
+
+                    try {
                         database.execSQL(RELATION_INFO_QUERY);
                         database.setTransactionSuccessful();
                     } catch (SQLiteException ex){
@@ -417,6 +429,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         queryBuilder3.append("select * from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID);
         queryBuilder3.append(" order by v.auto_day ASC, v.hole_id ASC, v.circle_space ASC;");
 
+        Log.d("Query", queryBuilder3.toString());
+
         Cursor cursor = readable.rawQuery(queryBuilder3.toString(), null);
 
         boolean eol = cursor.moveToFirst();
@@ -655,7 +669,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //リストID、名前一覧の取得。０の場合も有り
-    public List<ListDTO> getLists(long myID){
+    public List<ListDTO> getLists(Context context, long myID){
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("select * from ").append(LIST_INFO).append(" where my_id = ").append(myID).append(" order by _id DESC;");
 
@@ -663,6 +677,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = readable.rawQuery(queryBuilder.toString(), null);
 
         List<ListDTO> list = new ArrayList<>();
+        //フォロー一覧
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        long selectedListID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
+        ListDTO followDTO = new ListDTO();
+        followDTO.name = context.getString(R.string.all_follow);
+        if (selectedListID == 0){
+            followDTO.subscribed = true;
+        }
+        list.add(followDTO);
 
         boolean eol = cursor.moveToFirst();
         while (eol){
@@ -680,6 +703,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return list;
+    }
+
+    public ListDTO getListDTO(Context context, long listID){
+        ListDTO listDTO = new ListDTO();
+        if (listID == 0){
+            //フォロー一覧
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            long selectedListID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
+            listDTO.name = context.getString(R.string.all_follow);
+            if (selectedListID == 0){
+                listDTO.subscribed = true;
+            }
+        } else {
+            SQLiteDatabase readable = getReadableDatabase();
+            String query = "select * from " + LIST_INFO + " where _id = " + listID + ";";
+            Cursor cursor = readable.rawQuery(query,null);
+            cursor.moveToFirst();
+            if (cursor.getCount() > 0){
+                listDTO.listID = cursor.getLong(cursor.getColumnIndex("_id"));
+                listDTO.name = cursor.getString(cursor.getColumnIndex("name"));
+                int subscribed = cursor.getInt(cursor.getColumnIndex("subscribed"));
+                if (subscribed == 1){
+                    listDTO.subscribed = true;
+                }
+            }
+        }
+        return listDTO;
     }
 
     //リストの購読
@@ -727,7 +777,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //購読中list_idと一致するものがlistDTOs中にある場合、購読中に設定しておく
             int subscribed = cursor.getInt(cursor.getColumnIndex("subscribed"));
             if (subscribed == 1){
-                int listID = cursor.getInt(cursor.getColumnIndex("list_id"));
+                long listID = cursor.getLong(cursor.getColumnIndex("_id"));
                 for (ListDTO listDTO:listDTOs){
                     if (listDTO.listID == listID){
                         listDTO.subscribed = true;
@@ -800,5 +850,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         args.put("token", myAccount.token);
         args.put("token_secret", myAccount.token_secret);
         writable.insertWithOnConflict(MULTI_ACCOUNTS, null, args, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    public void setListsSubscribe(List<ListDTO> listDTOs){
+        SQLiteDatabase writable = getWritableDatabase();
+        for (ListDTO listDTO:listDTOs){
+            String filter = "_id = " + listDTO.listID;
+            ContentValues args = new ContentValues();
+            int subscribed_i = 0;
+            if (listDTO.subscribed){
+                subscribed_i = 1;
+            }
+            args.put("subscribed", subscribed_i);
+            writable.update(LIST_INFO, args, filter, null);
+        }
     }
 }

@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity
         implements MyAsyncTask.IAsyncTaskCallback,
         UserLoadDialogFragment.IDialogControl,
         ViewPager.OnPageChangeListener,
-        ClearDialogFragment.Callback,
-        IObserver{
+        ClearDialogFragment.Callback{
     //画面回転時、 task == null（onCreate） となってしまうので、
     //とりあえず TwitterUtils.task に参照を退避するようにしている。
     //task,dialogで弱参照しているActivity,DialogFragmentが軒並み参照先を失ってしまうので、
@@ -95,17 +94,6 @@ public class MainActivity extends AppCompatActivity
         if (TwitterUtils.loadAccessToken(this) == null){
             //OAuth認証画面
             startActivity(new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class));
-//            if (TwitterUtils.loadAccessToken(this) == null){
-//                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//                SharedPreferences.Editor editor = preferences.edit();
-//                try {
-//                    editor.putLong(MY_ID, TwitterUtils.getTwitter(this).getId());
-//                } catch (TwitterException e){
-//                    e.printStackTrace();
-//                } finally {
-//                    editor.apply();
-//                }
-//            }
         } else {
             //認証済みの場合
             if (savedInstanceState == null){
@@ -130,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
-        long myID = prefMyself.getLong("my_id", 0);
+        final long myID = prefMyself.getLong("my_id", 0);
         if (myID != 0){
             //アイコンの設定
             ConstraintLayout headerLayout = includeDrawer.findViewById(R.id.header_layout);
@@ -148,21 +136,11 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
-        //フォロー一覧
-        ListDTO followDTO = new ListDTO();
-        followDTO.name = getString(R.string.all_follow);
-        followDTO.subscribed = true;
-        listDTOAdapter.add(followDTO);
-
-        List<ListDTO> listDTOs = helper.getLists(myID);
-        if (listDTOs != null){
-            for (int list_i = 0; list_i < listDTOs.size(); list_i++){
-                listDTOAdapter.add(listDTOs.get(list_i));
-//                if (listDTOs.get(list_i).subscribed){
-//                    listDTOAdapter.add(listDTOs.get(list_i));
-//                }
-            }
+        //表示する一覧
+        final ListDTOAdapter listDTOAdapter = new ListDTOAdapter(this);
+        List<ListDTO> listDTOs = helper.getLists(this, myID);
+        for (int list_i = 0; list_i < listDTOs.size(); list_i++){
+            listDTOAdapter.add(listDTOs.get(list_i));
         }
         leftDrawer.setAdapter(listDTOAdapter);
         leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -171,21 +149,27 @@ public class MainActivity extends AppCompatActivity
                 //リストクリック時の処理
                 //単垢対応モード。複アカになったらリファクタ必要かも。
                 ListDTOAdapter adapter = (ListDTOAdapter) leftDrawer.getAdapter();
-
                 for (int list_i = 0; list_i < adapter.getCount(); list_i++){
                     adapter.getItem(list_i).subscribed = false;
                 }
 
+                //adapterをArrayListに変換
                 ListDTO listDTO = adapter.getItem(i);
                 listDTO.subscribed = true;
+                List<ListDTO> listDTOList = adapter.toArrayList();
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putLong(SELECTED_LIST_ID, listDTO.listID);
                 editor.apply();
 
-                onPositiveButtonClicked();
+                //表示差し替え
+                updateStickyList();
                 MainActivity.this.onBackPressed();
+                MainActivity.this.updateToolbar();
+
+                //DBに保存
+                helper.setListsSubscribe(listDTOList);
                 Log.d("ListItemClicked", listDTO.listID + " " + listDTO.name);
             }
         });
@@ -200,13 +184,19 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 Log.d("DrawerToggle", "Opened");
-                setTitle("test open");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 Log.d("DrawerToggle", "Closed");
-                setTitle(R.string.app_name);
+                ListView listView = drawerView.findViewById(R.id.left_drawer);
+                ListDTOAdapter adapter = (ListDTOAdapter)listView.getAdapter();
+                adapter.clear();
+
+                List<ListDTO> listDTOs = helper.getLists(MainActivity.this, myID);
+                for (ListDTO listDTO:listDTOs){
+                    adapter.add(listDTO);
+                }
             }
         };
 
@@ -294,6 +284,10 @@ public class MainActivity extends AppCompatActivity
 
         //ToolBarの設定
         Toolbar toolbar = findViewById(R.id.toolbar);
+        TextView selectedListName = toolbar.findViewById(R.id.toolbar_constraint).findViewById(R.id.selected_list_name);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        long listID = preferences.getLong(SELECTED_LIST_ID, 0);
+        selectedListName.setText(helper.getListDTO(this, listID).name);
         toolbar.inflateMenu(R.menu.menu_main);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -318,18 +312,24 @@ public class MainActivity extends AppCompatActivity
         });
 //        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
 //        String profile_image_url = prefMyself.getString("profile_image_url", null);
+        ImageButton btn = findViewById(R.id.navigation_icon);
         if (myID != 0){
-            ImageButton btn = findViewById(R.id.navigation_icon);
             Glide.with(this).load(prefMyself.getString("profile_image_url", null)).into(btn);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("Toolbar", "NavigationIcon Clicked");
-                    drawerLayout.openDrawer(Gravity.LEFT);
-                }
-            });
         }
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Toolbar", "NavigationIcon Clicked");
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+        helper.close();
     }
 
     @Override
@@ -688,6 +688,7 @@ public class MainActivity extends AppCompatActivity
                 ImageButton btn = findViewById(R.id.navigation_icon);
                 Glide.with(this).load(myself.profile_image_url).into(btn);
                 TabLayout tabLayout = findViewById(R.id.tab_layout);
+                updateDrawer(); //リスト一覧の表示更新
                 onPageSelected(tabLayout.getSelectedTabPosition());
             } else {
 
@@ -763,8 +764,52 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void update() {
-        //DrawerLayout, Toolbar, ViewPagerの表示更新
+    public void updateStickyList(){
+        //表示中フラグメントのupdate()をたたく
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        int position = tabLayout.getSelectedTabPosition();
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + position);
+
+        if (fragment instanceof StickyListFragment && fragment instanceof IObserver){
+            //一応clearする前に位置を保存
+            ((StickyListFragment)fragment).saveScrollY();
+            ((IObserver)fragment).update();
+        }
+    }
+
+    public void updateToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        TextView selectedListName = toolbar.findViewById(R.id.toolbar_constraint).findViewById(R.id.selected_list_name);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        long listID = preferences.getLong(SELECTED_LIST_ID, 0);
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+        ListDTO listDTO = helper.getListDTO(this, listID);
+        selectedListName.setText(listDTO.name);
+    }
+
+    public void updateDrawer(){
+        //Drawer表示項目を更新
+        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
+        ConstraintLayout headerLayout = includeDrawer.findViewById(R.id.header_layout);
+        ImageView icon = headerLayout.findViewById(R.id.my_icon);
+        TextView myName = headerLayout.findViewById(R.id.my_name);
+        TextView totalYosan = headerLayout.findViewById(R.id.total_yosan);
+
+        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
+        Glide.with(this).load(prefMyself.getString("profile_image_url", "")).into(icon);
+        myName.setText(prefMyself.getString("name", ""));
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        long myID = preferences.getLong(MY_ID, 0);
+        ListView listView = includeDrawer.findViewById(R.id.left_drawer);
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+        List<ListDTO> listDTOs = helper.getLists(this, myID);
+        ListDTOAdapter adapter = (ListDTOAdapter) listView.getAdapter();
+        adapter.clear();
+        for (ListDTO listDTO:listDTOs){
+            adapter.add(listDTO);
+        }
     }
 }

@@ -43,12 +43,13 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
         if (args.getString(PARAM).equals(FOLLOW_LIST)){
             //FollowListアダプターの実装
             adapter = new UserDTOAdapter(getActivity());
-            List<UserDTO> users = helper.getUserList();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            long myID = preferences.getLong(MainActivity.MY_ID, 0);
+            long selectedListID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
+            List<UserDTO> users = helper.getUserList(myID, selectedListID);
 
             for (UserDTO user : users){
-//                if (user.auto_day > 0) {
-                    adapter.add(user);
-//                }
+                adapter.add(user);
             }
             view.setTag(FOLLOW_LIST);
         } else {

@@ -45,7 +45,10 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
         final PickUpDTOAdapter adapter = new PickUpDTOAdapter(getActivity());
         if (args.getString(PARAM).equals(PICKUP_LIST)){
             //PickupListアダプターの実装
-            List<UserDTO> users = helper.getUserList();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            long myID = preferences.getLong(MainActivity.MY_ID, 0);
+            long selectedListID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
+            List<UserDTO> users = helper.getUserList(myID, selectedListID);
 
             for (UserDTO user : users){
 //                if (user.auto_day > 0 && user.pickup == 1){

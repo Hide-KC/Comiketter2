@@ -82,7 +82,12 @@ public class PickUpDTOAdapter extends ArrayAdapter<UserDTO> implements StickyLis
     // 各アイテムのHeaderはポジションを5で割った商です
     // getHeaderIdを参考にしましょう
     public int getHeaderItem(int position){
-        UserDTO user = getItem(position);
+        UserDTO user;
+        if (position > getCount()){
+            user = getItem(getCount() - 1);
+        } else {
+            user = getItem(position);
+        }
         return user.auto_day;
 
 //        if (user.manual_day != 0){

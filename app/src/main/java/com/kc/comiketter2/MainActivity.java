@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.lang.ref.WeakReference;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,6 +198,8 @@ public class MainActivity extends AppCompatActivity
                 for (ListDTO listDTO:listDTOs){
                     adapter.add(listDTO);
                 }
+
+                MainActivity.this.updateTotalYosan();
             }
         };
 
@@ -762,6 +765,7 @@ public class MainActivity extends AppCompatActivity
             helper.clearOptionalInfo();
             ((IObserver)fragment).update();
         }
+        updateTotalYosan();
     }
 
     public void updateStickyList(){
@@ -795,7 +799,6 @@ public class MainActivity extends AppCompatActivity
         ConstraintLayout headerLayout = includeDrawer.findViewById(R.id.header_layout);
         ImageView icon = headerLayout.findViewById(R.id.my_icon);
         TextView myName = headerLayout.findViewById(R.id.my_name);
-        TextView totalYosan = headerLayout.findViewById(R.id.total_yosan);
 
         SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
         Glide.with(this).load(prefMyself.getString("profile_image_url", "")).into(icon);
@@ -811,5 +814,22 @@ public class MainActivity extends AppCompatActivity
         for (ListDTO listDTO:listDTOs){
             adapter.add(listDTO);
         }
+    }
+
+    public void updateTotalYosan(){
+        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
+        ConstraintLayout headerLayout = includeDrawer.findViewById(R.id.header_layout);
+        TextView totalYosan = headerLayout.findViewById(R.id.total_yosan);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        long myID = preferences.getLong(MY_ID, 0);
+        long listID = preferences.getLong(SELECTED_LIST_ID, 0);
+
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+        int yosan = helper.getTotalYosan(myID, listID);
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        totalYosan.setText(numberFormat.format(yosan));
+        totalYosan.append(getString(R.string.yen));
     }
 }

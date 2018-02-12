@@ -865,4 +865,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             writable.update(LIST_INFO, args, filter, null);
         }
     }
+
+    public int getTotalYosan(long myID, long listID){
+        List<UserDTO> users = new ArrayList<>();
+        SQLiteDatabase readable = getReadableDatabase();
+
+        StringBuilder queryBuilder1 = new StringBuilder();
+        StringBuilder queryBuilder2 = new StringBuilder();
+        StringBuilder queryBuilder3 = new StringBuilder();
+
+        //query1
+        queryBuilder1.append("select * from ").append(USER_INFO).append(" inner join ").append(OPTIONAL_INFO).append(" on ").append(USER_INFO).append("._id = ").append(OPTIONAL_INFO).append("._id");
+        //query2
+        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u inner join ").append(RELATION_INFO).append(" on u._id = ").append(RELATION_INFO).append(".user_id");
+        //query3
+        queryBuilder3.append("select yosan from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID).append(";");
+
+        Log.d("Query", queryBuilder3.toString());
+
+        Cursor cursor = readable.rawQuery(queryBuilder3.toString(), null);
+        int yosan = 0;
+        boolean eol = cursor.moveToFirst();
+        while (eol){
+            yosan = yosan + cursor.getInt(cursor.getColumnIndex("yosan"));
+            eol = cursor.moveToNext();
+        }
+        cursor.close();
+        return yosan;
+    }
 }

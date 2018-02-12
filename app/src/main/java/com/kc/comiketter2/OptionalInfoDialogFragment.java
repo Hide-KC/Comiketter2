@@ -163,6 +163,9 @@ public class OptionalInfoDialogFragment extends DialogFragment {
             StickyListFragment fragment = (StickyListFragment) getTargetFragment();
             fragment.saveScrollY();
             ((ViewPager.OnPageChangeListener) activity).onPageSelected(1);
+            if (activity instanceof MainActivity){
+                ((MainActivity) activity).updateTotalYosan();
+            }
         }
     }
 }

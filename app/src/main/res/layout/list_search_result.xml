@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/profile_image"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -15,6 +15,8 @@
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/image_shape"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -30,6 +32,8 @@
         android:hint="name"
         android:maxLines="1"
         android:textAlignment="viewStart"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
         app:layout_constraintEnd_toStartOf="@+id/screen_name"
         app:layout_constraintStart_toEndOf="@+id/profile_image"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,6 +49,9 @@
         android:minWidth="20dp"
         android:textAlignment="viewEnd"
         android:textSize="10sp"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+
         app:layout_constraintBottom_toBottomOf="@+id/name"
         app:layout_constraintEnd_toStartOf="@+id/pickup_view" />
 
@@ -56,6 +63,10 @@
         android:textAlignment="viewEnd"
         android:textSize="14sp"
         android:minWidth="1dp"
+        android:maxLines="1"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toStartOf="@+id/circle_space" />
 
@@ -67,6 +78,10 @@
         android:textAlignment="viewEnd"
         android:textSize="14sp"
         android:minWidth="1dp"
+        android:maxLines="1"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+
         app:layout_constraintBottom_toBottomOf="@+id/hole_name"
         app:layout_constraintEnd_toStartOf="@+id/pickup_view" />
 
@@ -80,6 +95,9 @@
         android:textAlignment="viewStart"
         android:ellipsize="end"
         android:maxLines="1"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toStartOf="@+id/hole_name"
         app:layout_constraintStart_toEndOf="@+id/profile_image" />
@@ -88,6 +106,9 @@
         android:id="@+id/spacer"
         android:layout_width="0dp"
         android:layout_height="8dp"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
@@ -99,6 +120,8 @@
         android:layout_marginEnd="24dp"
         android:scaleX="0.8"
         android:scaleY="0.8"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/profile_image"

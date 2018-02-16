@@ -107,7 +107,7 @@ public class SearchResultAdapter extends ArrayAdapter<UserDTO> {
 
     public static class ItemViewHolder{
         Long user_id;
-        ImageButton profile_image;
+        ImageView profile_image;
         TextView name;
         TextView screenName;
         ImageView pickup_view;

@@ -361,6 +361,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume(){
         super.onResume();
         Log.d("Comiketter2", "onResume");
+        updateTotalYosan();
         TaskManager manager = TaskManager.getInstance();
         MyAsyncTask<Void, Integer, List<User>> task = (MyAsyncTask<Void, Integer, List<User>>)manager.get(taskID);
 

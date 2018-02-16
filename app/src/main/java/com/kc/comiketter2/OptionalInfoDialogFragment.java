@@ -37,12 +37,22 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         return dialog;
     }
 
+    public static OptionalInfoDialogFragment newInstance(long userID){
+        OptionalInfoDialogFragment dialog = new OptionalInfoDialogFragment();
+        Bundle args = new Bundle();
+        args.putLong("_id", userID);
+
+        dialog.setArguments(args);
+        dialog.setTargetFragment(null, 0);
+        return dialog;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final long userID = getArguments().getLong("_id");
         Fragment targetFragment = getTargetFragment();
-        if (targetFragment != null){
+        if (targetFragment != null && targetFragment instanceof StickyListFragment){
             ((StickyListFragment)targetFragment).saveScrollY();
         }
 
@@ -100,7 +110,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
                 } else {
                     cnt = cnt + 1;
                 }
-                busuu.setText("" + cnt);
+                busuu.setText(String.valueOf(cnt));
             }
         });
 
@@ -115,7 +125,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
                 } else {
                     cnt = cnt - 1;
                 }
-                busuu.setText("" + cnt);
+                busuu.setText(String.valueOf(cnt));
             }
         });
 
@@ -166,6 +176,8 @@ public class OptionalInfoDialogFragment extends DialogFragment {
             if (activity instanceof MainActivity){
                 ((MainActivity) activity).updateTotalYosan();
             }
+        } else if (activity instanceof IObserver){
+            ((IObserver) activity).update();
         }
     }
 }

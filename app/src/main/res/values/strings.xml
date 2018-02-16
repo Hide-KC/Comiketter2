@@ -23,7 +23,7 @@
     <string name="date">日にち</string>
     <string name="profile_url">"twitter://user?screen_name="</string>
     <string name="nichime">日目</string>
-    <string name="unknown">不明</string>
+    <string name="unknown">日にち不明</string>
     <string name="follow">フォロー</string>
     <string name="pickup">買物リスト</string>
     <string name="achievement">達成率</string>

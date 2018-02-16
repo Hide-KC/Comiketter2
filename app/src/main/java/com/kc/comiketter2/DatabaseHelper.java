@@ -134,28 +134,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
             } else if (oldVersion == 2 && newVersion == 3){
                 //複アカ、リスト対応
-                database.beginTransaction();
-                {
-                    try {
-                        database.execSQL(MULTI_ACCOUNT_QUERY);
-                    } catch (SQLiteException ex){
-                        ex.printStackTrace();
-                    }
+                try {
+                    database.execSQL(MULTI_ACCOUNT_QUERY);
+                } catch (SQLiteException ex){
+                    ex.printStackTrace();
+                }
 
-                    try {
-                        database.execSQL(LIST_INFO_QUERY);
-                    } catch (SQLiteException ex){
-                        ex.printStackTrace();
-                    }
+                try {
+                    database.execSQL(LIST_INFO_QUERY);
+                } catch (SQLiteException ex){
+                    ex.printStackTrace();
+                }
 
-                    try {
-                        database.execSQL(RELATION_INFO_QUERY);
-                        database.setTransactionSuccessful();
-                    } catch (SQLiteException ex){
-                        ex.printStackTrace();
-                    } finally {
-                        database.endTransaction();
-                    }
+                try {
+                    database.execSQL(RELATION_INFO_QUERY);
+                } catch (SQLiteException ex){
+                    ex.printStackTrace();
                 }
             }
         }

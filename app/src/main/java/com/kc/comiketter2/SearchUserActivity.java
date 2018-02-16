@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class SearchUserActivity extends AppCompatActivity {
+public class SearchUserActivity extends AppCompatActivity implements IObserver {
 
     public static final Integer REQUEST_CODE = 1000;
 
@@ -27,7 +28,7 @@ public class SearchUserActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_search_activity);
 
         toolbar.setTitle(getString(R.string.search_activity));
-        toolbar.setNavigationIcon(R.drawable.arrow_left);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,15 +41,28 @@ public class SearchUserActivity extends AppCompatActivity {
 
         toolbar.inflateMenu(R.menu.menu_search_activity);
 
+        final ListView listView = findViewById(R.id.list_result);
+        //リストアイテムにクリックイベントを付与
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (adapterView.getItemAtPosition(i) instanceof UserDTO){
+                    UserDTO user = (UserDTO)adapterView.getItemAtPosition(i);
+                    OptionalInfoDialogFragment dialog = OptionalInfoDialogFragment.newInstance(user.user_id);
+                    dialog.show(SearchUserActivity.this.getSupportFragmentManager(), "optional_info");
+                    Log.d("Comiketter", "" + user.user_id);
+                }
+            }
+        });
+
         //リストにアダプタをセット
-        final ListView list = findViewById(R.id.list_result);
         final ArrayAdapter<UserDTO> adapter;
-        if (list.getAdapter() != null && list.getAdapter() instanceof ArrayAdapter){
-            adapter = (ArrayAdapter<UserDTO>)list.getAdapter();
+        if (listView.getAdapter() != null && listView.getAdapter() instanceof ArrayAdapter){
+            adapter = (ArrayAdapter<UserDTO>)listView.getAdapter();
             adapter.clear();
         } else {
             adapter = new SearchResultAdapter(SearchUserActivity.this);
-            list.setAdapter(adapter);
+            listView.setAdapter(adapter);
         }
 
         EditText editText = findViewById(R.id.search_text);
@@ -84,9 +98,6 @@ public class SearchUserActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         if (savedInstanceState != null){
             editText.setText(savedInstanceState.getString("searchText"));
         }
@@ -100,4 +111,26 @@ public class SearchUserActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void update() {
+        EditText editText = findViewById(R.id.search_text);
+        String word = editText.getText().toString();
+
+        //DatabaseHelper#searchを呼ぶ
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+        List<UserDTO> users = helper.search(word);
+
+        Log.d("Search", "======================================");
+        Log.d("Search", "word :" + word);
+        for(UserDTO user : users){
+            Log.d("Search", user.name + " @" + user.screen_name);
+        }
+
+        ListView results = findViewById(R.id.list_result);
+        ArrayAdapter<UserDTO> adapter = (ArrayAdapter<UserDTO>) results.getAdapter();
+        adapter.clear();
+        for(Integer user_i = 0; user_i < users.size(); user_i++){
+            adapter.add(users.get(user_i));
+        }
+    }
 }

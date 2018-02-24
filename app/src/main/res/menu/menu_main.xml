@@ -26,6 +26,10 @@
         android:icon="@drawable/clear"
         android:title="@string/clear"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/toolbar_preferences"
+        android:title="@string/custom_filter_title"
+        app:showAsAction="never"/>
 
 
 

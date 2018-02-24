@@ -14,8 +14,6 @@ import android.support.v7.app.AlertDialog;
 public class ClearDialogFragment extends DialogFragment {
     public interface Callback{
         void onPositiveButtonClicked();
-//        void onNegativeButtonClicked();
-//        void onCancelled();
     }
 
     public static ClearDialogFragment newInstance(){

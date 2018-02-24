@@ -69,8 +69,11 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SearchUserActivity.REQUEST_CODE && data != null && resultCode == RESULT_OK){
+            //Pickup等、DBに変更があった場合に備えてページ更新
             TabLayout tabLayout = findViewById(R.id.tab_layout);
             onPageSelected(tabLayout.getSelectedTabPosition());
+        } else if (requestCode == MyPreferenceActivity.REQUEST_CODE && data != null && requestCode == RESULT_OK){
+            //カスタムフィルタの状態を読込み、ページ更新
         }
     }
 
@@ -307,8 +310,8 @@ public class MainActivity extends AppCompatActivity
                     clearOptionalInfo();
                 } else if (id == R.id.toolbar_search_sub) {
                     startSearchActivity();
-                } else {
-
+                } else if (id == R.id.toolbar_preferences) {
+                    startPreferenceActivity();
                 }
                 return true;
             }
@@ -662,6 +665,11 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, com.kc.comiketter2.SearchUserActivity.class);
 
         startActivityForResult(intent, SearchUserActivity.REQUEST_CODE);
+    }
+
+    private void startPreferenceActivity(){
+        Intent intent = new Intent(this, MyPreferenceActivity.class);
+        startActivityForResult(intent, MyPreferenceActivity.REQUEST_CODE);
     }
 
     @Override

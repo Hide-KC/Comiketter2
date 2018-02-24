@@ -44,6 +44,7 @@
     <string name="clear">クリア</string>
     <string name="reload">更新</string>
     <string name="search">検索</string>
+    <string name="settings">設定</string>
 
     <!--ターゲット選択-->
     <string name="new_release">新刊</string>
@@ -67,6 +68,12 @@
     <string name="account_name">アカウント名</string>
     <string name="zero_yen">0円</string>
     <string name="subscribe_list">リストを追加</string>
+
+    <!--設定画面-->
+    <string name="category_filter">フィルタ</string>
+    <string name="enable_custom_filter">フィルタの有効化</string>
+    <string name="enable_summary">設定したフィルタが有効になります。\nOFFにするとコミケ用のフィルタになります。</string>
+    <string name="custom_filter_title">イベントフィルタ</string>
 
     <!--その他-->
     <string name="no_client">There are no Twitter client.</string>

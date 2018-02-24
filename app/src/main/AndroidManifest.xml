@@ -37,8 +37,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchUserActivity"
-            android:label="@string/search_activity">
+            android:name=".SearchUserActivity">
+        </activity>
+        <activity
+            android:name=".MyPreferenceActivity"
+            >
         </activity>
     </application>
 

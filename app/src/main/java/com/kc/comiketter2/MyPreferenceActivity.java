@@ -10,7 +10,6 @@ import android.view.View;
 
 public class MyPreferenceActivity extends AppCompatActivity {
     public static final Integer REQUEST_CODE = 2000;
-    public static final String LAYER = "layer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +34,6 @@ public class MyPreferenceActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends PreferenceFragment {
-
-        public SettingsFragment() {
-        }
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {

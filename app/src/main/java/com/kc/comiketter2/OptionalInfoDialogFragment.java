@@ -27,7 +27,7 @@ import com.bumptech.glide.Glide;
 public class OptionalInfoDialogFragment extends DialogFragment {
     private View view = null;
 
-    public static OptionalInfoDialogFragment newInstance(StickyListFragment targetFragment, long userID){
+    public static DialogFragment newInstance(StickyListFragment targetFragment, long userID){
         OptionalInfoDialogFragment dialog = new OptionalInfoDialogFragment();
         Bundle args = new Bundle();
         args.putLong("_id", userID);
@@ -37,7 +37,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    public static OptionalInfoDialogFragment newInstance(long userID){
+    public static DialogFragment newInstance(long userID){
         OptionalInfoDialogFragment dialog = new OptionalInfoDialogFragment();
         Bundle args = new Bundle();
         args.putLong("_id", userID);

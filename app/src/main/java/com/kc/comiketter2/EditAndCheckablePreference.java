@@ -52,10 +52,10 @@ public class EditAndCheckablePreference extends Preference {
             }
         });
 
-        view.setBackground(getDrawableResource(R.drawable.ripple));
+        view.setBackground(getBackgroundSelector());
     }
 
-    private Drawable getDrawableResource(int id){
+    private Drawable getBackgroundSelector(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             return getContext().getDrawable(R.drawable.ripple);
         } else {

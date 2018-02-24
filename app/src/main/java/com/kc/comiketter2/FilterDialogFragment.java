@@ -12,10 +12,9 @@ import android.support.v4.app.DialogFragment;
 public class FilterDialogFragment extends DialogFragment {
 
     public static DialogFragment newInstance(){
-        DialogFragment fragment = new FilterDialogFragment();
+        FilterDialogFragment fragment = new FilterDialogFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-
         return fragment;
     }
 

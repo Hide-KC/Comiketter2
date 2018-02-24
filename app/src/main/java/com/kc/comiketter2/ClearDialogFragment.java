@@ -16,7 +16,7 @@ public class ClearDialogFragment extends DialogFragment {
         void onPositiveButtonClicked();
     }
 
-    public static ClearDialogFragment newInstance(){
+    public static DialogFragment newInstance(){
         ClearDialogFragment dialog = new ClearDialogFragment();
         Bundle args = new Bundle();
         dialog.setArguments(args);

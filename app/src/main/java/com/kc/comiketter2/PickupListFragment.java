@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * Created by HIDE on 2017/12/13.
  */
 
-public class PickupListFragment extends StickyListFragment implements IObserver {
+public class PickupListFragment extends StickyListFragment implements IUpdater {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,12 +51,20 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
             long selectedListID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
             List<UserDTO> users = helper.getUserList(myID, selectedListID);
 
-            for (UserDTO user : users){
-//                if (user.auto_day > 0 && user.pickup == 1){
-                if (user.pickup == 1){
-                    adapter.add(user);
+            if (preferences.getBoolean("filter_switch", false)){
+                for (UserDTO user : users){
+                    if (user.pickup == 1 && StringMatcher.getEventName(user.name,false, getContext()) != null){
+                        adapter.add(user);
+                    }
+                }
+            } else {
+                for (UserDTO user : users){
+                    if (user.pickup == 1){
+                        adapter.add(user);
+                    }
                 }
             }
+
 
             view.setTag(PICKUP_LIST);
         } else {
@@ -72,8 +81,8 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
                     PickUpDTOAdapter adp = (PickUpDTOAdapter) sticky.getAdapter();
                     UserDTO user = adp.getItem(i);
 
-                    OptionalInfoDialogFragment dialog = OptionalInfoDialogFragment.newInstance(PickupListFragment.this, user.user_id);
-                    dialog.show(getFragmentManager(), "optional_info");
+                    DialogFragment dialog = OptionalInfoDialogFragment.newInstance(PickupListFragment.this, user.user_id);
+                    dialog.show(getActivity().getSupportFragmentManager(), "optional_info");
                     Log.d("Comiketter", "" + user.user_id);
                 }
             }
@@ -113,11 +122,19 @@ public class PickupListFragment extends StickyListFragment implements IObserver 
                 DatabaseHelper helper = DatabaseHelper.getInstance(getActivity());
                 //PickupListアダプターの実装
                 List<UserDTO> users = helper.getUserList(myID, listID);
-
-                for (Integer user_i = 0; user_i < users.size(); user_i++){
-                    //                if (user.auto_day > 0 && user.pickup == 1){
-                    if (users.get(user_i).pickup == 1){
-                        adapter.add(users.get(user_i));
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                if (preferences.getBoolean("filter_switch", false)){
+                    for (Integer user_i = 0; user_i < users.size(); user_i++){
+                        if (users.get(user_i).pickup == 1
+                                && StringMatcher.getEventName(users.get(user_i).name,false, getContext()) != null){
+                            adapter.add(users.get(user_i));
+                        }
+                    }
+                } else {
+                    for (Integer user_i = 0; user_i < users.size(); user_i++){
+                        if (users.get(user_i).pickup == 1){
+                            adapter.add(users.get(user_i));
+                        }
                     }
                 }
 

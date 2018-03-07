@@ -1,6 +1,7 @@
 package com.kc.comiketter2;
 
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,11 +13,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
-public class SearchUserActivity extends AppCompatActivity implements IObserver {
+public class SearchUserActivity extends AppCompatActivity implements IUpdater {
 
     public static final Integer REQUEST_CODE = 1000;
 
@@ -39,7 +39,7 @@ public class SearchUserActivity extends AppCompatActivity implements IObserver {
             }
         });
 
-        toolbar.inflateMenu(R.menu.menu_search_activity);
+        toolbar.inflateMenu(R.menu.search_activity);
 
         final ListView listView = findViewById(R.id.list_result);
         //リストアイテムにクリックイベントを付与
@@ -48,7 +48,7 @@ public class SearchUserActivity extends AppCompatActivity implements IObserver {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (adapterView.getItemAtPosition(i) instanceof UserDTO){
                     UserDTO user = (UserDTO)adapterView.getItemAtPosition(i);
-                    OptionalInfoDialogFragment dialog = OptionalInfoDialogFragment.newInstance(user.user_id);
+                    DialogFragment dialog = OptionalInfoDialogFragment.newInstance(user.user_id);
                     dialog.show(SearchUserActivity.this.getSupportFragmentManager(), "optional_info");
                     Log.d("Comiketter", "" + user.user_id);
                 }

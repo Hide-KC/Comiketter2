@@ -28,7 +28,7 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/toolbar_preferences"
-        android:title="@string/custom_filter_title"
+        android:title="@string/settings"
         app:showAsAction="never"/>
 
 

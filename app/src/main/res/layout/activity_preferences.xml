@@ -16,17 +16,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/custom_filter_title" />
+        app:title="@string/settings" />
 
-    <fragment
-        android:id="@+id/settings_fragment"
-        android:name="com.kc.comiketter2.MyPreferenceActivity$SettingsFragment"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+    </FrameLayout>
 
 
 </android.support.constraint.ConstraintLayout>

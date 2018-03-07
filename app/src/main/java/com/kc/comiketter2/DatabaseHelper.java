@@ -860,7 +860,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public int getTotalYosan(long myID, long listID){
+    public int getTotalYosan(long myID, long listID, Context context){
         List<UserDTO> users = new ArrayList<>();
         SQLiteDatabase readable = getReadableDatabase();
 
@@ -873,17 +873,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //query2
         queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u inner join ").append(RELATION_INFO).append(" on u._id = ").append(RELATION_INFO).append(".user_id");
         //query3
-        queryBuilder3.append("select yosan from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID).append(";");
+        queryBuilder3.append("select name, yosan from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID).append(";");
 
         Log.d("Query", queryBuilder3.toString());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean filterChecked = preferences.getBoolean("filter_switch", false);
 
         Cursor cursor = readable.rawQuery(queryBuilder3.toString(), null);
         int yosan = 0;
         boolean eol = cursor.moveToFirst();
-        while (eol){
-            yosan = yosan + cursor.getInt(cursor.getColumnIndex("yosan"));
-            eol = cursor.moveToNext();
+        if (filterChecked){
+            StringBuilder builder = new StringBuilder();
+            while (eol){
+                builder.append(cursor.getString(cursor.getColumnIndex("name")));
+                if (StringMatcher.getEventName(builder.toString(), false, context) != null){
+                    yosan += cursor.getInt(cursor.getColumnIndex("yosan"));
+                }
+                builder.setLength(0);
+                eol = cursor.moveToNext();
+            }
+        } else {
+            while (eol){
+                yosan += cursor.getInt(cursor.getColumnIndex("yosan"));
+                eol = cursor.moveToNext();
+            }
         }
+
         cursor.close();
         return yosan;
     }

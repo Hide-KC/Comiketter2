@@ -1,9 +1,20 @@
 package com.kc.comiketter2;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.util.Log;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -21,6 +32,7 @@ public class StringMatcher {
     final private static String EVENT_SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])";
     final private static String AB = ".*(ab)"; //abを探索→無ければa|bで探索
     final private static String AOrB = ".*(a|b)";
+    final private static String FILTER_SWITCH = "filter_switch";
 
     //ホールHashMap
     final private static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){
@@ -71,21 +83,73 @@ public class StringMatcher {
     };
 
     //どのパターンが何日目にマッチするのかをここで定義。
-    final private static String firstDay = "([1１一]日目|金曜?日?|初日)" + "|(29|２９)日";
-    final private static String secondDay = "([2２二]日目|土曜?日?)" + "|(30|３０)日";
-    final private static String thirdDay = "([3３三]日目|日曜?日?)" + "|(31|３１)日";
+    final private static String firstDay = "([1１一]日目|金曜?日?|初日)" + "|(10|１０)日";
+    final private static String secondDay = "([2２二]日目|土曜?日?)" + "|(11|１１)日";
+    final private static String thirdDay = "([3３三]日目|日曜?日?)" + "|(12|１２)日";
 
+
+    //イベント名サーチメソッドフィルタ対応版
+    public static String getEventName(String name, boolean checkHasSpace, Context context){
+        //checkHasSpace：スペースチェックをするかどうか。false:スペースチェックをしない　true:スペースチェック実施
+        if (!checkHasSpace || getSpace(name) != null){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            if (sharedPreferences.getBoolean(FILTER_SWITCH,false)){
+                Log.d("StringMatcher", "switch_checked");
+                //フィルタ設定を参照してフィルタリング
+                List<String> stringList = new ArrayList<>();
+                for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT ; filter_i++){
+                    SharedPreferences preferences = context.getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
+                    if (preferences.getBoolean(EditAndCheckablePreference.CHECKED, false)){
+                        String filterWord = preferences.getString(EditAndCheckablePreference.FILTER, "");
+                        if (!filterWord.equals("")){
+                            String[] strings = null;
+                            if (filterWord.contains(",")){
+                                strings = filterWord.split(",");
+                                for (String s:strings){
+                                    s = s.trim();
+                                    if (s.length() > 0){
+                                        stringList.add(s);
+                                    }
+                                }
+                            } else {
+                                stringList.add(filterWord);
+                            }
+                        }
+                    }
+                }
+
+                if (stringList.size() > 0){
+                    String[] stringArray = new String[stringList.size()];
+                    stringList.toArray(stringArray);
+                    return getEventName(name, stringArray, false);
+                } else {
+                    //コミケ専用フィルタリング
+                    return getEventName(name);
+                }
+            } else {
+                Log.d("StringMatcher", "switch_not_checked");
+                //コミケ専用フィルタリング
+                return getEventName(name);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public static String getComiketName(String name){
+        return getEventName(name);
+    }
 
     /**
      * コミケ専用のイベント名サーチメソッド
      * @param name 名前
      * @return イベント名
      */
-    public static String getEventName(String name){
+    private static String getEventName(String name){
         //イベント名パターンを持っているか
         if (getSpace(name) != null){
             //イベント名でフィルタ、イベント名を抽出
-            String eventName = getEventName(name, comikeEventPattern);
+            String eventName = getEventName(name, comikeEventPattern, true);
             if (eventName != null){
                 return eventName;
             } else {
@@ -102,27 +166,39 @@ public class StringMatcher {
      * @param eventNames サーチするイベント名称
      * @return イベント名
      */
-    public static String getEventName(String name, String[] eventNames) {
-        StringBuilder builder = new StringBuilder();
-        //ORサーチ
-        builder.append("(");
-        for (int i = 0; i < eventNames.length ; i++){
-            builder.append(eventNames[i] + "|");
-            if (i == eventNames.length - 1){
-                int index = builder.lastIndexOf("|");
-                builder.deleteCharAt(index);
-                builder.append(")");
+    private static String getEventName(String name, String[] eventNames, boolean enableRegex) {
+        //正規表現使用の有無をenableRegexで指定
+        if (enableRegex){
+            StringBuilder builder = new StringBuilder();
+            //ORサーチ
+            builder.append("(");
+            for (int i = 0; i < eventNames.length ; i++){
+                builder.append(eventNames[i] + "|");
+                if (i == eventNames.length - 1){
+                    int index = builder.lastIndexOf("|");
+                    builder.deleteCharAt(index);
+                    builder.append(")");
+                }
             }
-        }
 
-        Pattern pattern = Pattern.compile(builder.toString());
-        Matcher matcher = pattern.matcher(name);
+            Pattern pattern = Pattern.compile(builder.toString());
+            Matcher matcher = pattern.matcher(name);
 
-        if (matcher.find()){
-            String match = matcher.group(1);
-            Log.d("Event", match);
-            return match;
+            if (matcher.find()){
+                String match = matcher.group(1);
+                Log.d("Event", match);
+                return match;
+            } else {
+                return null;
+            }
         } else {
+            //正規表現を使用しないでマッチング
+            for (int i = 0; i < eventNames.length; i++){
+                String eventName = eventNames[i].trim();
+                if (name.contains(eventName)){
+                    return eventName;
+                }
+            }
             return null;
         }
     }

@@ -134,7 +134,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
 
         builder.setView(view)
                 .setTitle(getActivity().getString(R.string.dialog_title))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //ユーザ情報の保存
@@ -176,8 +176,8 @@ public class OptionalInfoDialogFragment extends DialogFragment {
             if (activity instanceof MainActivity){
                 ((MainActivity) activity).updateTotalYosan();
             }
-        } else if (activity instanceof IObserver){
-            ((IObserver) activity).update();
+        } else if (activity instanceof IUpdater){
+            ((IUpdater) activity).update();
         }
     }
 }

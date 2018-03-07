@@ -38,7 +38,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0){
-            return context.getString(R.string.follow);
+            return context.getString(R.string.accounts);
         } else if (position == 1){
             return context.getString(R.string.pickup);
         } else if (position == 2) {

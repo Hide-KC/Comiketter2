@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/custom_filter_title">
+    <PreferenceCategory android:title="@string/category_filter_title">
         <SwitchPreference
-            android:key="enable_filter"
-            android:title="@string/enable_custom_filter"
-            android:summary="@string/enable_summary" />
-
-        <com.kc.comiketter2.EditAndCheckablePreference
-            android:key="filter1"
-            android:title="testtes"
-            android:summary="testだよ"/>
-
+            android:key="filter_switch"
+            android:title="@string/switch_pref_title"
+            android:summary="@string/switch_pref_summary" />
     </PreferenceCategory>
 
+    <PreferenceScreen android:title="@string/filter"
+        android:summary="@string/filter_or_search">
+        <PreferenceCategory android:title="@string/filter">
+            <com.kc.comiketter2.EditAndCheckablePreference
+                android:key="filter0"
+                android:title="設定１"
+                android:summary="testだよ"/>
 
+            <com.kc.comiketter2.EditAndCheckablePreference
+                android:key="filter1"
+                android:title="設定２"
+                android:summary="testだよ"/>
+
+            <com.kc.comiketter2.EditAndCheckablePreference
+                android:key="filter2"
+                android:title="設定３"
+                android:summary="testだよ"/>
+
+            <com.kc.comiketter2.EditAndCheckablePreference
+                android:key="filter3"
+                android:title="設定４"
+                android:summary="testだよ"/>
+
+            <com.kc.comiketter2.EditAndCheckablePreference
+                android:key="filter4"
+                android:title="設定５"
+                android:summary="testだよ"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
 </PreferenceScreen>

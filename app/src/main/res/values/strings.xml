@@ -24,7 +24,7 @@
     <string name="profile_url">"twitter://user?screen_name="</string>
     <string name="nichime">日目</string>
     <string name="unknown">日にち不明</string>
-    <string name="follow">フォロー</string>
+    <string name="accounts">アカウント</string>
     <string name="pickup">買物リスト</string>
     <string name="achievement">達成率</string>
     <string name="achieve_ratio">達成率は...</string>
@@ -70,10 +70,17 @@
     <string name="subscribe_list">リストを追加</string>
 
     <!--設定画面-->
-    <string name="category_filter">フィルタ</string>
-    <string name="enable_custom_filter">フィルタの有効化</string>
-    <string name="enable_summary">設定したフィルタが有効になります。\nOFFにするとコミケ用のフィルタになります。</string>
-    <string name="custom_filter_title">イベントフィルタ</string>
+    <string name="category_filter_title">イベントフィルタ</string>
+    <string name="switch_pref_title">フィルタの有効化</string>
+    <string name="switch_pref_summary">設定したフィルタが有効になります。\nOFFにするとコミケ用のフィルタになります。</string>
+    <string name="filter">フィルタ</string>
+    <string name="filter_info">フィルタ情報</string>
+    <string name="filter_name_title">フィルタ名</string>
+    <string name="filter_text_title">フィルタワード</string>
+    <string name="filter_text_eg">コミティア など</string>
+    <string name="clear_filter">フィルタのクリア</string>
+    <string name="clear_filter_message">フィルタを消去します。\nよろしいですか？</string>
+    <string name="filter_or_search">「 , 」区切りでOR検索ができます</string>
 
     <!--その他-->
     <string name="no_client">There are no Twitter client.</string>

@@ -17,7 +17,7 @@ import java.util.List;
  * Created by HIDE on 2017/12/14.
  */
 
-public class AchievementFragment extends Fragment implements IObserver {
+public class AchievementFragment extends Fragment implements IUpdater {
     public static String ACHIEVEMENT = "achievement";
 
     @Nullable

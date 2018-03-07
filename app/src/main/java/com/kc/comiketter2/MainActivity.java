@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -72,8 +73,19 @@ public class MainActivity extends AppCompatActivity
             //Pickup等、DBに変更があった場合に備えてページ更新
             TabLayout tabLayout = findViewById(R.id.tab_layout);
             onPageSelected(tabLayout.getSelectedTabPosition());
-        } else if (requestCode == MyPreferenceActivity.REQUEST_CODE && data != null && requestCode == RESULT_OK){
+        } else if (requestCode == MyPreferenceActivity.REQUEST_CODE){
             //カスタムフィルタの状態を読込み、ページ更新
+            Log.d("Preference", "onActivityResult");
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            ImageView filterView = toolbar.findViewById(R.id.toolbar_constraint).findViewById(R.id.filter_image);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if (preferences.getBoolean("filter_switch", false)){
+                filterView.setVisibility(View.VISIBLE);
+            } else {
+                filterView.setVisibility(View.INVISIBLE);
+            }
+            TabLayout tabLayout = findViewById(R.id.tab_layout);
+            onPageSelected(tabLayout.getSelectedTabPosition());
         }
     }
 
@@ -202,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                     adapter.add(listDTO);
                 }
 
-                MainActivity.this.updateTotalYosan();
+//                MainActivity.this.updateTotalYosan();
             }
         };
 
@@ -211,35 +223,6 @@ public class MainActivity extends AppCompatActivity
         //TabLayoutの設定
         final TabLayout tabLayout = findViewById(R.id.tab_layout);
         final ViewPager viewPager = findViewById(R.id.view_pager);
-
-//        SearchView searchView = (SearchView) toolbar.getMenu().findItem(R.id.toolbar_search).getActionView();
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                FragmentManager manager = getSupportFragmentManager();
-//                Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + tabLayout.getSelectedTabPosition());
-//                StickyListHeadersListView sticky = null;
-//                if (tabLayout.getSelectedTabPosition() <= 1){
-//                    sticky = fragment.getView().findViewById(R.id.sticky_list);
-//                }
-//
-//                if (sticky == null){
-//                    Log.d("Comiketter", "sticky == null");
-//                } else {
-//                    if (newText.equals("")){
-//
-//                    } else {
-//
-//                    }
-//                }
-//                return false;
-//            }
-//        });
 
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -290,11 +273,18 @@ public class MainActivity extends AppCompatActivity
 
         //ToolBarの設定
         Toolbar toolbar = findViewById(R.id.toolbar);
-        TextView selectedListName = toolbar.findViewById(R.id.toolbar_constraint).findViewById(R.id.selected_list_name);
+        ConstraintLayout constraintLayout = toolbar.findViewById(R.id.toolbar_constraint);
+        TextView selectedListName = constraintLayout.findViewById(R.id.selected_list_name);
+        ImageView filterView = constraintLayout.findViewById(R.id.filter_image);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean("filter_switch", false)){
+            filterView.setVisibility(View.VISIBLE);
+        } else {
+            filterView.setVisibility(View.INVISIBLE);
+        }
         long listID = preferences.getLong(SELECTED_LIST_ID, 0);
         selectedListName.setText(helper.getListDTO(this, listID).name);
-        toolbar.inflateMenu(R.menu.menu_main);
+        toolbar.inflateMenu(R.menu.main);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -316,8 +306,7 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
         });
-//        SharedPreferences prefMyself = getSharedPreferences("myself", Context.MODE_PRIVATE);
-//        String profile_image_url = prefMyself.getString("profile_image_url", null);
+
         ImageButton btn = findViewById(R.id.navigation_icon);
         if (myID != 0){
             Glide.with(this).load(prefMyself.getString("profile_image_url", null)).into(btn);
@@ -478,7 +467,9 @@ public class MainActivity extends AppCompatActivity
 
                             for (User user:userResponseList){
                                 //正規表現に一致するユーザのみ抽出。
-                                if (StringMatcher.getEventName(user.getName()) != null || helper.isExisted(user.getId())){
+                                if (StringMatcher.getComiketName(user.getName()) != null
+                                        || StringMatcher.getEventName(user.getName(), true, context) != null
+                                        || helper.isExisted(user.getId())){
                                     Log.d("Comiketter", user.getName());
                                     UserDTO userDTO = new UserDTO(user);
                                     users.add(userDTO);
@@ -510,7 +501,8 @@ public class MainActivity extends AppCompatActivity
                             for (Integer user_i = 1; user_i < users.size(); user_i++){
                                 //文字数は500文字以内にする。超えると拒否される
                                 //スクリーン名の制限は2018-01-01現在15文字＋from等加算で２１文字余裕を見る
-                                if (StringMatcher.getEventName(users.get(user_i).name) != null){
+                                if (StringMatcher.getComiketName(users.get(user_i).name) != null
+                                        || StringMatcher.getEventName(users.get(user_i).name,true, context) != null){
                                     builder.append("from:" + users.get(user_i).screen_name + " OR ");
                                 }
 
@@ -568,7 +560,9 @@ public class MainActivity extends AppCompatActivity
                             if (members != null){
                                 for (User member:members){
                                     //正規表現に一致するユーザのみ抽出。
-                                    if (StringMatcher.getEventName(member.getName()) != null || helper.isExisted(member.getId())){
+                                    if (StringMatcher.getComiketName(member.getName()) != null
+                                            || StringMatcher.getEventName(member.getName(),true, context) != null
+                                            || helper.isExisted(member.getId())){
                                         Log.d("Comiketter", member.getName());
                                         UserDTO userDTO = new UserDTO(member);
                                         users.add(userDTO);
@@ -656,14 +650,13 @@ public class MainActivity extends AppCompatActivity
 
     private void clearOptionalInfo(){
         //DBのオプションテーブルの入力可能部分を消去
-        ClearDialogFragment dialog = ClearDialogFragment.newInstance();
+        DialogFragment dialog = ClearDialogFragment.newInstance();
         dialog.show(getSupportFragmentManager(), "clear_confirmation");
     }
 
     private void startSearchActivity(){
         //サーチ画面を展開
         Intent intent = new Intent(this, com.kc.comiketter2.SearchUserActivity.class);
-
         startActivityForResult(intent, SearchUserActivity.REQUEST_CODE);
     }
 
@@ -747,9 +740,8 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + position);
 
-        if (fragment instanceof IObserver){
-            IObserver observer = (IObserver) fragment;
-            observer.update();
+        if (fragment instanceof IUpdater){
+            ((IUpdater)fragment).update();
         }
     }
 
@@ -766,13 +758,13 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + position);
 
-        if (fragment instanceof StickyListFragment && fragment instanceof IObserver){
+        if (fragment instanceof StickyListFragment && fragment instanceof IUpdater){
             //DataBaseHelper#clearOptionalInfoをたたく
             DatabaseHelper helper = DatabaseHelper.getInstance(this);
             //一応clearする前に位置を保存
             ((StickyListFragment)fragment).saveScrollY();
             helper.clearOptionalInfo();
-            ((IObserver)fragment).update();
+            ((IUpdater)fragment).update();
         }
         updateTotalYosan();
     }
@@ -784,10 +776,10 @@ public class MainActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + position);
 
-        if (fragment instanceof StickyListFragment && fragment instanceof IObserver){
+        if (fragment instanceof StickyListFragment && fragment instanceof IUpdater){
             //一応clearする前に位置を保存
             ((StickyListFragment)fragment).saveScrollY();
-            ((IObserver)fragment).update();
+            ((IUpdater)fragment).update();
         }
     }
 
@@ -836,7 +828,7 @@ public class MainActivity extends AppCompatActivity
         long listID = preferences.getLong(SELECTED_LIST_ID, 0);
 
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
-        int yosan = helper.getTotalYosan(myID, listID);
+        int yosan = helper.getTotalYosan(myID, listID, this);
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         totalYosan.setText(numberFormat.format(yosan));
         totalYosan.append(getString(R.string.yen));

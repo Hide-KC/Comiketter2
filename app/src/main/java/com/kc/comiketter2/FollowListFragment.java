@@ -21,7 +21,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * Created by HIDE on 2017/12/13.
  */
 
-public class FollowListFragment extends StickyListFragment implements IObserver  {
+public class FollowListFragment extends StickyListFragment implements IUpdater {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,9 +48,18 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
             long selectedListID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
             List<UserDTO> users = helper.getUserList(myID, selectedListID);
 
-            for (UserDTO user : users){
-                adapter.add(user);
+            if (preferences.getBoolean("filter_switch", false)){
+                for (UserDTO user : users){
+                    if (StringMatcher.getEventName(user.name, false, getContext()) != null){
+                        adapter.add(user);
+                    }
+                }
+            } else {
+                for (UserDTO user : users){
+                    adapter.add(user);
+                }
             }
+
             view.setTag(FOLLOW_LIST);
         } else {
             throw new IllegalArgumentException("取り出した引数は無効です");
@@ -87,11 +96,18 @@ public class FollowListFragment extends StickyListFragment implements IObserver 
                 DatabaseHelper helper = DatabaseHelper.getInstance(getActivity());
                 //UserDTOListアダプターの実装
                 List<UserDTO> users = helper.getUserList(myID, listID);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-                for (Integer user_i = 0; user_i < users.size(); user_i++){
-//                    if (users.get(user_i).auto_day > 0){
+                if (preferences.getBoolean("filter_switch", false)){
+                    for (Integer user_i = 0; user_i < users.size(); user_i++){
+                        if (StringMatcher.getEventName(users.get(user_i).name,false, getContext()) != null){
+                            adapter.add(users.get(user_i));
+                        }
+                    }
+                } else {
+                    for (Integer user_i = 0; user_i < users.size(); user_i++){
                         adapter.add(users.get(user_i));
-//                    }
+                    }
                 }
 
                 return adapter;

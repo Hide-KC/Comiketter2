@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -15,6 +14,7 @@ import twitter4j.auth.AccessToken;
  */
 
 public class MultiTwitterUtils {
+    private static final String ID = "_id";
     private static final String TOKEN = "token";
     private static final String TOKEN_SECRET = "token_secret";
 
@@ -38,7 +38,7 @@ public class MultiTwitterUtils {
 
     static public AccessToken loadAccessToken(Context context, long myID){
         DatabaseHelper helper = DatabaseHelper.getInstance(context);
-        return helper.getAccessTokenArray(myID);
+        return helper.getAccessToken(myID);
     }
 
     static public void storeAccessToken(Context context, long myID, AccessToken token){
@@ -46,9 +46,9 @@ public class MultiTwitterUtils {
         SQLiteDatabase writable = helper.getWritableDatabase();
 
         ContentValues args = new ContentValues();
-        args.put("_id", myID);
-        args.put("token", token.getToken());
-        args.put("token_secret", token.getTokenSecret());
+        args.put(ID, myID);
+        args.put(TOKEN, token.getToken());
+        args.put(TOKEN_SECRET, token.getTokenSecret());
 
         int id = (int) writable.insertWithOnConflict(helper.MULTI_ACCOUNTS, null, args, SQLiteDatabase.CONFLICT_IGNORE);
         if (id == -1){

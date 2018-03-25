@@ -155,118 +155,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void updateUserInfo(List<UserDTO> users){
-        //登録済みID一覧を取得
-        SQLiteDatabase readable = getReadableDatabase();
-        String q = "select _id from " + OPTIONAL_INFO + ";";
-        Cursor cursor = readable.rawQuery(q, null);
-
-        List<Long> registeredIDs = new ArrayList<>();
-
-        boolean eol = cursor.moveToFirst();
-        while (eol){
-            registeredIDs.add(cursor.getLong(cursor.getColumnIndex("_id")));
-            eol = cursor.moveToNext();
-        }
-
-        cursor.close();
-
-        //値のUpdate
-        SQLiteDatabase writable = getWritableDatabase();
-        writable.beginTransaction();
-        {
-            try{
-                for (Integer user_i = 0; user_i < registeredIDs.size(); user_i++){
-                    //更新前準備。スペース、日付をリセットする。サークル名はリセットしなくていいかな。
-                    //当落発表時くらいしかキャッチするタイミングがないため。
-                    String filter = "_id = " + registeredIDs.get(user_i);
-                    ContentValues cv = new ContentValues();
-                    cv.put("auto_day", 99);
-                    cv.put("circle_space", "");
-                    cv.put("hole_id", 0);
-                    writable.update(OPTIONAL_INFO, cv, filter, null);
-                }
-
-                for (Integer user_i = 0; user_i < users.size(); user_i++){
-                    UserDTO user = users.get(user_i);
-
-                    //USER_INFO query
-                    String replaceQuery = "Insert or Replace into " + USER_INFO + " ("
-                            + "_id, "
-                            + "name, "
-                            + "screen_name, "
-                            + "profile_image_url, "
-                            + "profile_description) "
-                            + "Values (?, ?, ?, ?, ?)";
-
-                    SQLiteStatement replaceUserInfo = writable.compileStatement(replaceQuery);
-                    replaceUserInfo.bindLong(1, user.user_id);
-                    replaceUserInfo.bindString(2, user.name);
-                    replaceUserInfo.bindString(3, user.screen_name);
-                    replaceUserInfo.bindString(4, user.profile_image_url);
-                    replaceUserInfo.bindString(5, user.profile_description);
-
-                    replaceUserInfo.execute();
-
-                    //OPTIONAL_INFO query
-                    //user_i == 0　は自身のアカウントのため、１からスタート
-                    if (user_i > 0){
-                        Integer autoDay = StringMatcher.getParticipateDay(user.name);
-                        String space = StringMatcher.getSpace(user.name);
-                        Integer holeID = 0;
-
-                        ContentValues instantValues = new ContentValues();
-                        instantValues.put("_id", user.user_id);
-                        if (space != null && autoDay != 99){
-                            holeID = StringMatcher.getHoleID(space);
-                            Log.d("Hole", user.name + " " + space + " " + StringMatcher.getHoleName(holeID));
-                            instantValues.put("hole_id", holeID);
-                            instantValues.put("auto_day", autoDay);
-                            instantValues.put("circle_space", space);
-                        } else {
-                            instantValues.put("auto_day", 0);
-                            instantValues.put("circle_space", "");
-                        }
-
-                        if (user.circle_name != null){
-                            instantValues.put("circle_name", user.circle_name);
-                        } else {
-                            instantValues.put("circle_name", "");
-                        }
-
-                        int id = (int) writable.insertWithOnConflict(OPTIONAL_INFO, null, instantValues, SQLiteDatabase.CONFLICT_IGNORE);
-                        if (id == -1){
-                            String filter = "_id = " + user.user_id;
-                            ContentValues args = new ContentValues();
-                            args.put("auto_day", autoDay);
-                            //当落発表ツイが流れてしまうとnullになってしまうためnullチェック
-                            if (!user.circle_name.equals("")){
-                                args.put("circle_name", user.circle_name);
-                            }
-
-                            args.put("hole_id", holeID);
-                            args.put("circle_space", space);
-                            writable.update(OPTIONAL_INFO, args, filter, null);
-                        }
-                    }
-                }
-
-                writable.setTransactionSuccessful();
-            } catch (SQLiteException ex){
-                ex.printStackTrace();
-            } finally {
-                writable.endTransaction();
-                writable.close();
-            }
-        }
-    }
-
     /**
      * relationID=0:フォロー、relationID=listID:リスト入り
      * @param relationID
      * @param users
      */
-    public void updateUserInfo(long relationID, List<UserDTO> users){
+    public void updateUserInfo(long relationID, List<UserDTO> users, Context context){
         UserDTO myAccount = users.get(0);
 
         //登録済みID一覧を取得。Relation_Infoテーブルと結合
@@ -355,15 +249,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                     ContentValues instantValues = new ContentValues();
                     instantValues.put("_id", user.user_id);
-                    if (space != null && autoDay != 99){
+                    instantValues.put("auto_day", autoDay);
+                    instantValues.put("circle_space", space);
+                    if (!space.equals("")){
                         holeID = StringMatcher.getHoleID(space);
                         Log.d("Hole", user.name + " " + space + " " + StringMatcher.getHoleName(holeID));
                         instantValues.put("hole_id", holeID);
-                        instantValues.put("auto_day", autoDay);
-                        instantValues.put("circle_space", space);
-                    } else {
-                        instantValues.put("auto_day", 0);
-                        instantValues.put("circle_space", "");
                     }
 
                     if (user.circle_name != null){
@@ -817,7 +708,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public AccessToken getAccessTokenArray(long myID){
+    public AccessToken getAccessToken(long myID){
         SQLiteDatabase readable = getReadableDatabase();
         String query = "select token, token_secret from " + MULTI_ACCOUNTS + " where _id = " + myID + ";";
         Cursor cursor = readable.rawQuery(query, null);

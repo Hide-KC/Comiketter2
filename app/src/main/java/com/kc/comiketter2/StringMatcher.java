@@ -1,6 +1,7 @@
 package com.kc.comiketter2;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -91,7 +92,8 @@ public class StringMatcher {
     //イベント名サーチメソッドフィルタ対応版
     public static String getEventName(String name, boolean checkHasSpace, Context context){
         //checkHasSpace：スペースチェックをするかどうか。false:スペースチェックをしない　true:スペースチェック実施
-        if (!checkHasSpace || getSpace(name) != null){
+        //保存済みフォローがスペースを消した場合に
+        if (!checkHasSpace || !getSpace(name).equals("")){
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             if (sharedPreferences.getBoolean(FILTER_SWITCH,false)){
                 Log.d("StringMatcher", "switch_checked");
@@ -147,7 +149,7 @@ public class StringMatcher {
      */
     private static String getEventName(String name){
         //イベント名パターンを持っているか
-        if (getSpace(name) != null){
+        if (!getSpace(name).equals("")){
             //イベント名でフィルタ、イベント名を抽出
             String eventName = getEventName(name, comikeEventPattern, true);
             if (eventName != null){
@@ -245,7 +247,7 @@ public class StringMatcher {
             builder.append(match[0]).append(match[1]).append(match[2]);
             return builder.toString();
         } else {
-            return null;
+            return "";
         }
     }
 

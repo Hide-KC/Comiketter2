@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
                     adapter.add(listDTO);
                 }
 
-//                MainActivity.this.updateTotalYosan();
+                MainActivity.this.updateTotalYosan();
             }
         };
 
@@ -688,7 +688,7 @@ public class MainActivity extends AppCompatActivity
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 long listID = preferences.getLong(SELECTED_LIST_ID, 0);
-                helper.updateUserInfo(listID, users);
+                helper.updateUserInfo(listID, users, this);
 
                 ImageButton btn = findViewById(R.id.navigation_icon);
                 Glide.with(this).load(myself.profile_image_url).into(btn);
@@ -818,6 +818,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateTotalYosan(){
+        Log.d("Yosan", "updateTotalYosan");
         final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
         ConstraintLayout headerLayout = includeDrawer.findViewById(R.id.header_layout);

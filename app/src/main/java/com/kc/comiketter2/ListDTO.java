@@ -1,5 +1,7 @@
 package com.kc.comiketter2;
 
+import android.util.Log;
+
 /**
  * Created by HIDE on 2018/01/18.
  */

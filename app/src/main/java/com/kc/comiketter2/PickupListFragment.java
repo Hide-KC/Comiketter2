@@ -65,7 +65,6 @@ public class PickupListFragment extends StickyListFragment implements IUpdater {
                 }
             }
 
-
             view.setTag(PICKUP_LIST);
         } else {
             throw new IllegalArgumentException("取り出した引数は無効です");

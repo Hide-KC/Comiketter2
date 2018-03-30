@@ -39,6 +39,9 @@
     <string name="yen">円</string>
     <string name="dialog_title">情報を入力</string>
     <string name="clear_message">ユーザ入力情報をクリアします。\n（サークル名は消去されません）</string>
+    <string name="clear_got_data">取得したデータをクリアします。\n自身のアカウントは消去されません。</string>
+    <string name="clear_got_data_success">データのクリア成功</string>
+    <string name="clear_got_data_miss">データのクリア失敗</string>
 
     <!--メニュー関係-->
     <string name="clear">クリア</string>
@@ -81,6 +84,27 @@
     <string name="clear_filter">フィルタのクリア</string>
     <string name="clear_filter_message">フィルタを消去します。\nよろしいですか？</string>
     <string name="filter_or_search">「 , 」区切りでOR検索ができます</string>
+    <string name="how_to">使い方</string>
+    <string name="clear_data">ユーザ情報のクリア</string>
+    <string name="clear_data_summary">取得したユーザ情報を削除します。</string>
+    <string name="visible_all_user">全てのユーザを表示</string>
+    <string name="visible_all_user_summary">OFFにすると配置を取得できたユーザのみ表示します。</string>
+    <string name="how_to_text">
+        ！アカウントの取得における前提条件！\n
+        サークルスペース（「A01a」「あ01ab」等）を表示していないアカウントは取得できませんのでご留意ください。\n
+        \n
+        ①夏コミ・冬コミサークル参加者の取得\n
+        フィルタを無効化した状態で、更新を実行します。\n
+        \n
+        ②特定の即売会参加者の取得\n
+        （１）フィルタワードを設定し、チェックボックスにチェックを入れます。\n
+        （２）フィルタを有効にします。\n
+        （３）更新を実行すると、フィルタワードにマッチするアカウントが取得されます。\n
+        \n
+        ③一度取得したアカウントについて\n
+        イベント後にサークルスペースが削除されても、その他欄に表示をします。\n
+        「全てのユーザを表示」を無効にすると、サークルスペースが表示されているアカウントのみ表示します。
+    </string>
 
     <!--その他-->
     <string name="no_client">There are no Twitter client.</string>

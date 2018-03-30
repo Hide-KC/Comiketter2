@@ -75,15 +75,17 @@ public class MainActivity extends AppCompatActivity
             onPageSelected(tabLayout.getSelectedTabPosition());
         } else if (requestCode == MyPreferenceActivity.REQUEST_CODE){
             //カスタムフィルタの状態を読込み、ページ更新
+            //取得済みユーザを全て表示するかどうか。カスタムフィルタとOR条件
             Log.d("Preference", "onActivityResult");
             Toolbar toolbar = findViewById(R.id.toolbar);
             ImageView filterView = toolbar.findViewById(R.id.toolbar_constraint).findViewById(R.id.filter_image);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if (preferences.getBoolean("filter_switch", false)){
+            if (preferences.getBoolean("filter_switch", false) || preferences.getBoolean("visible_all_user", false)){
                 filterView.setVisibility(View.VISIBLE);
             } else {
                 filterView.setVisibility(View.INVISIBLE);
             }
+
             TabLayout tabLayout = findViewById(R.id.tab_layout);
             onPageSelected(tabLayout.getSelectedTabPosition());
         }
@@ -650,7 +652,7 @@ public class MainActivity extends AppCompatActivity
 
     private void clearOptionalInfo(){
         //DBのオプションテーブルの入力可能部分を消去
-        DialogFragment dialog = ClearDialogFragment.newInstance();
+        DialogFragment dialog = ClearDialogFragment.newInstance(getString(R.string.clear_message));
         dialog.show(getSupportFragmentManager(), "clear_confirmation");
     }
 

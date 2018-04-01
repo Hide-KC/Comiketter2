@@ -51,19 +51,27 @@ public class PickupListFragment extends StickyListFragment implements IUpdater {
             long selectedListID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
             List<UserDTO> users = helper.getUserList(myID, selectedListID);
 
-            if (preferences.getBoolean("filter_switch", false)){
-                for (UserDTO user : users){
-                    if (user.pickup == 1 && StringMatcher.getEventName(user.name,false, getContext()) != null){
-                        adapter.add(user);
-                    }
-                }
-            } else {
-                for (UserDTO user : users){
-                    if (user.pickup == 1){
-                        adapter.add(user);
-                    }
+            this.filterUsers(users);
+
+            for (UserDTO user : users){
+                if (user.pickup == 1){
+                    adapter.add(user);
                 }
             }
+
+//            if (preferences.getBoolean("filter_switch", false)){
+//                for (UserDTO user : users){
+//                    if (user.pickup == 1 && StringMatcher.getEventName(user.name,false, getContext()) != null){
+//                        adapter.add(user);
+//                    }
+//                }
+//            } else {
+//                for (UserDTO user : users){
+//                    if (user.pickup == 1){
+//                        adapter.add(user);
+//                    }
+//                }
+//            }
 
             view.setTag(PICKUP_LIST);
         } else {
@@ -121,19 +129,11 @@ public class PickupListFragment extends StickyListFragment implements IUpdater {
                 DatabaseHelper helper = DatabaseHelper.getInstance(getActivity());
                 //PickupListアダプターの実装
                 List<UserDTO> users = helper.getUserList(myID, listID);
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                if (preferences.getBoolean("filter_switch", false)){
-                    for (Integer user_i = 0; user_i < users.size(); user_i++){
-                        if (users.get(user_i).pickup == 1
-                                && StringMatcher.getEventName(users.get(user_i).name,false, getContext()) != null){
-                            adapter.add(users.get(user_i));
-                        }
-                    }
-                } else {
-                    for (Integer user_i = 0; user_i < users.size(); user_i++){
-                        if (users.get(user_i).pickup == 1){
-                            adapter.add(users.get(user_i));
-                        }
+                PickupListFragment.this.filterUsers(users);
+
+                for (UserDTO user : users){
+                    if (user.pickup == 1){
+                        adapter.add(user);
                     }
                 }
 
@@ -165,6 +165,27 @@ public class PickupListFragment extends StickyListFragment implements IUpdater {
         long myID = preferences.getLong(MainActivity.MY_ID, 0);
         long listID = preferences.getLong(MainActivity.SELECTED_LIST_ID, 0);
         task.execute(myID, listID);
+    }
+
+    @Override
+    protected void filterUsers(List<UserDTO> users) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        //フィルタの有効化と全てのユーザの表示
+        StringBuilder name = new StringBuilder();
+        for (int user_i = users.size() - 1; user_i >= 0; user_i--){
+            name.append(users.get(user_i).name);
+            if (preferences.getBoolean("filter_switch", false)){
+                if (StringMatcher.getEventName(name.toString(), false, getContext()) == null){
+                    users.remove(user_i);
+                }
+            } else if (preferences.getBoolean("visible_all_user", false)){
+                if (StringMatcher.getSpace(name.toString()).equals("")){
+                    users.remove(user_i);
+                }
+            }
+            name.setLength(0);
+        }
     }
 
     @Override

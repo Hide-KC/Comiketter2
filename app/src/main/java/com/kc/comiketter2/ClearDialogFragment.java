@@ -12,7 +12,7 @@ import android.support.v7.app.AlertDialog;
  */
 
 public class ClearDialogFragment extends DialogFragment {
-    public interface Callback{
+    public interface ICallback {
         void onPositiveButtonClicked();
     }
 
@@ -37,8 +37,8 @@ public class ClearDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //OK
-                        if (getActivity() instanceof Callback){
-                            ((Callback) getActivity()).onPositiveButtonClicked();
+                        if (getActivity() instanceof ICallback){
+                            ((ICallback) getActivity()).onPositiveButtonClicked();
                         }
                     }
                 })

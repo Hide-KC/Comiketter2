@@ -493,19 +493,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //自身のアカウント以外の全消去
         boolean ret = false;
         SQLiteDatabase writable = getWritableDatabase();
-        String sql = "truncate table ";
+        String sql = "delete from ";
         writable.beginTransaction(); {
             try {
-                writable.execSQL(sql + USER_INFO + ";");
-                writable.execSQL(sql + OPTIONAL_INFO + ";");
-                writable.execSQL(sql + LIST_INFO + ";");
-                writable.execSQL(sql + RELATION_INFO + ";");
+                writable.execSQL(sql + USER_INFO);
+                writable.execSQL(sql + OPTIONAL_INFO);
+                writable.execSQL(sql + LIST_INFO);
+                writable.execSQL(sql + RELATION_INFO);
                 ret = true;
                 writable.setTransactionSuccessful();
             } catch (SQLiteException e){
                 e.printStackTrace();
             } finally {
                 writable.endTransaction();
+                writable.execSQL("vacuum");
                 writable.close();
             }
         }

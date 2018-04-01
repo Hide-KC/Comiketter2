@@ -1,19 +1,12 @@
 package com.kc.comiketter2;
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.SwitchPreference;
 import android.util.Log;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,12 +68,11 @@ public class StringMatcher {
     //コミケ関係の日付記載パターン
     final private static String[] comikeEventPattern = new String[]{
             "[１-３1-3一二三]日目",
-            "[月火水木金土]曜?",
+            "[金土]",
             "日曜",
             "初日",
             "[東西]" + EVENT_SPACE_PATTERN,
-            "[CＣ][0-9０-９]{2,3}.*日曜?"
-//            ,"砲|ﾃｨｱ|ティア"
+            "[CＣ][0-9０-９]{2,3}.*日"
     };
 
     //どのパターンが何日目にマッチするのかをここで定義。

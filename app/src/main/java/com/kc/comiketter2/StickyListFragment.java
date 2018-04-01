@@ -1,7 +1,11 @@
 package com.kc.comiketter2;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+
+import java.util.List;
 
 /**
  * Created by HIDE on 2017/12/13.
@@ -29,6 +33,7 @@ public abstract class StickyListFragment extends Fragment {
         return fragment;
     }
 
+    protected abstract void filterUsers(List<UserDTO> users);
     public abstract void selectionToTop();
     public abstract void saveScrollY();
 }

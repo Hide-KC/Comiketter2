@@ -39,7 +39,7 @@
     <string name="yen">円</string>
     <string name="dialog_title">情報を入力</string>
     <string name="clear_message">ユーザ入力情報をクリアします。\n（サークル名は消去されません）</string>
-    <string name="clear_got_data">取得したデータをクリアします。\n自身のアカウントは消去されません。</string>
+    <string name="clear_got_data">取得したデータをクリアします。\n（自身のアカウント情報は消去されません）</string>
     <string name="clear_got_data_success">データのクリア成功</string>
     <string name="clear_got_data_miss">データのクリア失敗</string>
 

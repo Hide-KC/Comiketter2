@@ -9,8 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-public class MyPreferenceActivity extends AppCompatActivity {
+public class MyPreferenceActivity extends AppCompatActivity implements ClearDialogFragment.ICallback {
     public static final Integer REQUEST_CODE = 2000;
 
     @Override
@@ -46,5 +47,15 @@ public class MyPreferenceActivity extends AppCompatActivity {
         manager.beginTransaction()
                 .add(R.id.container, fragment, "preference_fragment")
                 .commit();
+    }
+
+    @Override
+    public void onPositiveButtonClicked() {
+        DatabaseHelper helper = DatabaseHelper.getInstance(this);
+        if (helper.clearData()){
+            Toast.makeText(this, getString(R.string.clear_got_data_success), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.clear_got_data_miss), Toast.LENGTH_SHORT).show();
+        }
     }
 }

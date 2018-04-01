@@ -9,13 +9,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 /**
  * Created by HIDE on 2018/03/03.
  */
 
-public class MyPreferenceFragment extends PreferenceFragment implements ClearDialogFragment.Callback{
+public class MyPreferenceFragment extends PreferenceFragment{
     public static final int FILTER_COUNT = 5;
 
     public static PreferenceFragment newInstance(){
@@ -56,15 +55,5 @@ public class MyPreferenceFragment extends PreferenceFragment implements ClearDia
                 return false;
             }
         });
-    }
-
-    @Override
-    public void onPositiveButtonClicked() {
-        DatabaseHelper helper = DatabaseHelper.getInstance(this.getActivity());
-        if (helper.clearData()){
-            Toast.makeText(this.getActivity(), getString(R.string.clear_got_data_success), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this.getActivity(), getString(R.string.clear_got_data_miss), Toast.LENGTH_SHORT).show();
-        }
     }
 }

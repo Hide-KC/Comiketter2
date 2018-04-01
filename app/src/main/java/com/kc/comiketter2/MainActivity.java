@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
         implements MyAsyncTask.IAsyncTaskCallback,
         UserLoadDialogFragment.IDialogControl,
         ViewPager.OnPageChangeListener,
-        ClearDialogFragment.Callback{
+        ClearDialogFragment.ICallback {
     //画面回転時、 task == null（onCreate） となってしまうので、
     //とりあえず TwitterUtils.task に参照を退避するようにしている。
     //task,dialogで弱参照しているActivity,DialogFragmentが軒並み参照先を失ってしまうので、
@@ -75,12 +75,11 @@ public class MainActivity extends AppCompatActivity
             onPageSelected(tabLayout.getSelectedTabPosition());
         } else if (requestCode == MyPreferenceActivity.REQUEST_CODE){
             //カスタムフィルタの状態を読込み、ページ更新
-            //取得済みユーザを全て表示するかどうか。カスタムフィルタとOR条件
             Log.d("Preference", "onActivityResult");
             Toolbar toolbar = findViewById(R.id.toolbar);
             ImageView filterView = toolbar.findViewById(R.id.toolbar_constraint).findViewById(R.id.filter_image);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if (preferences.getBoolean("filter_switch", false) || preferences.getBoolean("visible_all_user", false)){
+            if (preferences.getBoolean("filter_switch", false)){
                 filterView.setVisibility(View.VISIBLE);
             } else {
                 filterView.setVisibility(View.INVISIBLE);
@@ -202,6 +201,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 Log.d("DrawerToggle", "Opened");
+                ListView listView = drawerView.findViewById(R.id.left_drawer);
+                ListDTOAdapter adapter = (ListDTOAdapter)listView.getAdapter();
+                adapter.clear();
+
+                List<ListDTO> listDTOs = helper.getLists(MainActivity.this, myID);
+                for (ListDTO listDTO:listDTOs){
+                    adapter.add(listDTO);
+                }
+
+                MainActivity.this.updateTotalYosan();
             }
 
             @Override
@@ -436,6 +445,7 @@ public class MainActivity extends AppCompatActivity
                                 Log.d("Comiketter2", "フォローID一覧が取得できませんでした。");
                                 return null;
                             }
+                            cursor = ids.getNextCursor();
                         } while (ids.hasNext());
 
                         //ユーザIDが０個だったら抜ける
@@ -583,6 +593,7 @@ public class MainActivity extends AppCompatActivity
                                 Log.d("Comiketter2", "フォローID一覧が取得できませんでした。");
                                 return null;
                             }
+                            cursor = members.getNextCursor();
                         } while (members.hasNext());
 
                         //リストメンバーが０個だったら抜ける

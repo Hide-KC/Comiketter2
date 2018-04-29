@@ -490,11 +490,15 @@ public class MainActivity extends AppCompatActivity
 
                             publishProgress(1, i * 100 + j);
 
-                            RateLimitStatus rateLimit = userResponseList.getRateLimitStatus();
-                            Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
+                            try {
+                                RateLimitStatus rateLimit = userResponseList.getRateLimitStatus();
+                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
 
-                            if (rateLimit.getRemaining() <= 0){
-                                Log.d("Comiketter2", "API切れです。");
+                                if (rateLimit.getRemaining() <= 0){
+                                    Log.d("Comiketter2", "API切れです。");
+                                }
+                            } catch (NullPointerException e){
+                                return users;
                             }
 
                             if (this.isCancelled()) return users;
@@ -564,8 +568,13 @@ public class MainActivity extends AppCompatActivity
                         }
                     } else {
                         //リストの更新の場合
+                        //メンバーカウントを取得
+                        UserList userList = twitter.showUserList(targetID);
+                        publishProgress(0, userList.getMemberCount());
+
                         PagableResponseList<User> members;
-                        Long cursor = -1L;
+                        long cursor = -1L;
+                        int count = 0;
                         do {
                             members = twitter.getUserListMembers(targetID, cursor);
 
@@ -581,26 +590,29 @@ public class MainActivity extends AppCompatActivity
                                     }
                                 }
 
-                                RateLimitStatus rateLimit = members.getRateLimitStatus();
-                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
+                                try {
+                                    RateLimitStatus rateLimit = members.getRateLimitStatus();
+                                    Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
 
-                                if (rateLimit.getRemaining() <= 0){
-                                    Log.d("Comiketter2", "API切れです。");
+                                    if (rateLimit.getRemaining() <= 0){
+                                        Log.d("Comiketter2", "API切れです。");
+                                        break;
+                                    }
+                                } catch (NullPointerException e){
                                     break;
                                 }
-
                             } else {
                                 Log.d("Comiketter2", "フォローID一覧が取得できませんでした。");
                                 return null;
                             }
+                            publishProgress(1, members.size() + 20 * count);
                             cursor = members.getNextCursor();
+                            count++;
                         } while (members.hasNext());
 
                         //リストメンバーが０個だったら抜ける
                         if (users.size() <= 0) {
                             return null;
-                        } else {
-                            publishProgress(0, members.size());
                         }
 
                         if (this.isCancelled()) return null;
@@ -646,7 +658,9 @@ public class MainActivity extends AppCompatActivity
                 try{
                     weakDialog.get().dismiss();
                 } catch (NullPointerException e){
-
+                    e.printStackTrace();
+                } catch (IllegalStateException e){
+                    e.printStackTrace();
                 }
             }
         };

@@ -15,8 +15,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
+        android:maxLines="2"
         android:scrollHorizontally="true"
-        android:singleLine="true"
         android:text="name"
         android:textAlignment="viewStart"
         android:textSize="14sp"
@@ -46,7 +46,7 @@
         android:layout_marginTop="4dp"
         android:background="@android:color/transparent"
         android:ellipsize="end"
-        android:maxLines="4"
+        android:maxLines="3"
         android:text="profile_description"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/spacer"
@@ -75,8 +75,8 @@
         android:text="@string/circle_space_hint"
         android:textAlignment="viewEnd"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/name" />
 
     <TextView
         android:id="@+id/circle_name"
@@ -101,8 +101,8 @@
         android:layout_marginEnd="2dp"
         android:text="    "
         android:textAlignment="viewEnd"
-        app:layout_constraintBottom_toBottomOf="@+id/name"
-        app:layout_constraintEnd_toStartOf="@+id/circle_space" />
+        app:layout_constraintEnd_toStartOf="@+id/circle_space"
+        app:layout_constraintTop_toTopOf="@+id/name" />
 
     <Space
         android:id="@+id/spacer"

@@ -59,20 +59,6 @@ public class PickupListFragment extends StickyListFragment implements IUpdater {
                 }
             }
 
-//            if (preferences.getBoolean("filter_switch", false)){
-//                for (UserDTO user : users){
-//                    if (user.pickup == 1 && StringMatcher.getEventName(user.name,false, getContext()) != null){
-//                        adapter.add(user);
-//                    }
-//                }
-//            } else {
-//                for (UserDTO user : users){
-//                    if (user.pickup == 1){
-//                        adapter.add(user);
-//                    }
-//                }
-//            }
-
             view.setTag(PICKUP_LIST);
         } else {
             throw new IllegalArgumentException("取り出した引数は無効です");
@@ -179,8 +165,8 @@ public class PickupListFragment extends StickyListFragment implements IUpdater {
                 if (StringMatcher.getEventName(name.toString(), false, getContext()) == null){
                     users.remove(user_i);
                 }
-            } else if (preferences.getBoolean("visible_all_user", false)){
-                if (StringMatcher.getSpace(name.toString()).equals("")){
+            } else if (!preferences.getBoolean("visible_all_user", true)){
+                if (users.get(user_i).circle_space.equals("")){
                     users.remove(user_i);
                 }
             }

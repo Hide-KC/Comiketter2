@@ -23,7 +23,6 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/toolbar_clear"
-        android:icon="@drawable/clear"
         android:title="@string/clear"
         app:showAsAction="never"/>
     <item

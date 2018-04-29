@@ -143,8 +143,8 @@ public class FollowListFragment extends StickyListFragment implements IUpdater {
                 if (StringMatcher.getEventName(name.toString(), false, getContext()) == null){
                     users.remove(user_i);
                 }
-            } else if (preferences.getBoolean("visible_all_user", false)){
-                if (StringMatcher.getSpace(name.toString()).equals("")){
+            } else if (!preferences.getBoolean("visible_all_user", true)){
+                if (users.get(user_i).circle_space.equals("")){
                     users.remove(user_i);
                 }
             }

@@ -206,25 +206,25 @@ public class StringMatcher {
         Pattern patternSpace = Pattern.compile(EVENT_SPACE_PATTERN);
         Matcher matcherSpace = patternSpace.matcher(name);
         if (matcherSpace.find()){
-            Pattern patternAB = Pattern.compile(AB);
+            Pattern patternAB = Pattern.compile(EVENT_SPACE_PATTERN + AB);
             Matcher matcherAB = patternAB.matcher(name);
 
             String[] match;
             if (matcherAB.find()){
                 match = new String[]{
-                        Normalizer.normalize(matcherSpace.group(1), Normalizer.Form.NFKC),
-                        Normalizer.normalize(matcherSpace.group(2), Normalizer.Form.NFKC),
-                        Normalizer.normalize(matcherAB.group(1), Normalizer.Form.NFKC)};
+                        Normalizer.normalize(matcherAB.group(1), Normalizer.Form.NFKC),
+                        Normalizer.normalize(matcherAB.group(2), Normalizer.Form.NFKC),
+                        Normalizer.normalize(matcherAB.group(3), Normalizer.Form.NFKC)};
 
             } else {
-                Pattern patternAOrB = Pattern.compile(AOrB);
+                Pattern patternAOrB = Pattern.compile(EVENT_SPACE_PATTERN + AOrB);
                 Matcher matcherAOrB = patternAOrB.matcher(name);
 
                 if (matcherAOrB.find()){
                     match = new String[]{
-                            Normalizer.normalize(matcherSpace.group(1), Normalizer.Form.NFKC),
-                            Normalizer.normalize(matcherSpace.group(2), Normalizer.Form.NFKC),
-                            Normalizer.normalize(matcherAOrB.group(1), Normalizer.Form.NFKC)};
+                            Normalizer.normalize(matcherAOrB.group(1), Normalizer.Form.NFKC),
+                            Normalizer.normalize(matcherAOrB.group(2), Normalizer.Form.NFKC),
+                            Normalizer.normalize(matcherAOrB.group(3), Normalizer.Form.NFKC)};
                 } else {
                     match = new String[]{
                             Normalizer.normalize(matcherSpace.group(1), Normalizer.Form.NFKC),

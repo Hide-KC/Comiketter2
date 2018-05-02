@@ -14,6 +14,12 @@ public class ConfirmOAuthActivity extends AppCompatActivity {
     private TwitterOAuth mOAuth;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ConfirmOAuthActivity.this.finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_oauth);
@@ -25,15 +31,6 @@ public class ConfirmOAuthActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mOAuth.startAuthorize();
-            }
-        });
-
-
-        Button btnNo = (Button)findViewById(R.id.btnNo);
-        btnNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ConfirmOAuthActivity.this.finish();
             }
         });
     }

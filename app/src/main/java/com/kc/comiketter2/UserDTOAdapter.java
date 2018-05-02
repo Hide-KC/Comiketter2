@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,7 +144,13 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
         }
 
         //自己紹介の設定
+        if (holder.name.getLineCount() == 2){
+            holder.profile_description.setMaxLines(3);
+        }
         holder.profile_description.setText(user.profile_description);
+
+        //末尾の処理
+        holder.profile_description.setEllipsize(TextUtils.TruncateAt.END);
 
         //ふぁぼの設定
         if (user.pickup == 0){
@@ -167,12 +174,6 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
                 }
             }
         });
-
-        //1列の高さの指定。不規則に高さがばらついてしまうため指定している
-//        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, holder.profile_image.getHeight());
-//        convertView.setLayoutParams(params);
-//        Log.d("Comiketter2", String.valueOf(convertView.getHeight()));
-
 
         int day = 0;
         if (user.manual_day == 0){

@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">CircleFinder</string>
-    <string name="txtRenkei">Twitterアカウントと連携を行います。\nよろしいですか？</string>
-    <string name="yes">Yes</string>
+    <string name="txtRenkei">Twitter連携で始める\nサークルチェック</string>
+    <string name="privacy_policy_url">http://blog.livedoor.jp/kcstock/archives/53420989.html</string>
+    <string name="privacy_policy">Application Privacy Policy</string>
+    <string name="yes">アカウントとつながる</string>
     <string name="no">No</string>
 
     <!--OAuth認証関係-->

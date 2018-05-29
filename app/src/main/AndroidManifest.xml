@@ -36,9 +36,10 @@
                     android:scheme="twittercallback" />
             </intent-filter>
         </activity>
-        <activity android:name=".SearchUserActivity"></activity>
-        <activity android:name=".MyPreferenceActivity"></activity>
-        <activity android:name=".HowToActivity"></activity>
+        <activity android:name=".SearchUserActivity" />
+        <activity android:name=".MyPreferenceActivity" />
+        <activity android:name=".HowToActivity" />
+        <activity android:name=".PrivacyPolicyActivity"></activity>
     </application>
 
 </manifest>

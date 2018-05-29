@@ -38,13 +38,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
     }
 
     public static DialogFragment newInstance(long userID){
-        OptionalInfoDialogFragment dialog = new OptionalInfoDialogFragment();
-        Bundle args = new Bundle();
-        args.putLong("_id", userID);
-
-        dialog.setArguments(args);
-        dialog.setTargetFragment(null, 0);
-        return dialog;
+        return newInstance(null, userID);
     }
 
     @NonNull

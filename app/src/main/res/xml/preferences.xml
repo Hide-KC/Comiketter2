@@ -50,5 +50,8 @@
         <Preference
             android:key="how_to"
             android:title="@string/how_to"/>
+        <Preference
+            android:key="privacy_policy"
+            android:title="@string/privacy_policy_ja"/>
     </PreferenceCategory>
 </PreferenceScreen>

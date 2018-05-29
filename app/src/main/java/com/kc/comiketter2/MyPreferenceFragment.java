@@ -38,7 +38,6 @@ public class MyPreferenceFragment extends PreferenceFragment{
         clearDataPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d("PreferenceFragment", "clear_data");
                 DialogFragment dialog = ClearDialogFragment.newInstance(getString(R.string.clear_got_data));
                 dialog.show(((AppCompatActivity)(MyPreferenceFragment.this.getActivity())).getSupportFragmentManager(), "clear_all");
                 return false;
@@ -49,8 +48,17 @@ public class MyPreferenceFragment extends PreferenceFragment{
         howToPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d("PreferenceFragment", "how_to");
                 Intent intent = new Intent(MyPreferenceFragment.this.getActivity(), com.kc.comiketter2.HowToActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
+
+        Preference privacyPolicyPreference = findPreference("privacy_policy");
+        privacyPolicyPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(MyPreferenceFragment.this.getActivity(), com.kc.comiketter2.PrivacyPolicyActivity.class);
                 startActivity(intent);
                 return false;
             }

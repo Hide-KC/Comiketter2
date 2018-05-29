@@ -3,8 +3,11 @@
     <string name="txtRenkei">Twitter連携で始める\nサークルチェック</string>
     <string name="privacy_policy_url">http://blog.livedoor.jp/kcstock/archives/53420989.html</string>
     <string name="privacy_policy">Application Privacy Policy</string>
+    <string name="privacy_policy_ja">プライバシーポリシー</string>
     <string name="yes">アカウントとつながる</string>
     <string name="no">No</string>
+    <string name="twitter">Twitter</string>
+    <string name="kcpoipoi">\@kcpoipoi\nハッシュタグ「#CircleFinder」で開発状況をツイートしています。</string>
 
     <!--OAuth認証関係-->
     <string name="consumer_key">reqGaYmF6UgKSzckijUAU48WB</string>
@@ -92,9 +95,8 @@
     <string name="visible_all_user">全てのユーザを表示</string>
     <string name="visible_all_user_summary">OFFにすると配置を取得できたユーザのみ表示します。</string>
     <string name="how_to_text">
-        ！アカウントの取得における前提条件！\n
-        サークルスペース（「A01a」「あ01ab」等）を表示していないアカウントは取得できませんのでご留意ください。\n
-        \n
+        <b>最初に「更新」をしてみてください！\n作成済のリストがドロワーに表示されます。</b>\n\n
+
         ①夏コミ・冬コミサークル参加者の取得\n
         フィルタを無効化した状態で、更新を実行します。\n
         \n
@@ -105,7 +107,10 @@
         \n
         ③一度取得したアカウントについて\n
         イベント後にサークルスペースが削除されても、その他欄に表示をします。\n
-        「全てのユーザを表示」を無効にすると、サークルスペースが表示されているアカウントのみ表示します。
+        「全てのユーザを表示」を無効にすると、サークルスペースが表示されているアカウントのみ表示します。\n\n
+
+        ◎アカウントの取得における前提条件\n
+        サークルスペース（「A01a」「あ01ab」等）を表示していないアカウントは取得できませんのでご留意ください。\n
     </string>
 
     <!--その他-->

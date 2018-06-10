@@ -39,7 +39,6 @@
         <activity android:name=".SearchUserActivity" />
         <activity android:name=".MyPreferenceActivity" />
         <activity android:name=".HowToActivity" />
-        <activity android:name=".PrivacyPolicyActivity"></activity>
     </application>
 
 </manifest>

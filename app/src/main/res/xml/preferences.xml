@@ -3,8 +3,10 @@
     <PreferenceCategory android:title="@string/category_filter_title">
         <SwitchPreference
             android:key="filter_switch"
+            android:defaultValue="false"
             android:title="@string/switch_pref_title"
-            android:summary="@string/switch_pref_summary" />
+            android:summary="@string/switch_pref_summary"
+            android:visibility="invisible"/>
     </PreferenceCategory>
 
     <PreferenceScreen android:title="@string/filter"

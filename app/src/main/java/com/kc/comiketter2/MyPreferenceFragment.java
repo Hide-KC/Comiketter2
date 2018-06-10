@@ -58,8 +58,8 @@ public class MyPreferenceFragment extends PreferenceFragment{
         privacyPolicyPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(MyPreferenceFragment.this.getActivity(), com.kc.comiketter2.PrivacyPolicyActivity.class);
-                startActivity(intent);
+                DialogFragment dialog = ExplainDialogFragment.newInstance();
+                dialog.show(((AppCompatActivity)(MyPreferenceFragment.this.getActivity())).getSupportFragmentManager(), "explain");
                 return false;
             }
         });

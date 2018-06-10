@@ -24,7 +24,6 @@ import twitter4j.auth.AccessToken;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public final String USER_INFO = "user_info";
     public final String OPTIONAL_INFO = "optional_info";
-    public final String HOLE_NAMES = "hole_names";
     public final String MULTI_ACCOUNTS = "multi_accounts";
     public final String LIST_INFO = "list_info";
     public final String RELATION_INFO = "relation_info";
@@ -46,18 +45,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "auto_day integer not null, "
             + "manual_day integer, "
             + "circle_name text, "
-            + "circle_space text, "
-            + "hole_id integer, "
             + "target integer, "
             + "busuu integer, "
             + "yosan integer, "
             + "memo text, "
             + "pickup integer, "
             + "hasgot integer )";
-
-    private final String HOLE_NAME_QUERY = "create table " + HOLE_NAMES + " ("
-            + "hole_id integer primary key not null, "
-            + "name text not null )";
 
     //_id：my_id
     //storeAccessTokenの関係で_id以外はNULL制約かけられない
@@ -108,7 +101,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.execSQL(MULTI_ACCOUNT_QUERY);
         database.execSQL(LIST_INFO_QUERY);
         database.execSQL(RELATION_INFO_QUERY);
-        database.execSQL(HOLE_NAME_QUERY);
     }
 
     @Override
@@ -117,21 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < newVersion){
             if (oldVersion == 1 && newVersion == 2){
                 //OPTIONAL_INFOテーブルへのhole_id列追加、HOLE_NAMESテーブルの追加
-                try {
-                    database.execSQL(HOLE_NAME_QUERY);
-                    database.execSQL(
-                            "alter table " + OPTIONAL_INFO + " add hole_id text"
-                    );
-                } catch (SQLiteException ex){
-                    ex.printStackTrace();
-                }
-
-                for (Integer key:StringMatcher.getMapKeys()){
-                    ContentValues cv = new ContentValues();
-                    cv.put("hole_id", key);
-                    cv.put("name", StringMatcher.getHoleName(key));
-                    database.insert(HOLE_NAMES, null, cv);
-                }
+                //→対応終了
             } else if (oldVersion == 2 && newVersion == 3){
                 //複アカ、リスト対応
                 try {
@@ -151,6 +129,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 } catch (SQLiteException ex){
                     ex.printStackTrace();
                 }
+            } else if (oldVersion == 3 && newVersion == 4){
+                //ダイアログ表示して再構築してよいか伺う。
+                //全テーブルのドロップ、再構築
+
             }
         }
     }
@@ -210,8 +192,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String filter = "_id = " + registeredIDs.get(user_i);
                     ContentValues cv = new ContentValues();
                     cv.put("auto_day", 99);
-                    cv.put("circle_space", "");
-                    cv.put("hole_id", 0);
                     writable.update(OPTIONAL_INFO, cv, filter, null);
                 }
 
@@ -244,18 +224,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                     //OPTIONAL_INFO query
                     Integer autoDay = StringMatcher.getParticipateDay(user.name);
-                    String space = StringMatcher.getSpace(user.name);
-                    Integer holeID = 0;
 
                     ContentValues instantValues = new ContentValues();
                     instantValues.put("_id", user.user_id);
                     instantValues.put("auto_day", autoDay);
-                    instantValues.put("circle_space", space);
-                    if (!space.equals("")){
-                        holeID = StringMatcher.getHoleID(space);
-                        Log.d("Hole", user.name + " " + space + " " + StringMatcher.getHoleName(holeID));
-                        instantValues.put("hole_id", holeID);
-                    }
 
                     if (user.circle_name != null){
                         instantValues.put("circle_name", user.circle_name);
@@ -273,8 +245,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             instantValues2.put("circle_name", user.circle_name);
                         }
 
-                        instantValues2.put("hole_id", holeID);
-                        instantValues2.put("circle_space", space);
                         writable.update(OPTIONAL_INFO, instantValues2, filter, null);
                     }
 
@@ -312,7 +282,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u inner join ").append(RELATION_INFO).append(" on u._id = ").append(RELATION_INFO).append(".user_id");
         //query3
         queryBuilder3.append("select * from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID);
-        queryBuilder3.append(" order by v.auto_day ASC, v.hole_id ASC, v.circle_space ASC;");
+        queryBuilder3.append(" order by v.auto_day ASC;");
 
         Log.d("Query", queryBuilder3.toString());
 
@@ -328,9 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
             user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
             user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
-            user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
             user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
-            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
             user.target = cursor.getInt(cursor.getColumnIndex("target"));
             user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
             user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));
@@ -358,7 +326,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //query1
         queryBuilder1.append("select * from ").append(USER_INFO).append(" inner join ").append(OPTIONAL_INFO).append(" on ").append(USER_INFO).append("._id = ").append(OPTIONAL_INFO).append("._id");
         //query2
-        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u order by u.auto_day ASC, u.hole_id ASC, u.circle_space ASC;");
+        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u order by u.auto_day ASC;");
 
         Cursor cursor = database.rawQuery(queryBuilder2.toString(), null);
 
@@ -372,9 +340,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
             user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
             user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
-            user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
             user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
-            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
             user.target = cursor.getInt(cursor.getColumnIndex("target"));
             user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
             user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));
@@ -409,9 +375,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
         user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
         user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
-        user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
         user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
-        user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
         user.target = cursor.getInt(cursor.getColumnIndex("target"));
         user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
         user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));
@@ -548,8 +512,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url"));
             user.pickup = cursor.getInt(cursor.getColumnIndex("pickup"));
             user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
-            user.hole_id = cursor.getInt(cursor.getColumnIndex("hole_id"));
-            user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
             users.add(user);
             eol = cursor.moveToNext();
         }
@@ -558,7 +520,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return users;
     }
 
-    public Boolean isExisted(Long userID){
+    public Boolean isUserExisted(Long userID){
         StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append("select _id from ").append(USER_INFO).append(" where _id = ").append(userID).append(";");
 

@@ -18,8 +18,6 @@ public class UserDTO {
     public int auto_day = 0;
     public int manual_day = 0;
     public String circle_name = "";
-    public String circle_space = "";
-    public int hole_id = 0;
     public int target = 0;
     public int busuu = 0;
     public int yosan = 0;

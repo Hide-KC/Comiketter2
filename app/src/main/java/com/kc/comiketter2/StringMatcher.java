@@ -233,7 +233,7 @@ public class StringMatcher {
                 }
             }
 
-            Log.d("Space", match[0] + match[1] + match[2]);
+//            Log.d("Space", match[0] + match[1] + match[2]);
 
             StringBuilder builder = new StringBuilder();
             builder.append(match[0]).append(match[1]).append(match[2]);

@@ -2,12 +2,13 @@
     <string name="app_name">CircleFinder</string>
     <string name="txtRenkei">Twitter連携で始める\nサークルチェック</string>
     <string name="privacy_policy_url">http://blog.livedoor.jp/kcstock/archives/53420989.html</string>
+    <string name="privacy_policy_dialog">プライバシーポリシーを表示</string>
     <string name="privacy_policy">Application Privacy Policy</string>
     <string name="privacy_policy_ja">プライバシーポリシー</string>
     <string name="yes">アカウントとつながる</string>
     <string name="no">No</string>
     <string name="twitter">Twitter</string>
-    <string name="kcpoipoi">\@kcpoipoi\nハッシュタグ「#CircleFinder」で開発状況をツイートしています。</string>
+    <string name="kcpoipoi">\@kcpoipoi</string>
 
     <!--OAuth認証関係-->
     <string name="consumer_key">reqGaYmF6UgKSzckijUAU48WB</string>

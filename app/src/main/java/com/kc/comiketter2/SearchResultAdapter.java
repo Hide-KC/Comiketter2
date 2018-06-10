@@ -63,16 +63,8 @@ public class SearchResultAdapter extends ArrayAdapter<UserDTO> {
         //スクリーンネームの設定
         holder.screenName.setText("@" + user.screen_name);
 
-        //ホールの設定
-        String holeName = StringMatcher.getHoleName(user.hole_id);
-        if (holeName != null){
-            holder.hole_name.setText(holeName);
-        } else {
-            holder.hole_name.setText("");
-        }
-
         //サークルスペースの設定
-        holder.circle_space.setText(user.circle_space);
+        holder.circle_space.setText(StringMatcher.getSpace(user.name));
 
         //サークル名の設定
         if (user.circle_name != null){

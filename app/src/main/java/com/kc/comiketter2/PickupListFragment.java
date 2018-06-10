@@ -166,7 +166,7 @@ public class PickupListFragment extends StickyListFragment implements IUpdater {
                     users.remove(user_i);
                 }
             } else if (!preferences.getBoolean("visible_all_user", true)){
-                if (users.get(user_i).circle_space.equals("")){
+                if (StringMatcher.getSpace(users.get(user_i).name).equals("")){
                     users.remove(user_i);
                 }
             }

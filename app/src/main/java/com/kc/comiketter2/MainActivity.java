@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
         //DrawerLayoutの設定
         final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         ConstraintLayout includeDrawer = drawerLayout.findViewById(R.id.include_drawer);
-        final ListView leftDrawer = includeDrawer.findViewById(R.id.left_drawer);
+        final ListView leftDrawer = includeDrawer.findViewById(R.id.event_list);
         Button subscribeList = includeDrawer.findViewById(R.id.subscribeList);
         subscribeList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 Log.d("DrawerToggle", "Opened");
-                ListView listView = drawerView.findViewById(R.id.left_drawer);
+                ListView listView = drawerView.findViewById(R.id.event_list);
                 ListDTOAdapter adapter = (ListDTOAdapter)listView.getAdapter();
                 adapter.clear();
 
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerClosed(View drawerView) {
                 Log.d("DrawerToggle", "Closed");
-                ListView listView = drawerView.findViewById(R.id.left_drawer);
+                ListView listView = drawerView.findViewById(R.id.event_list);
                 ListDTOAdapter adapter = (ListDTOAdapter)listView.getAdapter();
                 adapter.clear();
 
@@ -481,7 +481,7 @@ public class MainActivity extends AppCompatActivity
                                 //正規表現に一致するユーザのみ抽出。
                                 if (StringMatcher.getComiketName(user.getName()) != null
                                         || StringMatcher.getEventName(user.getName(), true, context) != null
-                                        || helper.isExisted(user.getId())){
+                                        || helper.isUserExisted(user.getId())){
                                     Log.d("Comiketter", user.getName());
                                     UserDTO userDTO = new UserDTO(user);
                                     users.add(userDTO);
@@ -583,7 +583,7 @@ public class MainActivity extends AppCompatActivity
                                     //正規表現に一致するユーザのみ抽出。
                                     if (StringMatcher.getComiketName(member.getName()) != null
                                             || StringMatcher.getEventName(member.getName(),true, context) != null
-                                            || helper.isExisted(member.getId())){
+                                            || helper.isUserExisted(member.getId())){
                                         Log.d("Comiketter", member.getName());
                                         UserDTO userDTO = new UserDTO(member);
                                         users.add(userDTO);
@@ -834,7 +834,7 @@ public class MainActivity extends AppCompatActivity
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         long myID = preferences.getLong(MY_ID, 0);
-        ListView listView = includeDrawer.findViewById(R.id.left_drawer);
+        ListView listView = includeDrawer.findViewById(R.id.event_list);
         DatabaseHelper helper = DatabaseHelper.getInstance(this);
         List<ListDTO> listDTOs = helper.getLists(this, myID);
         ListDTOAdapter adapter = (ListDTOAdapter) listView.getAdapter();

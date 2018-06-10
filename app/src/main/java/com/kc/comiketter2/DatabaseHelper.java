@@ -45,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "auto_day integer not null, "
             + "manual_day integer, "
             + "circle_name text, "
+            + "circle_space text, "
             + "target integer, "
             + "busuu integer, "
             + "yosan integer, "
@@ -192,6 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     String filter = "_id = " + registeredIDs.get(user_i);
                     ContentValues cv = new ContentValues();
                     cv.put("auto_day", 99);
+                    cv.put("circle_space", "");
                     writable.update(OPTIONAL_INFO, cv, filter, null);
                 }
 

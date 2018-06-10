@@ -1,5 +1,6 @@
 package com.kc.comiketter2;
 
+import android.app.Application;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;

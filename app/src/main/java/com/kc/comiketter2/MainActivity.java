@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity
 
             TabLayout tabLayout = findViewById(R.id.tab_layout);
             onPageSelected(tabLayout.getSelectedTabPosition());
+        } else if (requestCode == ConfirmOAuthActivity.REQUEST_CODE && resultCode == RESULT_CANCELED){
+            //認証失敗、終了
+            finish();
         }
     }
 
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
         if (TwitterUtils.loadAccessToken(this) == null){
             //OAuth認証画面
-            startActivity(new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class));
+            startOAuthActivity();
         } else {
             //認証済みの場合
             if (savedInstanceState == null){
@@ -694,6 +697,12 @@ public class MainActivity extends AppCompatActivity
     private void startPreferenceActivity(){
         Intent intent = new Intent(this, MyPreferenceActivity.class);
         startActivityForResult(intent, MyPreferenceActivity.REQUEST_CODE);
+    }
+
+    private void startOAuthActivity(){
+        //認証画面を展開
+        Intent intent = new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class);
+        startActivityForResult(intent, ConfirmOAuthActivity.REQUEST_CODE);
     }
 
     @Override

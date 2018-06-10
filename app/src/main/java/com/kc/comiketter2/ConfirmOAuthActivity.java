@@ -13,11 +13,15 @@ import android.widget.Button;
  */
 public class ConfirmOAuthActivity extends AppCompatActivity {
     private TwitterOAuth mOAuth;
+    public static final Integer REQUEST_CODE = 3000;
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ConfirmOAuthActivity.this.finish();
+        Intent intent = new Intent();
+        intent.putExtra("msg", "finish");
+        setResult(RESULT_CANCELED, intent);
+        finish();
     }
 
     @Override
@@ -53,6 +57,7 @@ public class ConfirmOAuthActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         mOAuth.OAuthApproval(this, intent);
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

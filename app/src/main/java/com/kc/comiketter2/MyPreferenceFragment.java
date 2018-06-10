@@ -15,6 +15,7 @@ import android.view.View;
  */
 
 public class MyPreferenceFragment extends PreferenceFragment{
+    //もしフィルターの数を増やす場合はここを増やすこと！！
     public static final int FILTER_COUNT = 5;
 
     public static PreferenceFragment newInstance(){

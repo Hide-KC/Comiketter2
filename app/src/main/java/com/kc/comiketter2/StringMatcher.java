@@ -26,7 +26,6 @@ public class StringMatcher {
     final private static String EVENT_SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])";
     final private static String AB = ".*(ab)"; //abを探索→無ければa|bで探索
     final private static String AOrB = ".*(a|b)";
-    final private static String FILTER_SWITCH = "filter_switch";
 
     //ホールHashMap
     final private static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){
@@ -85,46 +84,35 @@ public class StringMatcher {
     public static String getEventName(String name, boolean checkHasSpace, Context context){
         //checkHasSpace：スペースチェックをするかどうか。false:スペースチェックをしない　true:スペースチェック実施
         //保存済みフォローがスペースを消した場合に
-        if (!checkHasSpace || !getSpace(name).equals("")){
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            if (sharedPreferences.getBoolean(FILTER_SWITCH,false)){
-                Log.d("StringMatcher", "switch_checked");
-                //フィルタ設定を参照してフィルタリング
-                List<String> stringList = new ArrayList<>();
-                for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT ; filter_i++){
-                    SharedPreferences preferences = context.getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
-                    if (preferences.getBoolean(EditAndCheckablePreference.CHECKED, false)){
-                        String filterWord = preferences.getString(EditAndCheckablePreference.FILTER, "");
-                        if (!filterWord.equals("")){
-                            String[] strings = null;
-                            if (filterWord.contains(",")){
-                                strings = filterWord.split(",");
-                                for (String s:strings){
-                                    s = s.trim();
-                                    if (s.length() > 0){
-                                        stringList.add(s);
-                                    }
-                                }
-                            } else {
-                                stringList.add(filterWord);
+        if (!(checkHasSpace && getSpace(name).equals(""))) {
+            List<String> stringList = new ArrayList<>();
+            for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT; filter_i++) {
+                SharedPreferences preferences = context.getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
+                if (preferences.getBoolean(EditAndCheckablePreference.CHECKED, false)) {
+                    String filterWord = preferences.getString(EditAndCheckablePreference.FILTER, "");
+                    if (!filterWord.equals("") && filterWord.contains(",")) {
+                        String[] strings = filterWord.split(",");
+                        for (String s : strings) {
+                            s = s.trim();
+                            if (s.length() > 0) {
+                                stringList.add(s);
                             }
                         }
+                    } else {
+                        stringList.add(filterWord);
                     }
                 }
+            }
 
-                if (stringList.size() > 0){
-                    String[] stringArray = new String[stringList.size()];
-                    stringList.toArray(stringArray);
-                    return getEventName(name, stringArray, false);
-                } else {
-                    //コミケ専用フィルタリング
-                    return getEventName(name);
-                }
+            if (stringList.size() > 0) {
+                String[] stringArray = new String[stringList.size()];
+                stringList.toArray(stringArray);
+                return getEventName(name, stringArray, false);
             } else {
-                Log.d("StringMatcher", "switch_not_checked");
                 //コミケ専用フィルタリング
                 return getEventName(name);
             }
+
         } else {
             return null;
         }
@@ -305,4 +293,5 @@ public class StringMatcher {
     public static Set<Integer> getMapKeys(){
         return holeHashMap.keySet();
     }
+
 }

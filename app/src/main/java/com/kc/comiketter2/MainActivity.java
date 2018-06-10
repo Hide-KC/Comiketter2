@@ -78,8 +78,9 @@ public class MainActivity extends AppCompatActivity
             Log.d("Preference", "onActivityResult");
             Toolbar toolbar = findViewById(R.id.toolbar);
             ImageView filterView = toolbar.findViewById(R.id.toolbar_constraint).findViewById(R.id.filter_image);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if (preferences.getBoolean("filter_switch", false)){
+
+            //フィルタワードのチェック状態で判別
+            if(isFiltered()){
                 filterView.setVisibility(View.VISIBLE);
             } else {
                 filterView.setVisibility(View.INVISIBLE);
@@ -288,11 +289,14 @@ public class MainActivity extends AppCompatActivity
         TextView selectedListName = constraintLayout.findViewById(R.id.selected_list_name);
         ImageView filterView = constraintLayout.findViewById(R.id.filter_image);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getBoolean("filter_switch", false)){
+
+        //フィルタワードのチェック状態で判別
+        if(isFiltered()){
             filterView.setVisibility(View.VISIBLE);
         } else {
             filterView.setVisibility(View.INVISIBLE);
         }
+
         long listID = preferences.getLong(SELECTED_LIST_ID, 0);
         selectedListName.setText(helper.getListDTO(this, listID).name);
         toolbar.inflateMenu(R.menu.main);
@@ -860,5 +864,15 @@ public class MainActivity extends AppCompatActivity
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         totalYosan.setText(numberFormat.format(yosan));
         totalYosan.append(getString(R.string.yen));
+    }
+
+    private boolean isFiltered(){
+        for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT ; filter_i++){
+            SharedPreferences preferences = getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
+            if (preferences.getBoolean(EditAndCheckablePreference.CHECKED, false)){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -47,31 +47,7 @@ public class AchievementFragment extends Fragment implements IUpdater {
 
     @Override
     public void update() {
-        Log.d("Comiketter", "Achievement Update");
-        DatabaseHelper helper = DatabaseHelper.getInstance(getActivity());
-        List<UserDTO> users = helper.getUserList();
 
-        Integer cnt_pickup = 0;
-        Integer cnt_hasgot = 0;
-
-        for (Integer user_i = 0; user_i < users.size(); user_i++){
-            if (users.get(user_i).pickup == 1){
-                cnt_pickup++;
-            }
-
-            if (users.get(user_i).hasgot == 1){
-                cnt_hasgot++;
-            }
-        }
-
-        View view = getView();
-        ProgressBar progressBar = view.findViewById(R.id.achievement_progress);
-        TextView hasgotView = view.findViewById(R.id.hasgot_count);
-        TextView pickupView = view.findViewById(R.id.pickup_count);
-        progressBar.setMax(cnt_pickup);
-        progressBar.setProgress(cnt_hasgot);
-        hasgotView.setText(String.valueOf(cnt_hasgot));
-        pickupView.setText(String.valueOf(cnt_pickup));
 
     }
 }

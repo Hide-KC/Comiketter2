@@ -318,48 +318,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return users;
     }
 
-    public List<UserDTO> getUserList(){
-        List<UserDTO> users = new ArrayList<>();
-        SQLiteDatabase database = getReadableDatabase();
-
-        StringBuilder queryBuilder1 = new StringBuilder();
-        StringBuilder queryBuilder2 = new StringBuilder();
-
-        //query1
-        queryBuilder1.append("select * from ").append(USER_INFO).append(" inner join ").append(OPTIONAL_INFO).append(" on ").append(USER_INFO).append("._id = ").append(OPTIONAL_INFO).append("._id");
-        //query2
-        queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u order by u.auto_day ASC;");
-
-        Cursor cursor = database.rawQuery(queryBuilder2.toString(), null);
-
-        boolean eol = cursor.moveToFirst();
-        while (eol){
-            UserDTO user = new UserDTO();
-            user.user_id = cursor.getLong(cursor.getColumnIndex("_id"));
-            user.name = cursor.getString(cursor.getColumnIndex("name"));
-            user.screen_name = cursor.getString(cursor.getColumnIndex("screen_name"));
-            user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url")).replaceAll("':", ":");
-            user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
-            user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
-            user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
-            user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
-            user.target = cursor.getInt(cursor.getColumnIndex("target"));
-            user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
-            user.yosan = cursor.getInt(cursor.getColumnIndex("yosan"));
-            user.memo = cursor.getString(cursor.getColumnIndex("memo"));
-            user.pickup = cursor.getInt(cursor.getColumnIndex("pickup"));
-            user.hasgot = cursor.getInt(cursor.getColumnIndex("hasgot"));
-
-            users.add(user);
-            eol = cursor.moveToNext();
-        }
-
-        cursor.close();
-
-
-        return users;
-    }
-
     public UserDTO getUser(long userID){
         UserDTO user = new UserDTO();
         SQLiteDatabase database = getReadableDatabase();
@@ -755,13 +713,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         queryBuilder3.append("select name, yosan from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID).append(";");
 
         Log.d("Query", queryBuilder3.toString());
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean filterChecked = preferences.getBoolean("filter_switch", false);
+
+        boolean isFiltered = false;
+        for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT; filter_i++){
+            SharedPreferences preferences = context.getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
+            if (preferences.getBoolean(EditAndCheckablePreference.CHECKED, false)){
+                isFiltered = true;
+                break;
+            }
+        }
 
         Cursor cursor = readable.rawQuery(queryBuilder3.toString(), null);
         int yosan = 0;
         boolean eol = cursor.moveToFirst();
-        if (filterChecked){
+        if (isFiltered){
             StringBuilder builder = new StringBuilder();
             while (eol){
                 builder.append(cursor.getString(cursor.getColumnIndex("name")));

@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/category_filter_title">
-        <SwitchPreference
-            android:key="filter_switch"
-            android:defaultValue="false"
-            android:title="@string/switch_pref_title"
-            android:summary="@string/switch_pref_summary"
-            android:visibility="invisible"/>
-    </PreferenceCategory>
-
     <PreferenceScreen android:title="@string/filter"
         android:summary="@string/filter_or_search">
         <PreferenceCategory android:title="@string/filter">

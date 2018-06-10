@@ -26,7 +26,6 @@ public class StringMatcher_New {
     final private static String EVENT_SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])";
     final private static String AB = ".*(ab)"; //abを探索→無ければa|bで探索
     final private static String AOrB = ".*(a|b)";
-    final private static String FILTER_SWITCH = "filter_switch";
 
     //コミケ関係の日付記載パターン
     final private static String[] comikeEventPattern = new String[]{

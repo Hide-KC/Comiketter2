@@ -224,11 +224,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                     //OPTIONAL_INFO query
                     Integer autoDay = StringMatcher.getParticipateDay(user.name);
+                    String space = StringMatcher.getSpace(user.name);
 
                     ContentValues instantValues = new ContentValues();
                     instantValues.put("_id", user.user_id);
                     instantValues.put("auto_day", autoDay);
-
+                    instantValues.put("circle_space", space);
                     if (user.circle_name != null){
                         instantValues.put("circle_name", user.circle_name);
                     } else {
@@ -247,6 +248,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             instantValues2.put("circle_name", user.circle_name);
                         }
 
+                        instantValues2.put("circle_space", space);
                         writable.update(OPTIONAL_INFO, instantValues2, filter, null);
                     }
 
@@ -284,7 +286,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         queryBuilder2.append("select * from ( ").append(queryBuilder1).append(" ) u inner join ").append(RELATION_INFO).append(" on u._id = ").append(RELATION_INFO).append(".user_id");
         //query3
         queryBuilder3.append("select * from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID);
-        queryBuilder3.append(" order by v.auto_day ASC;");
+        queryBuilder3.append(" order by v.auto_day ASC, v.circle_space ASC;");
 
         Log.d("Query", queryBuilder3.toString());
 
@@ -300,6 +302,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
             user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
             user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
+            user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
             user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
             user.target = cursor.getInt(cursor.getColumnIndex("target"));
             user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
@@ -335,6 +338,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user.profile_description = cursor.getString(cursor.getColumnIndex("profile_description")).replaceAll("':", ":");
         user.auto_day = cursor.getInt(cursor.getColumnIndex("auto_day"));
         user.manual_day = cursor.getInt(cursor.getColumnIndex("manual_day"));
+        user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
         user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
         user.target = cursor.getInt(cursor.getColumnIndex("target"));
         user.busuu = cursor.getInt(cursor.getColumnIndex("busuu"));
@@ -471,6 +475,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.screen_name = cursor.getString(cursor.getColumnIndex("screen_name"));
             user.profile_image_url = cursor.getString(cursor.getColumnIndex("profile_image_url"));
             user.pickup = cursor.getInt(cursor.getColumnIndex("pickup"));
+            user.circle_space = cursor.getString(cursor.getColumnIndex("circle_space"));
             user.circle_name = cursor.getString(cursor.getColumnIndex("circle_name"));
             users.add(user);
             eol = cursor.moveToNext();
@@ -567,22 +572,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void subscribeList(Integer listID){
         ContentValues args = new ContentValues();
         args.put("subscribed", 1);
-        String filter = String.valueOf(listID);
-
-        SQLiteDatabase writable = getWritableDatabase();
-        try{
-            writable.update(LIST_INFO, args, filter, null);
-        } catch (SQLiteException e){
-            e.printStackTrace();
-        } finally {
-            writable.close();
-        }
-    }
-
-    //リストの購読解除
-    public void quitList(Integer listID){
-        ContentValues args = new ContentValues();
-        args.put("subscribed", 0);
         String filter = String.valueOf(listID);
 
         SQLiteDatabase writable = getWritableDatabase();

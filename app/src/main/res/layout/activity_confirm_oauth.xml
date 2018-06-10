@@ -37,12 +37,12 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="36dp"
         android:text="@string/privacy_policy_ja"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/btnYes"
         app:layout_constraintStart_toStartOf="@+id/btnYes"
-        app:layout_constraintTop_toBottomOf="@+id/btnYes" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/btn_explain"
@@ -55,5 +55,16 @@
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/open_web"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/btnYes"
+        app:layout_constraintStart_toStartOf="@+id/btnYes"
+        app:layout_constraintTop_toBottomOf="@+id/btnYes" />
 
 </android.support.constraint.ConstraintLayout>

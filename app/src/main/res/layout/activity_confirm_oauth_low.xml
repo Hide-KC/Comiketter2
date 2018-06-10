@@ -7,6 +7,17 @@
     tools:context="com.kc.comiketter2.ConfirmOAuthActivity">
 
     <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/open_web"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/btnYes"
+        app:layout_constraintStart_toStartOf="@+id/btnYes"
+        app:layout_constraintTop_toBottomOf="@+id/btnYes" />
+
+    <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -37,12 +48,12 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="36dp"
         android:text="@string/privacy_policy_ja"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/btnYes"
         app:layout_constraintStart_toStartOf="@+id/btnYes"
-        app:layout_constraintTop_toBottomOf="@+id/btnYes" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
         android:id="@+id/btn_explain"

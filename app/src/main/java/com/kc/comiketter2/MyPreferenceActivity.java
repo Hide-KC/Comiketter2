@@ -21,16 +21,6 @@ public class MyPreferenceActivity extends AppCompatActivity implements ClearDial
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.preference_activity);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.clear_filter){
-                    DialogFragment fragment = FilterClearDialogFragment.newInstance();
-                    fragment.show(MyPreferenceActivity.this.getSupportFragmentManager(), "clear_filter");
-                }
-                return false;
-            }
-        });
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

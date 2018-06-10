@@ -233,6 +233,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         instantValues.put("circle_name", user.circle_name);
                     } else {
                         instantValues.put("circle_name", "");
+                        user.circle_name = "";
                     }
 
                     int conflictOPID = (int) writable.insertWithOnConflict(OPTIONAL_INFO, null, instantValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -240,6 +241,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         String filter = "_id = " + user.user_id;
                         ContentValues instantValues2 = new ContentValues();
                         instantValues2.put("auto_day", autoDay);
+                        Log.d(this.getClass().getSimpleName(), user.name);
                         //当落発表ツイが流れてしまうとnullになってしまうためnullチェック
                         if (!user.circle_name.equals("")){
                             instantValues2.put("circle_name", user.circle_name);

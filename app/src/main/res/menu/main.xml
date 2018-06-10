@@ -20,15 +20,15 @@
         android:id="@+id/toolbar_reload"
         android:icon="@drawable/reload"
         android:title="@string/reload"
-        app:showAsAction="never"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/toolbar_clear"
         android:title="@string/clear"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/toolbar_preferences"
         android:title="@string/settings"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
 
 

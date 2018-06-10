@@ -8,7 +8,14 @@
                 android:topRightRadius="10dp"
                 android:bottomRightRadius="10dp"/>
             <solid
-                android:color="@android:color/darker_gray"/>
+                android:color="@color/first_row_back_1"/>
+            <padding
+                android:right="12dp"
+                android:left="12dp"/>
         </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <color android:color="@color/first_header_back"/>
     </item>
 </selector>

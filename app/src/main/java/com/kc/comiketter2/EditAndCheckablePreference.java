@@ -50,7 +50,6 @@ public class EditAndCheckablePreference extends Preference {
             public void onClick(View view) {
                 //ダイアログの表示
                 String key = EditAndCheckablePreference.this.getKey();
-                Log.d("key", key);
 
                 Activity activity = (Activity) getContext();
                 DialogFragment dialogFragment = FilterDialogFragment.newInstance(key);

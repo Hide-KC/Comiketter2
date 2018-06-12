@@ -10,8 +10,6 @@
     <string name="kcpoipoi">\@kcpoipoi</string>
 
     <!--OAuth認証関係-->
-    <string name="consumer_key">reqGaYmF6UgKSzckijUAU48WB</string>
-    <string name="consumer_secret">9yqqVOFsIfeSjdXEj99fyvqvdPKxAHhmdni4q93AKwGl61quCD</string>
     <string name="callback_url">twittercallback://twitter</string>
     <string name="authorize_error">認証失敗</string>
     <string name="accesstoken_error">アカウントが取得できませんでした</string>

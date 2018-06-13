@@ -10,14 +10,13 @@
     <string name="kcpoipoi">\@kcpoipoi</string>
 
     <!--OAuth認証関係-->
+    <string name="consumer_key">reqGaYmF6UgKSzckijUAU48WB</string>
+    <string name="consumer_secret">9yqqVOFsIfeSjdXEj99fyvqvdPKxAHhmdni4q93AKwGl61quCD</string>
     <string name="callback_url">twittercallback://twitter</string>
     <string name="authorize_error">認証失敗</string>
     <string name="accesstoken_error">アカウントが取得できませんでした</string>
     <string name="accesstoken_success">Twitter連携完了！</string>
     <string name="open_web">※ウェブブラウザが起動し認証画面になります。</string>
-    <!--CircleFinder Keys-->
-    <!--<string name="consumer_key">kgkYh0gV73VxwzFmgSvRCUO4C</string>-->
-    <!--<string name="consumer_secret">1m6IWyOPEpxgvMSuWgpHtbr0FUAf8ntOweo8cXm4EyvR9omjWU</string>-->
 
     <!--StickyListLayout関係-->
     <string name="circle_space_hint">スペース</string>

@@ -3,6 +3,13 @@
     <PreferenceScreen android:title="@string/filter"
         android:summary="@string/filter_or_search">
         <PreferenceCategory android:title="@string/filter">
+            <CheckBoxPreference
+                android:key="comiket"
+                android:title="コミックマーケット"
+                android:summary="※コミケフィルタは編集不可です"
+                android:defaultValue="true"
+                />
+
             <com.kc.comiketter2.EditAndCheckablePreference
                 android:key="filter0"
                 android:title="設定１"

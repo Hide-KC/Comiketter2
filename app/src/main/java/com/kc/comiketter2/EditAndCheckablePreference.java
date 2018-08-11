@@ -50,7 +50,8 @@ public class EditAndCheckablePreference extends Preference {
             public void onClick(View view) {
                 //ダイアログの表示
                 String key = EditAndCheckablePreference.this.getKey();
-                Log.d("key", key);
+                //コミケ専用フィルタの場合はクリックイベントなし
+                if (key.equals("comike")) return;
 
                 Activity activity = (Activity) getContext();
                 DialogFragment dialogFragment = FilterDialogFragment.newInstance(key);
@@ -61,7 +62,45 @@ public class EditAndCheckablePreference extends Preference {
         //KeyからSharedPreferencesを取得、初期値に設定
         final SharedPreferences preferences = getContext().getSharedPreferences(getKey(), Context.MODE_PRIVATE);
         CheckBox checkBox = view.findViewById(R.id.checkBox);
-        checkBox.setChecked(preferences.getBoolean(CHECKED, false));
+        TextView titleView = view.findViewById(android.R.id.title);
+        TextView summaryView = view.findViewById(android.R.id.summary);
+
+        if (getKey().equals("comike")){
+            //コミケ専用フィルタの場合は初期値true
+            checkBox.setChecked(preferences.getBoolean(CHECKED, true));
+            titleView.setText(preferences.getString(TITLE, getContext().getString(R.string.filter_name_comike)));
+            summaryView.setText(preferences.getString(FILTER, getContext().getString(R.string.filter_text_comike)));
+        } else {
+            //カスタムフィルタの場合は初期値false
+            checkBox.setChecked(preferences.getBoolean(CHECKED, false));
+
+            //プリセットフィルタを取得
+            String[] presetFilter0 = getContext().getResources().getStringArray(R.array.preset_filter0);
+            String[] presetFilter1 = getContext().getResources().getStringArray(R.array.preset_filter1);
+            String[] presetFilter2 = getContext().getResources().getStringArray(R.array.preset_filter2);
+
+            switch (getKey()){
+                case "filter0":
+                    //コミティア
+                    titleView.setText(preferences.getString(TITLE, presetFilter0[0]));
+                    summaryView.setText(preferences.getString(FILTER, presetFilter0[1]));
+                    break;
+                case "filter1":
+                    //コミック１
+                    titleView.setText(preferences.getString(TITLE, presetFilter1[0]));
+                    summaryView.setText(preferences.getString(FILTER, presetFilter1[1]));
+                    break;
+                case "filter2":
+                    //スパコミ
+                    titleView.setText(preferences.getString(TITLE, presetFilter2[0]));
+                    summaryView.setText(preferences.getString(FILTER, presetFilter2[1]));
+                    break;
+                default:
+                    titleView.setText(preferences.getString(TITLE, getContext().getString(R.string.filter_name_title)));
+                    summaryView.setText(preferences.getString(FILTER, getContext().getString(R.string.filter_text_title)));
+            }
+        }
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -71,11 +110,6 @@ public class EditAndCheckablePreference extends Preference {
                 editor.apply();
             }
         });
-
-        TextView titleView = view.findViewById(android.R.id.title);
-        TextView summaryView = view.findViewById(android.R.id.summary);
-        titleView.setText(preferences.getString(TITLE, getContext().getString(R.string.filter_name_title)));
-        summaryView.setText(preferences.getString(FILTER, getContext().getString(R.string.filter_text_title)));
 
         view.setBackground(getBackgroundSelector());
     }

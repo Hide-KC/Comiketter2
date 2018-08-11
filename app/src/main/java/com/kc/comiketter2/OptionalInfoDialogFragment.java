@@ -75,6 +75,7 @@ public class OptionalInfoDialogFragment extends DialogFragment {
         Glide.with(this).load(user.profile_image_url).into(profileImage);
         name.setText(user.name);
         circleName.setText(user.circle_name);
+        circleSpace.setText(user.circle_space);
         if (user.target > 0){
             target.setSelection(user.target);
         } else {

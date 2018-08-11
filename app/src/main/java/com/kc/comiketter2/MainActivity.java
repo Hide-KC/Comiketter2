@@ -209,7 +209,8 @@ public class MainActivity extends AppCompatActivity
                 ListDTOAdapter adapter = (ListDTOAdapter)listView.getAdapter();
                 adapter.clear();
 
-                List<ListDTO> listDTOs = helper.getLists(MainActivity.this, myID);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                List<ListDTO> listDTOs = helper.getLists(MainActivity.this, preferences.getLong(MY_ID, 0));
                 for (ListDTO listDTO:listDTOs){
                     adapter.add(listDTO);
                 }
@@ -224,7 +225,8 @@ public class MainActivity extends AppCompatActivity
                 ListDTOAdapter adapter = (ListDTOAdapter)listView.getAdapter();
                 adapter.clear();
 
-                List<ListDTO> listDTOs = helper.getLists(MainActivity.this, myID);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                List<ListDTO> listDTOs = helper.getLists(MainActivity.this, preferences.getLong(MY_ID, 0));
                 for (ListDTO listDTO:listDTOs){
                     adapter.add(listDTO);
                 }
@@ -441,7 +443,7 @@ public class MainActivity extends AppCompatActivity
                                 }
 
                                 RateLimitStatus rateLimit = ids.getRateLimitStatus();
-                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
+//                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
 
                                 if (rateLimit.getRemaining() <= 0){
                                     Log.d("Comiketter2", "API切れです。");
@@ -489,7 +491,7 @@ public class MainActivity extends AppCompatActivity
                                 if (StringMatcher.getComiketName(user.getName()) != null
                                         || StringMatcher.getEventName(user.getName(), true, context) != null
                                         || helper.isUserExisted(user.getId())){
-                                    Log.d("Comiketter", user.getName());
+//                                    Log.d("Comiketter", user.getName());
                                     UserDTO userDTO = new UserDTO(user);
                                     users.add(userDTO);
                                 }
@@ -499,7 +501,7 @@ public class MainActivity extends AppCompatActivity
 
                             try {
                                 RateLimitStatus rateLimit = userResponseList.getRateLimitStatus();
-                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
+//                                Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
 
                                 if (rateLimit.getRemaining() <= 0){
                                     Log.d("Comiketter2", "API切れです。");
@@ -543,11 +545,11 @@ public class MainActivity extends AppCompatActivity
                             Integer searchRateLimit = 180;
 
                             for (Integer q_i = 0; q_i < queries.size(); q_i++){
-                                Log.d("CircleName", "Query:" + queries.get(q_i));
+//                                Log.d("CircleName", "Query:" + queries.get(q_i));
                                 twitter4j.Query q = new Query(queries.get(q_i));
                                 twitter4j.QueryResult result = twitter.search(q);
-                                Log.d("CircleName", "残りAPI: " + result.getRateLimitStatus().getRemaining());
-                                Log.d("CircleName", "ツイート数: " + result.getTweets().size());
+//                                Log.d("CircleName", "残りAPI: " + result.getRateLimitStatus().getRemaining());
+//                                Log.d("CircleName", "ツイート数: " + result.getTweets().size());
 
                                 searchRateLimit = result.getRateLimitStatus().getRemaining();
 
@@ -591,7 +593,7 @@ public class MainActivity extends AppCompatActivity
                                     if (StringMatcher.getComiketName(member.getName()) != null
                                             || StringMatcher.getEventName(member.getName(),true, context) != null
                                             || helper.isUserExisted(member.getId())){
-                                        Log.d("Comiketter", member.getName());
+//                                        Log.d("Comiketter", member.getName());
                                         UserDTO userDTO = new UserDTO(member);
                                         users.add(userDTO);
                                     }
@@ -599,7 +601,7 @@ public class MainActivity extends AppCompatActivity
 
                                 try {
                                     RateLimitStatus rateLimit = members.getRateLimitStatus();
-                                    Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
+//                                    Log.d("Comiketter2", "残りAPI＝" + rateLimit.getRemaining());
 
                                     if (rateLimit.getRemaining() <= 0){
                                         Log.d("Comiketter2", "API切れです。");
@@ -710,7 +712,7 @@ public class MainActivity extends AppCompatActivity
         //AsyncTask完了後のコールバック
         if (result instanceof List){
             List<UserDTO> users = (List<UserDTO>)result;
-            Toast.makeText(this, "Finish!", Toast.LENGTH_SHORT).show();
+
             Log.d("Comiketter2", "処理終了！");
             Log.d("Comiketter2", "users.size() = " + users.size());
 
@@ -735,6 +737,33 @@ public class MainActivity extends AppCompatActivity
                 TabLayout tabLayout = findViewById(R.id.tab_layout);
                 updateDrawer(); //リスト一覧の表示更新
                 onPageSelected(tabLayout.getSelectedTabPosition());
+
+                AsyncTask<List<UserDTO>, Void, Integer> task = new AsyncTask<List<UserDTO>, Void, Integer>() {
+                    @Override
+                    protected Integer doInBackground(List<UserDTO>... params) {
+                        List<UserDTO> users = params[0];
+                        int filteredUsers = 0;
+                        for (int user_i = 0; user_i < users.size(); user_i++){
+                            String eventName = StringMatcher.getEventName(users.get(user_i).name, true, MainActivity.this);
+                            if (!(eventName == null || eventName.equals(""))){
+                                filteredUsers++;
+                            }
+                        }
+                        return filteredUsers;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Integer result) {
+                        super.onPostExecute(result);
+                        if (result == 0){
+                            Toast.makeText(MainActivity.this, getString(R.string.no_users), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, String.valueOf(result) + "人見つかりました！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                };
+                task.execute(users);
+
             } else {
 
             }

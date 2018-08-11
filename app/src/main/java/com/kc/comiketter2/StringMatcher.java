@@ -2,6 +2,7 @@ package com.kc.comiketter2;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.CheckBoxPreference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -85,6 +86,17 @@ public class StringMatcher {
         //checkHasSpace：スペースチェックをするかどうか。false:スペースチェックをしない　true:スペースチェック実施
         //保存済みフォローがスペースを消した場合に
         if (!(checkHasSpace && getSpace(name).equals(""))) {
+            //コミケも１フィルタとして使用。
+            SharedPreferences comikePref = context.getSharedPreferences("comike", Context.MODE_PRIVATE);
+            if (comikePref.getBoolean(EditAndCheckablePreference.CHECKED, true)){
+                //コミケにチェックが入っていれば、まずコミケ名を持っているかフィルタ。nullならカスタムフィルタへ。
+                String hasComike = getEventName(name);
+                if (hasComike != null){
+                    return hasComike;
+                }
+            }
+
+            //カスタムフィルタによるフィルタ。
             List<String> stringList = new ArrayList<>();
             for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT; filter_i++) {
                 SharedPreferences preferences = context.getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
@@ -110,9 +122,10 @@ public class StringMatcher {
                 return getEventName(name, stringArray, false);
             } else {
                 //コミケ専用フィルタリング
-                return getEventName(name);
+//                return getEventName(name);
+                //全てのフィルタにチェックが入っていなければ、nullでOK
+                return null;
             }
-
         } else {
             return null;
         }
@@ -168,7 +181,7 @@ public class StringMatcher {
 
             if (matcher.find()){
                 String match = matcher.group(1);
-                Log.d("Event", match);
+//                Log.d("Event", match);
                 return match;
             } else {
                 return null;

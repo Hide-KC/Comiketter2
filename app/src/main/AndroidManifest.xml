@@ -32,8 +32,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="twitter"
-                    android:scheme="twittercallback" />
+                    android:host="twittercallback"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity android:name=".SearchUserActivity" />

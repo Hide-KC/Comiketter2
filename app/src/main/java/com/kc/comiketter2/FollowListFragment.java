@@ -1,8 +1,8 @@
 package com.kc.comiketter2;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -31,12 +31,18 @@ public class FollowListFragment extends StickyListFragment implements IUpdater {
 
         //StickyListビューを取得
         StickyListHeadersListView sticky = view.findViewById(R.id.sticky_list);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            sticky.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS);
+        }
 
         //Adapterをいったんお掃除
         ArrayAdapter<UserDTO> adapter = (ArrayAdapter<UserDTO>) sticky.getAdapter();
         if (adapter != null) {
             adapter.clear();
         }
+
+        //空のときのEmptyViewをセット
+        sticky.setEmptyView(view.findViewById(R.id.empty_text));
 
         Bundle args = getArguments();
 
@@ -134,28 +140,18 @@ public class FollowListFragment extends StickyListFragment implements IUpdater {
 
     @Override
     protected void filterUsers(List<UserDTO> users) {
+        //コミケ専用フィルタとカスタムフィルタによるフィルタリング
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        boolean isFiltered = false;
-        for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT; filter_i++){
-            SharedPreferences preferences = getContext().getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
-            if (preferences.getBoolean(EditAndCheckablePreference.CHECKED, false)){
-                isFiltered = true;
-                break;
-            }
-        }
+        boolean visibleAllUser = defaultSharedPreferences.getBoolean("visible_all_user", false);
+        if (visibleAllUser) return;
 
-        //フィルタの有効化と全てのユーザの表示
         StringBuilder name = new StringBuilder();
-        for (int user_i = users.size() - 1; user_i >= 0; user_i--){
+        for (int user_i = users.size() - 1; user_i >=0; user_i--){
             name.append(users.get(user_i).name);
-            if (isFiltered){
-                if (StringMatcher.getEventName(name.toString(), false, getContext()) == null){
-                    users.remove(user_i);
-                }
-            } else if (!defaultSharedPreferences.getBoolean("visible_all_user", true)){
-                if(StringMatcher.getSpace(users.get(user_i).name).equals("")){
-                    users.remove(user_i);
-                }
+            //フィルタを実施。配置表示必須。
+            String eventName = StringMatcher.getEventName(name.toString(), true, getActivity());
+            if (eventName == null || eventName.equals("")){
+                users.remove(user_i);
             }
             name.setLength(0);
         }

@@ -10,7 +10,7 @@
     <string name="kcpoipoi">\@kcpoipoi</string>
 
     <!--OAuth認証関係-->
-    <string name="callback_url">twittercallback://twitter</string>
+    <string name="callback_url">https://twittercallback</string>
     <string name="authorize_error">認証失敗</string>
     <string name="accesstoken_error">アカウントが取得できませんでした</string>
     <string name="accesstoken_success">Twitter連携完了！</string>
@@ -31,6 +31,9 @@
     <string name="achieve_ratio">達成率は...</string>
     <string name="search_title">検索</string>
     <string name="circle_name">サークル名</string>
+    <string name="no_users">参加者が見つかりませんでした</string>
+    <string name="empty_string">更新ボタンを押すと最新のデータを取得します</string>
+    <string name="empty_pickup">ハートを付けたアカウントが表示されます</string>
 
     <!--Dialog関係-->
     <string name="loading">データ取得中です...</string>
@@ -40,7 +43,7 @@
     <string name="yen">円</string>
     <string name="dialog_title">情報を入力</string>
     <string name="clear_message">ユーザ入力情報をクリアします。\n（サークル名は消去されません）</string>
-    <string name="clear_got_data">取得したデータをクリアします。\n（自身のアカウント情報は消去されません）</string>
+    <string name="clear_got_data">取得したフォローのデータをクリアします。\n（自身のアカウント情報は消去されません）</string>
     <string name="clear_got_data_success">データのクリア成功</string>
     <string name="clear_got_data_miss">データのクリア失敗</string>
 
@@ -77,10 +80,12 @@
     <string name="category_filter_title">イベントフィルタ</string>
     <string name="switch_pref_title">フィルタの有効化</string>
     <string name="switch_pref_summary">設定したフィルタが有効になります。\nOFFにするとコミケ用のフィルタになります。</string>
-    <string name="filter">フィルタ</string>
+    <string name="filter">フィルタワードの管理</string>
     <string name="filter_info">フィルタ情報</string>
     <string name="filter_name_title">フィルタ名</string>
     <string name="filter_text_title">フィルタワード</string>
+    <string name="filter_name_comike">コミックマーケット</string>
+    <string name="filter_text_comike">※コミケフィルタは編集不可です</string>
     <string name="filter_text_eg">コミティア など</string>
     <string name="clear_filter">フィルタのクリア</string>
     <string name="clear_filter_message">フィルタを消去します。\nよろしいですか？</string>
@@ -89,8 +94,21 @@
     <string name="clear_data">ユーザ情報のクリア</string>
     <string name="clear_data_summary">取得したユーザ情報を削除します。</string>
     <string name="visible_all_user">全てのユーザを表示</string>
-    <string name="visible_all_user_summary">OFFにすると配置を取得できたユーザのみ表示します。</string>
+    <string name="visible_all_user_summary">ONにすると取得済みユーザを全て表示します。</string>
 
+    <!--プリセットフィルタ-->
+    <string-array name="preset_filter0">
+        <item>COMITIA</item>
+        <item>ティア,ﾃｨｱ,ＴＩＡ,TIA</item>
+    </string-array>
+    <string-array name="preset_filter1">
+        <item>COMIC1☆</item>
+        <item>コミ１,ｺﾐ1,コミ1,ｺﾐ１,COMIC1,ＣＯＭＩＣ１</item>
+    </string-array>
+    <string-array name="preset_filter2">
+        <item>COMIC CITY</item>
+        <item>スパコミ,ｽﾊﾟｺﾐ,COMIC CITY</item>
+    </string-array>
 
     <!--その他-->
     <string name="no_client">There are no Twitter client.</string>

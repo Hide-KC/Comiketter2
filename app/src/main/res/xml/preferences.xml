@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceScreen android:title="@string/filter"
-        android:summary="@string/filter_or_search">
-        <PreferenceCategory android:title="@string/filter">
-            <CheckBoxPreference
-                android:key="comiket"
-                android:title="コミックマーケット"
-                android:summary="※コミケフィルタは編集不可です"
-                android:defaultValue="true"
-                />
+    <PreferenceCategory android:title="@string/category_filter_title">
+        <PreferenceScreen android:title="@string/filter"
+            android:summary="@string/filter_or_search">
+            <PreferenceCategory android:title="@string/filter">
+                <com.kc.comiketter2.EditAndCheckablePreference
+                    android:key="comike"
+                    android:title="コミックマーケット"
+                    android:summary="※コミケフィルタは編集不可です"
+                    />
 
-            <com.kc.comiketter2.EditAndCheckablePreference
-                android:key="filter0"
-                android:title="設定１"
-                android:summary="testだよ"/>
+                <com.kc.comiketter2.EditAndCheckablePreference
+                    android:key="filter0"
+                    android:title="設定１"
+                    android:summary="testだよ"/>
 
-            <com.kc.comiketter2.EditAndCheckablePreference
-                android:key="filter1"
-                android:title="設定２"
-                android:summary="testだよ"/>
+                <com.kc.comiketter2.EditAndCheckablePreference
+                    android:key="filter1"
+                    android:title="設定２"
+                    android:summary="testだよ"/>
 
-            <com.kc.comiketter2.EditAndCheckablePreference
-                android:key="filter2"
-                android:title="設定３"
-                android:summary="testだよ"/>
+                <com.kc.comiketter2.EditAndCheckablePreference
+                    android:key="filter2"
+                    android:title="設定３"
+                    android:summary="testだよ"/>
 
-            <com.kc.comiketter2.EditAndCheckablePreference
-                android:key="filter3"
-                android:title="設定４"
-                android:summary="testだよ"/>
+                <com.kc.comiketter2.EditAndCheckablePreference
+                    android:key="filter3"
+                    android:title="設定４"
+                    android:summary="testだよ"/>
 
-            <com.kc.comiketter2.EditAndCheckablePreference
-                android:key="filter4"
-                android:title="設定５"
-                android:summary="testだよ"/>
-        </PreferenceCategory>
-    </PreferenceScreen>
+                <com.kc.comiketter2.EditAndCheckablePreference
+                    android:key="filter4"
+                    android:title="設定５"
+                    android:summary="testだよ"/>
+            </PreferenceCategory>
+        </PreferenceScreen>
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/other">
         <SwitchPreference
             android:key="visible_all_user"
             android:title="@string/visible_all_user"
             android:summary="@string/visible_all_user_summary"
-            android:defaultValue="true"/>
+            android:defaultValue="false"/>
         <Preference
             android:key="clear_data"
             android:title="@string/clear_data"

@@ -51,8 +51,23 @@ public class FilterDialogFragment extends DialogFragment {
         String name = "";
         String filter = "";
         if (preferences != null){
-            name = preferences.getString(TITLE, "");
-            filter = preferences.getString(FILTER, "");
+            String[] presetFilter = null;
+            switch (key){
+                case "filter0":
+                    presetFilter = getActivity().getResources().getStringArray(R.array.preset_filter0);
+                    break;
+                case "filter1":
+                    presetFilter = getActivity().getResources().getStringArray(R.array.preset_filter1);
+                    break;
+                case "filter2":
+                    presetFilter = getActivity().getResources().getStringArray(R.array.preset_filter2);
+                    break;
+                default:
+                    presetFilter = new String[]{ "" , "" };
+            }
+
+            name = preferences.getString(TITLE, presetFilter[0]);
+            filter = preferences.getString(FILTER, presetFilter[1]);
         }
 
         nameEdit.setText(name);
@@ -60,7 +75,7 @@ public class FilterDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view)
-                .setTitle(getString(R.string.explain_title))
+                .setTitle(getString(R.string.filter_info))
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

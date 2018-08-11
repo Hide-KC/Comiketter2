@@ -244,7 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         String filter = "_id = " + user.user_id;
                         ContentValues instantValues2 = new ContentValues();
                         instantValues2.put("auto_day", autoDay);
-                        Log.d(this.getClass().getSimpleName(), user.name);
+//                        Log.d(this.getClass().getSimpleName(), user.name);
                         //当落発表ツイが流れてしまうとnullになってしまうためnullチェック
                         if (!user.circle_name.equals("")){
                             instantValues2.put("circle_name", user.circle_name);
@@ -290,7 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         queryBuilder3.append("select * from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID);
         queryBuilder3.append(" order by v.auto_day ASC, v.circle_space ASC;");
 
-        Log.d("Query", queryBuilder3.toString());
+//        Log.d("Query", queryBuilder3.toString());
 
         Cursor cursor = readable.rawQuery(queryBuilder3.toString(), null);
 
@@ -370,7 +370,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.update(tableName, args, filter, null);
         database.close();
 
-        Log.d("UserID", "_id = " + userID + " , column = " + columnName);
+//        Log.d("UserID", "_id = " + userID + " , column = " + columnName);
     }
 
     public void clearOptionalInfo(){
@@ -428,7 +428,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             try {
                 writable.execSQL(sql + USER_INFO);
                 writable.execSQL(sql + OPTIONAL_INFO);
-                writable.execSQL(sql + LIST_INFO);
+//                writable.execSQL(sql + LIST_INFO);
                 writable.execSQL(sql + RELATION_INFO);
                 ret = true;
                 writable.setTransactionSuccessful();
@@ -703,7 +703,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //query3
         queryBuilder3.append("select name, yosan from ( ").append(queryBuilder2).append(" ) v where v.my_id = ").append(myID).append(" and v.relation_id = ").append(listID).append(";");
 
-        Log.d("Query", queryBuilder3.toString());
+//        Log.d("Query", queryBuilder3.toString());
 
         boolean isFiltered = false;
         for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT; filter_i++){

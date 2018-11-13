@@ -1,5 +1,6 @@
 package com.kc.comiketter2;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -14,7 +15,7 @@ import android.view.View;
  * Created by HIDE on 2018/03/03.
  */
 
-public class MyPreferenceFragment extends PreferenceFragment{
+public class MyPreferenceFragment extends PreferenceFragment implements FilterDialogFragment.IDialogCallback{
     //もしフィルターの数を増やす場合はここを増やすこと！！
     public static final int FILTER_COUNT = 5;
 
@@ -64,5 +65,16 @@ public class MyPreferenceFragment extends PreferenceFragment{
                 return false;
             }
         });
+    }
+
+    @Override
+    public void dialogResult(String key, int resultCode) {
+        //値の更新
+        if (resultCode == Activity.RESULT_OK){
+            Preference preference = findPreference(key);
+            if (preference instanceof EditAndCheckablePreference){
+                ((EditAndCheckablePreference) preference).updatePreferenceValue();
+            }
+        }
     }
 }

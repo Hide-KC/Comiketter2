@@ -2,13 +2,13 @@ package com.kc.comiketter2;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.Preference;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +26,10 @@ public class EditAndCheckablePreference extends Preference {
     public static final String FILTER = "filter";
     public static final String CHECKED = "checked";
 
+    private TextView titleView;
+    private TextView summaryView;
+    private CheckBox checkBox;
+
     public EditAndCheckablePreference(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -37,7 +41,7 @@ public class EditAndCheckablePreference extends Preference {
     @Override
     protected View onCreateView(ViewGroup parent) {
         super.onCreateView(parent);
-        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         return inflater.inflate(R.layout.preference_filter, parent,false);
     }
 
@@ -54,16 +58,17 @@ public class EditAndCheckablePreference extends Preference {
                 if (key.equals("comike")) return;
 
                 Activity activity = (Activity) getContext();
-                DialogFragment dialogFragment = FilterDialogFragment.newInstance(key);
+                Fragment parent = activity.getFragmentManager().findFragmentByTag("preference_fragment");
+                DialogFragment dialogFragment = FilterDialogFragment.newInstance(parent, key);
                 dialogFragment.show(activity.getFragmentManager(), "filter_info");
             }
         });
 
         //KeyからSharedPreferencesを取得、初期値に設定
         final SharedPreferences preferences = getContext().getSharedPreferences(getKey(), Context.MODE_PRIVATE);
-        CheckBox checkBox = view.findViewById(R.id.checkBox);
-        TextView titleView = view.findViewById(android.R.id.title);
-        TextView summaryView = view.findViewById(android.R.id.summary);
+        checkBox = view.findViewById(R.id.checkBox);
+        titleView = view.findViewById(android.R.id.title);
+        summaryView = view.findViewById(android.R.id.summary);
 
         if (getKey().equals("comike")){
             //コミケ専用フィルタの場合は初期値true
@@ -119,6 +124,38 @@ public class EditAndCheckablePreference extends Preference {
             return getContext().getDrawable(R.drawable.ripple);
         } else {
             return getContext().getResources().getDrawable(R.drawable.button_overlay);
+        }
+    }
+
+    public void updatePreferenceValue(){
+        //KeyからSharedPreferencesを取得、初期値に設定
+        final SharedPreferences preferences = getContext().getSharedPreferences(getKey(), Context.MODE_PRIVATE);
+        if (preferences != null){
+            //プリセットフィルタを取得
+            String[] presetFilter0 = getContext().getResources().getStringArray(R.array.preset_filter0);
+            String[] presetFilter1 = getContext().getResources().getStringArray(R.array.preset_filter1);
+            String[] presetFilter2 = getContext().getResources().getStringArray(R.array.preset_filter2);
+
+            switch (getKey()){
+                case "filter0":
+                    //コミティア
+                    titleView.setText(preferences.getString(TITLE, presetFilter0[0]));
+                    summaryView.setText(preferences.getString(FILTER, presetFilter0[1]));
+                    break;
+                case "filter1":
+                    //コミック１
+                    titleView.setText(preferences.getString(TITLE, presetFilter1[0]));
+                    summaryView.setText(preferences.getString(FILTER, presetFilter1[1]));
+                    break;
+                case "filter2":
+                    //スパコミ
+                    titleView.setText(preferences.getString(TITLE, presetFilter2[0]));
+                    summaryView.setText(preferences.getString(FILTER, presetFilter2[1]));
+                    break;
+                default:
+                    titleView.setText(preferences.getString(TITLE, getContext().getString(R.string.filter_name_title)));
+                    summaryView.setText(preferences.getString(FILTER, getContext().getString(R.string.filter_text_title)));
+            }
         }
     }
 }

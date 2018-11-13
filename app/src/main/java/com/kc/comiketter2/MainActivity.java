@@ -469,7 +469,6 @@ public class MainActivity extends AppCompatActivity
                         //Userオブジェクトを取得
                         Integer max = idsList.size() / 100;
                         for (Integer i = 0; i < max + 1 ; i++){
-                            ResponseList<User> userResponseList = null;
                             Integer j = 0;
                             long[] array = new long[100];
 
@@ -484,7 +483,7 @@ public class MainActivity extends AppCompatActivity
                                 if (j >= 100) break;
                             }
 
-                            userResponseList = twitter.lookupUsers(array);
+                            ResponseList<User> userResponseList = twitter.lookupUsers(array);
 
                             for (User user:userResponseList){
                                 //正規表現に一致するユーザのみ抽出。
@@ -663,6 +662,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void onPostExecute(List<UserDTO> users) {
                 //ダイアログを閉じる
+                //これはダメ実装だ～～～～
                 super.onPostExecute(users);
                 try{
                     weakDialog.get().dismiss();

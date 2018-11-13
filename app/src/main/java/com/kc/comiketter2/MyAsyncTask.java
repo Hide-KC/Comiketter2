@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference;
  * Created by HIDE on 2017/11/13.
  */
 
-public class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+abstract class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
     public WeakReference<Activity> weakActivity;
     public WeakReference<UserLoadDialogFragment> weakDialog;

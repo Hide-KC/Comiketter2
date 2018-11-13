@@ -1,8 +1,11 @@
 package com.kc.comiketter2;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -11,22 +14,33 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 /**
  * Created by HIDE on 2018/02/24.
  */
 
 public class FilterDialogFragment extends DialogFragment {
+    interface IDialogCallback{
+        void dialogResult(String key, int resultCode);
+    }
+
     private static final String KEY = "key";
     private static final String TITLE = "title";
     private static final String FILTER = "filter";
     private View view = null;
 
-    public static DialogFragment newInstance(String key){
+    public void dialogResult(String key) {
+        Fragment fragment = getTargetFragment();
+        if (fragment instanceof IDialogCallback){
+            ((IDialogCallback) fragment).dialogResult(key, Activity.RESULT_OK);
+        }
+    }
+
+    public static DialogFragment newInstance(Fragment target, String key){
         DialogFragment dialogFragment = new FilterDialogFragment();
         Bundle args = new Bundle();
         args.putString(KEY, key);
+        dialogFragment.setTargetFragment(target, 100);
         dialogFragment.setArguments(args);
 
         return dialogFragment;
@@ -36,7 +50,7 @@ public class FilterDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle args = getArguments();
-        String key = args.getString(KEY);
+        final String key = args.getString(KEY);
 
         //レイアウト展開
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -94,6 +108,7 @@ public class FilterDialogFragment extends DialogFragment {
                         editor.apply();
 
                         dialogInterface.dismiss();
+                        dialogResult(key);
                     }
                 });
 

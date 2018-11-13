@@ -25,8 +25,8 @@ import twitter4j.Status;
 public class StringMatcher {
     //配置表示パターン。語尾abは無い場合が多い。後ろから探索
     final private static String EVENT_SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])";
-    final private static String AB = ".*(ab)"; //abを探索→無ければa|bで探索
-    final private static String AOrB = ".*(a|b)";
+    final private static String AB = ".*((ab)|(ａｂ))"; //abを探索→無ければa|bで探索
+    final private static String AOrB = ".*([aａbｂ])";
 
     //ホールHashMap
     final private static Map<Integer, String> holeHashMap = new HashMap<Integer, String>(){

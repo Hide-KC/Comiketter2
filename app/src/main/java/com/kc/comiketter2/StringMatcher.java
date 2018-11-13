@@ -276,7 +276,7 @@ public class StringMatcher {
      * @return
      */
     public static String getCircleName(Status status){
-        Pattern pattern = Pattern.compile("貴サークル「(.*)」は");
+        Pattern pattern = Pattern.compile("[貴|あなたの]サークル「(.*)」は");
         Matcher matcher = pattern.matcher(status.getText());
         if (matcher.find()){
             Log.d("CircleName","CircleName :" + matcher.group(1));

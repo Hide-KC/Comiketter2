@@ -77,7 +77,7 @@ public class StringMatcher {
 
     //どのパターンが何日目にマッチするのかをここで定義。
     final private static String firstDay = "([1１一]日目|土曜?日?|初日)" + "|(29|２９)日";
-    final private static String secondDay = "([2２二]日目|日曜?日?)" + "|(30|３０)日";
+    final private static String secondDay = "([2２二]日目|日曜)" + "|(30|３０)日";
     final private static String thirdDay = "([3３三]日目|月曜?日?)" + "|(31|３１)日";
 
 
@@ -261,6 +261,9 @@ public class StringMatcher {
             for(Integer i_date = 1; i_date < dateArray.length; i_date++){
                 Pattern pattern = Pattern.compile(dateArray[i_date]);
                 Matcher matcher = pattern.matcher(name);
+                if (name.contains("日曜") | name.contains("(日)")) {
+                    Log.d(StringMatcher.class.getSimpleName(), name);
+                }
                 if (matcher.find()){
                     return i_date;
                 }

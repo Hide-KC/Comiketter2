@@ -1,11 +1,10 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.pickup;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.util.StringMatcher;
+import com.kc.comiketter2.UserDTO;
+import com.kc.comiketter2.data.DatabaseHelper;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 

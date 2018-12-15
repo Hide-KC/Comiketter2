@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.drawer;
 
 import android.util.Log;
 

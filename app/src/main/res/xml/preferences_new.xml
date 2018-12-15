@@ -4,27 +4,27 @@
         <PreferenceScreen android:title="@string/filter"
             android:summary="@string/filter_or_search">
             <PreferenceCategory android:title="@string/filter">
-                <com.kc.comiketter2.EditAndCheckablePreference
+                <com.kc.comiketter2.prefs.EditAndCheckablePreference
                     android:key="filter0"
                     android:title="設定１"
                     android:summary="testだよ"/>
 
-                <com.kc.comiketter2.EditAndCheckablePreference
+                <com.kc.comiketter2.prefs.EditAndCheckablePreference
                     android:key="filter1"
                     android:title="設定２"
                     android:summary="testだよ"/>
 
-                <com.kc.comiketter2.EditAndCheckablePreference
+                <com.kc.comiketter2.prefs.EditAndCheckablePreference
                     android:key="filter2"
                     android:title="設定３"
                     android:summary="testだよ"/>
 
-                <com.kc.comiketter2.EditAndCheckablePreference
+                <com.kc.comiketter2.prefs.EditAndCheckablePreference
                     android:key="filter3"
                     android:title="設定４"
                     android:summary="testだよ"/>
 
-                <com.kc.comiketter2.EditAndCheckablePreference
+                <com.kc.comiketter2.prefs.EditAndCheckablePreference
                     android:key="filter4"
                     android:title="設定５"
                     android:summary="testだよ"/>

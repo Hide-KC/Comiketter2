@@ -1,11 +1,10 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -15,12 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.kc.comiketter2.R;
+
 /**
  * Created by HIDE on 2018/02/24.
  */
 
 public class FilterDialogFragment extends DialogFragment {
-    interface IDialogCallback{
+    public interface IDialogCallback{
         void dialogResult(String key, int resultCode);
     }
 

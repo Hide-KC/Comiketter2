@@ -3,13 +3,15 @@ package com.kc.comiketter2;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import com.kc.comiketter2.dialog.UserLoadDialogFragment;
+
 import java.lang.ref.WeakReference;
 
 /**
  * Created by HIDE on 2017/11/13.
  */
 
-abstract class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+abstract public class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
     public WeakReference<Activity> weakActivity;
     public WeakReference<UserLoadDialogFragment> weakDialog;

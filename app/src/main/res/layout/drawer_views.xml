@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:background="@color/unohana"
-    tools:context="com.kc.comiketter2.MainActivity">
+    tools:context="com.kc.comiketter2.main.MainActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/header_layout"

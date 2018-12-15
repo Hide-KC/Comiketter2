@@ -1,10 +1,11 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.CheckBoxPreference;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.kc.comiketter2.prefs.EditAndCheckablePreference;
+import com.kc.comiketter2.prefs.MyPreferenceFragment;
 
 import java.text.Normalizer;
 import java.util.ArrayList;

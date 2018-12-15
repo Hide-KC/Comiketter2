@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kc.comiketter2.ConfirmOAuthActivity">
+    tools:context="com.kc.comiketter2.oauth.ConfirmOAuthActivity">
 
     <TextView
         android:id="@+id/textView"

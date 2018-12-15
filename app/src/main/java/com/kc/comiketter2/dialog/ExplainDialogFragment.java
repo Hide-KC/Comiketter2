@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +14,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import com.kc.comiketter2.R;
 
 public class ExplainDialogFragment extends DialogFragment {
     private View view = null;

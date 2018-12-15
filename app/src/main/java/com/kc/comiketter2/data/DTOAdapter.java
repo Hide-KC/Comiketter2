@@ -1,9 +1,12 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.data;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
+
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.UserDTO;
 
 /**
  * Created by HIDE on 2017/11/29.

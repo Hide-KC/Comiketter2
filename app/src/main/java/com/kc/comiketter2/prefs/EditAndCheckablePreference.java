@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.prefs;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import com.kc.comiketter2.dialog.FilterDialogFragment;
+import com.kc.comiketter2.R;
 
 /**
  * Created by HIDE on 2018/02/20.

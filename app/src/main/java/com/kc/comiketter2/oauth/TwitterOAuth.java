@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.oauth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.kc.comiketter2.R;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

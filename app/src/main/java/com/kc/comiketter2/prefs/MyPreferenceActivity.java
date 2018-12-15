@@ -1,15 +1,17 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.prefs;
 
-import android.support.v4.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.preference.PreferenceFragment;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.kc.comiketter2.dialog.ClearDialogFragment;
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.data.DatabaseHelper;
 
 public class MyPreferenceActivity extends AppCompatActivity implements ClearDialogFragment.ICallback {
     public static final Integer REQUEST_CODE = 2000;

@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.prefs;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,14 +8,18 @@ import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+
+import com.kc.comiketter2.dialog.ClearDialogFragment;
+import com.kc.comiketter2.dialog.ExplainDialogFragment;
+import com.kc.comiketter2.dialog.FilterDialogFragment;
+import com.kc.comiketter2.R;
 
 /**
  * Created by HIDE on 2018/03/03.
  */
 
-public class MyPreferenceFragment extends PreferenceFragment implements FilterDialogFragment.IDialogCallback{
+public class MyPreferenceFragment extends PreferenceFragment implements FilterDialogFragment.IDialogCallback {
     //もしフィルターの数を増やす場合はここを増やすこと！！
     public static final int FILTER_COUNT = 5;
 

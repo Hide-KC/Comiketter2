@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.kc.comiketter2.R;
 
 /**
  * Created by HIDE on 2017/11/18.

@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +19,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.kc.comiketter2.IUpdater;
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.StickyListFragment;
+import com.kc.comiketter2.UserDTO;
+import com.kc.comiketter2.data.DatabaseHelper;
+import com.kc.comiketter2.main.MainActivity;
 
 /**
  * Created by HIDE on 2017/12/24.

@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kc.comiketter2.data.DatabaseHelper;
+import com.kc.comiketter2.util.StringMatcher;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 

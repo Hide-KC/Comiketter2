@@ -23,8 +23,8 @@ import twitter4j.Status;
 
 //サークル配置の正規表現マッチング
 public class StringMatcher {
-    //配置表示パターン。語尾abは無い場合が多い。後ろから探索
-    final private static String EVENT_SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?([0-9０-９][0-9０-９])";
+    //配置表示パターン。語尾abは無い場合が多い。後ろから探索。Aと数値の間の文字は苦しい対応。
+    final private static String EVENT_SPACE_PATTERN = ".*([a-zA-ZＡ-Ｚあ-んア-ン]).?.?([0-9０-９][0-9０-９])";
     final private static String AB = ".*((ab)|(ａｂ))"; //abを探索→無ければa|bで探索
     final private static String AOrB = ".*([aａbｂ])";
 

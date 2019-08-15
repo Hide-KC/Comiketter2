@@ -1,7 +1,7 @@
 package com.kc.comiketter2;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.kc.comiketter2.follows.FollowListFragment;
 import com.kc.comiketter2.pickup.PickupListFragment;

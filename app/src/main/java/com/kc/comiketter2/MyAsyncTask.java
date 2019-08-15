@@ -3,6 +3,8 @@ package com.kc.comiketter2;
 import android.app.Activity;
 import android.os.AsyncTask;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.kc.comiketter2.dialog.UserLoadDialogFragment;
 
 import java.lang.ref.WeakReference;
@@ -13,7 +15,7 @@ import java.lang.ref.WeakReference;
 
 abstract public class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
-    public WeakReference<Activity> weakActivity;
+    public WeakReference<AppCompatActivity> weakActivity;
     public WeakReference<UserLoadDialogFragment> weakDialog;
     public long myID = 0;
     public long targetID = 0;
@@ -24,7 +26,7 @@ abstract public class MyAsyncTask<Params, Progress, Result> extends AsyncTask<Pa
     }
 
     public MyAsyncTask (IAsyncTaskCallback activity){
-        this.weakActivity = new WeakReference<>((Activity) activity);
+        this.weakActivity = new WeakReference<>((AppCompatActivity) activity);
     }
 
     @Override

@@ -3,11 +3,12 @@ package com.kc.comiketter2.prefs;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.preference.PreferenceFragment;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.kc.comiketter2.dialog.ClearDialogFragment;
 import com.kc.comiketter2.R;

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +16,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.kc.comiketter2.data.DatabaseHelper;
@@ -228,10 +229,16 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
                 color = res.getColor(R.color.second_row_back_2);
             }
         } else if (day == 3) {
-            if (p == 0){
+            if (p == 0) {
                 color = res.getColor(R.color.third_row_back_1);
             } else {
                 color = res.getColor(R.color.third_row_back_2);
+            }
+        } else if (day == 4) {
+            if (p == 0) {
+                color = res.getColor(R.color.fourth_row_back_1);
+            } else {
+                color = res.getColor(R.color.fourth_row_back_2);
             }
         } else if (day == 9) {
             if (p == 0){
@@ -259,6 +266,8 @@ public class UserDTOAdapter extends ArrayAdapter<UserDTO> implements StickyListH
             color = res.getColor(R.color.second_header_back);
         } else if (day == 3) {
             color = res.getColor(R.color.third_header_back);
+        } else if (day == 4) {
+            color = res.getColor(R.color.fourth_header_back);
         } else if (day == 9){
             color = res.getColor(R.color.unknown_header_back);
         } else {

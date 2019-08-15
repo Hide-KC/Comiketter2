@@ -1,13 +1,13 @@
 package com.kc.comiketter2;
 
-import android.app.Application;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
-import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class HowToActivity extends AppCompatActivity {
 

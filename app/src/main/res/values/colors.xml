@@ -22,6 +22,9 @@
     <color name="third_header_back">#e83929</color>
     <color name="third_row_back_1">#fdeff2</color>
     <color name="third_row_back_2">#fceaee</color>
+    <color name="fourth_header_back">#ffea00</color>
+    <color name="fourth_row_back_1">#fffbcc</color>
+    <color name="fourth_row_back_2">#fffde6</color>
     <color name="unknown_header_back">#afafb0</color>
     <color name="unknown_row_back_1">#dddcd6</color>
     <color name="unknown_row_back_2">#dbd9d0</color>

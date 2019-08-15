@@ -68,19 +68,20 @@ public class StringMatcher {
 
     //コミケ関係の日付記載パターン
     final private static String[] comikeEventPattern = new String[]{
-            "[１-３1-3一二三]日目",
-            "[金土]",
+            "[１-４1-4一二三四]日目",
+            "[土火]",
             "日曜",
+            "月曜",
             "初日",
             "[東西]" + EVENT_SPACE_PATTERN,
             "[CＣ][0-9０-９]{2,3}.*日"
     };
 
     //どのパターンが何日目にマッチするのかをここで定義。
-    final private static String firstDay = "([1１一]日目|土曜?日?|初日)" + "|(29|２９)日";
-    final private static String secondDay = "([2２二]日目|日曜)" + "|(30|３０)日";
-    final private static String thirdDay = "([3３三]日目|月曜?日?)" + "|(31|３１)日";
-
+    final private static String firstDay = "([1１一]日目|土|初日)" + "|(28|２８)日";
+    final private static String secondDay = "([2２二]日目|日曜)" + "|(29|２９)日";
+    final private static String thirdDay = "([3３三]日目|月曜)" + "|(30|３０)日";
+    final private static String fourthDay = "([4４四]日目|火)" + "|(31|３１)日";
 
     //イベント名サーチメソッドフィルタ対応版
     public static String getEventName(String name, boolean checkHasSpace, Context context){
@@ -258,7 +259,7 @@ public class StringMatcher {
         if (getEventName(name) == null){
             return 99;
         } else {
-            String[] dateArray = new String[]{"", firstDay, secondDay, thirdDay};
+            String[] dateArray = new String[]{"", firstDay, secondDay, thirdDay, fourthDay};
             for(Integer i_date = 1; i_date < dateArray.length; i_date++){
                 Pattern pattern = Pattern.compile(dateArray[i_date]);
                 Matcher matcher = pattern.matcher(name);
@@ -266,6 +267,7 @@ public class StringMatcher {
                     Log.d(StringMatcher.class.getSimpleName(), name);
                 }
                 if (matcher.find()){
+
                     return i_date;
                 }
             }

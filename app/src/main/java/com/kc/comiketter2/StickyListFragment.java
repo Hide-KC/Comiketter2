@@ -1,9 +1,10 @@
 package com.kc.comiketter2;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
+
+import com.kc.comiketter2.follows.FollowListFragment;
+import com.kc.comiketter2.pickup.PickupListFragment;
 
 import java.util.List;
 
@@ -19,14 +20,17 @@ public abstract class StickyListFragment extends Fragment {
     public static StickyListFragment newInstance(String param){
         StickyListFragment fragment = null;
         Bundle args = new Bundle();
-        if(param.equals(FOLLOW_LIST)){
-            args.putString(PARAM, FOLLOW_LIST);
-            fragment = new FollowListFragment();
-        } else if (param.equals(PICKUP_LIST)){
-            args.putString(PARAM, PICKUP_LIST);
-            fragment = new PickupListFragment();
-        } else {
-            throw new IllegalArgumentException("セットした引数は無効です");
+        switch (param) {
+            case FOLLOW_LIST:
+                args.putString(PARAM, FOLLOW_LIST);
+                fragment = new FollowListFragment();
+                break;
+            case PICKUP_LIST:
+                args.putString(PARAM, PICKUP_LIST);
+                fragment = new PickupListFragment();
+                break;
+            default:
+                throw new IllegalArgumentException("セットした引数は無効です");
         }
 
         fragment.setArguments(args);

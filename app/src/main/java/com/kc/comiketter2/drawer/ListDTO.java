@@ -1,6 +1,4 @@
-package com.kc.comiketter2;
-
-import android.util.Log;
+package com.kc.comiketter2.drawer;
 
 /**
  * Created by HIDE on 2018/01/18.

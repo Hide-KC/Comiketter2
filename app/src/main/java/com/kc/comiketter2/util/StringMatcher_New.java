@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

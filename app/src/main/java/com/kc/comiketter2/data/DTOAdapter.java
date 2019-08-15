@@ -1,9 +1,13 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.data;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
+
+import androidx.annotation.NonNull;
+
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.UserDTO;
 
 /**
  * Created by HIDE on 2017/11/29.
@@ -24,6 +28,8 @@ public abstract class DTOAdapter extends ArrayAdapter<UserDTO> {
             color = res.getColor(R.color.second_row_back_1);
         } else if (day == 3) {
             color = res.getColor(R.color.third_row_back_1);
+        } else if (day == 4) {
+            color = res.getColor(R.color.fourth_row_back_1);
         } else {
             color = res.getColor(R.color.unknown_row_back_1);
         }
@@ -40,6 +46,8 @@ public abstract class DTOAdapter extends ArrayAdapter<UserDTO> {
             color = res.getColor(R.color.second_header_back);
         } else if (day == 3) {
             color = res.getColor(R.color.third_header_back);
+        } else if (day == 4) {
+            color = res.getColor(R.color.fourth_header_back);
         } else {
             color = res.getColor(R.color.unknown_header_back);
         }

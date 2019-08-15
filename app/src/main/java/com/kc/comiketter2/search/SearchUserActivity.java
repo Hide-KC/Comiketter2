@@ -1,10 +1,7 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.search;
 
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,6 +10,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+
+import com.kc.comiketter2.IUpdater;
+import com.kc.comiketter2.dialog.OptionalInfoDialogFragment;
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.UserDTO;
+import com.kc.comiketter2.data.DatabaseHelper;
 
 import java.util.List;
 

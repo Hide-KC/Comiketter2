@@ -1,24 +1,24 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.main;
 
-import android.app.Activity;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -33,6 +33,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
+import com.kc.comiketter2.MyAsyncTask;
+import com.kc.comiketter2.dialog.ClearDialogFragment;
+import com.kc.comiketter2.follows.FollowListFragment;
+import com.kc.comiketter2.IUpdater;
+import com.kc.comiketter2.drawer.ListDTO;
+import com.kc.comiketter2.drawer.ListDTOAdapter;
+import com.kc.comiketter2.MyFragmentPagerAdapter;
+import com.kc.comiketter2.pickup.PickupListFragment;
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.search.SearchUserActivity;
+import com.kc.comiketter2.StickyListFragment;
+import com.kc.comiketter2.util.StringMatcher;
+import com.kc.comiketter2.TaskManager;
+import com.kc.comiketter2.oauth.TwitterUtils;
+import com.kc.comiketter2.UserDTO;
+import com.kc.comiketter2.dialog.UserLoadDialogFragment;
+import com.kc.comiketter2.data.DatabaseHelper;
+import com.kc.comiketter2.oauth.ConfirmOAuthActivity;
+import com.kc.comiketter2.prefs.EditAndCheckablePreference;
+import com.kc.comiketter2.prefs.MyPreferenceActivity;
+import com.kc.comiketter2.prefs.MyPreferenceFragment;
 
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
@@ -379,7 +401,7 @@ public class MainActivity extends AppCompatActivity
 
         if (task != null){
             Log.d("Comiketter2", task.getStatus().toString());
-            task.weakActivity = new WeakReference<Activity>(this);
+            task.weakActivity = new WeakReference<AppCompatActivity>(this);
         }
     }
 
@@ -692,7 +714,7 @@ public class MainActivity extends AppCompatActivity
 
     private void startSearchActivity(){
         //サーチ画面を展開
-        Intent intent = new Intent(this, com.kc.comiketter2.SearchUserActivity.class);
+        Intent intent = new Intent(this, SearchUserActivity.class);
         startActivityForResult(intent, SearchUserActivity.REQUEST_CODE);
     }
 
@@ -703,7 +725,7 @@ public class MainActivity extends AppCompatActivity
 
     private void startOAuthActivity(){
         //認証画面を展開
-        Intent intent = new Intent(this, com.kc.comiketter2.ConfirmOAuthActivity.class);
+        Intent intent = new Intent(this, ConfirmOAuthActivity.class);
         startActivityForResult(intent, ConfirmOAuthActivity.REQUEST_CODE);
     }
 

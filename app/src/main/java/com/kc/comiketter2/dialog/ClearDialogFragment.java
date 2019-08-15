@@ -1,22 +1,26 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 /**
- * Created by HIDE on 2018/03/03.
+ * Created by HIDE on 2017/12/25.
  */
 
-public class FilterClearDialogFragment extends DialogFragment {
-    public static DialogFragment newInstance(){
-        DialogFragment dialog = new FilterClearDialogFragment();
+public class ClearDialogFragment extends DialogFragment {
+    public interface ICallback {
+        void onPositiveButtonClicked();
+    }
+
+    public static DialogFragment newInstance(String message){
+        DialogFragment dialog = new ClearDialogFragment();
         Bundle args = new Bundle();
+        args.putString("message", message);
         dialog.setArguments(args);
 
         return dialog;
@@ -25,17 +29,17 @@ public class FilterClearDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        String message = args.getString("message", "");
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle("確認")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //OK
-                        for (int filter_i = 0; filter_i < MyPreferenceFragment.FILTER_COUNT; filter_i++){
-                            SharedPreferences preferences = getActivity().getSharedPreferences("filter" + filter_i, Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.clear();
-                            editor.apply();
+                        if (getActivity() instanceof ICallback){
+                            ((ICallback) getActivity()).onPositiveButtonClicked();
                         }
                     }
                 })
@@ -46,7 +50,7 @@ public class FilterClearDialogFragment extends DialogFragment {
                         //何もしないで閉じる
                     }
                 })
-                .setMessage(getString(R.string.clear_filter_message));
+                .setMessage(message);
 
         return dialogBuilder.create();
     }

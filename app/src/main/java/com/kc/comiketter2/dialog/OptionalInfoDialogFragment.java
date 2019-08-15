@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,10 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +14,18 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
+import com.kc.comiketter2.IUpdater;
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.StickyListFragment;
+import com.kc.comiketter2.UserDTO;
+import com.kc.comiketter2.data.DatabaseHelper;
+import com.kc.comiketter2.main.MainActivity;
 
 /**
  * Created by HIDE on 2017/12/24.

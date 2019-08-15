@@ -1,15 +1,18 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.oauth;
 
 /**
  * Created by HIDE on 2017/11/05.
  */
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.UserDTO;
+import com.kc.comiketter2.data.DatabaseHelper;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

@@ -1,4 +1,4 @@
-package com.kc.comiketter2;
+package com.kc.comiketter2.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,14 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
+import com.kc.comiketter2.prefs.EditAndCheckablePreference;
+import com.kc.comiketter2.drawer.ListDTO;
+import com.kc.comiketter2.main.MainActivity;
+import com.kc.comiketter2.prefs.MyPreferenceFragment;
+import com.kc.comiketter2.R;
+import com.kc.comiketter2.util.StringMatcher;
+import com.kc.comiketter2.UserDTO;
 
 import java.util.ArrayList;
 import java.util.List;

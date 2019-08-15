@@ -1,9 +1,9 @@
 package com.kc.comiketter2;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 /**
  * Created by HIDE on 2017/12/09.
@@ -22,8 +22,6 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
             return StickyListFragment.newInstance(StickyListFragment.FOLLOW_LIST);
         } else if (position == 1){
             return StickyListFragment.newInstance(StickyListFragment.PICKUP_LIST);
-        } else if (position == 2) {
-            return AchievementFragment.newInstance();
         } else {
             return null;
         }

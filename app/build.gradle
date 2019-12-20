@@ -1,45 +1,90 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
+
 apply plugin: 'kotlin-android'
 
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+
 android {
-    compileSdkVersion 28
-    defaultConfig {
-        applicationId "com.kc.comiketter2"
-        minSdkVersion 22
-        targetSdkVersion 28
-        versionCode 33
-        versionName "1.5.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  compileSdkVersion buildConfig.appCompileSdk
+  defaultConfig {
+    applicationId "com.kc.comiketter2"
+    minSdkVersion buildConfig.minSdk
+    targetSdkVersion buildConfig.targetSdk
+    versionCode buildConfig.versionCode
+    versionName buildConfig.versionName
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+  }
+  dataBinding {
+    enabled = true
+  }
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
     }
+  }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation "androidx.constraintlayout:constraintlayout:${versions.constraintlayout}"
+  implementation "androidx.legacy:legacy-support-v4:${versions.legacy}"
+  implementation "androidx.core:core-ktx:${versions.core_ktx}"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'org.twitter4j:twitter4j-core:4.0.7'
-    implementation 'com.github.mtotschnig:StickyListHeaders:2.7.1'
-    implementation 'com.github.bumptech.glide:glide:4.10.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+  testImplementation "junit:junit:${versions.junit}"
+  androidTestImplementation "androidx.test:runner:${versions.runner}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso_core}"
 
-    implementation 'work.kcpoipoi:pinninglistview:0.0.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+  implementation "com.google.android.material:material:${versions.material}"
+  implementation "androidx.appcompat:appcompat:${versions.appcompat}"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
 
+  // StickyListHeadersListView
+  implementation "com.github.mtotschnig:stickylistheaders:${versions.stickylistheaders}"
+
+  //Twitter4J
+  implementation "org.twitter4j:twitter4j-core:${versions.twitter4j_core}"
+
+  // Glide
+  implementation "com.github.bumptech.glide:glide:${versions.glide}"
+  annotationProcessor "com.github.bumptech.glide:compiler:${versions.glide}"
+
+  // Robolectric
+  testImplementation "org.robolectric:robolectric:${versions.robolectric}"
+
+  // ViewModel and LiveData
+  implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle_viewmodel}"
+  kapt "androidx.lifecycle:lifecycle-compiler:${versions.lifecycle}"
+
+  // Room
+  implementation "androidx.room:room-runtime:${versions.room}"
+  kapt "androidx.room:room-compiler:${versions.room}"
+
+  // RecyclerView
+  implementation "androidx.recyclerview:recyclerview:${versions.recyclerview}"
+
+  // BottomAppBar, BottomNavigationView
+  implementation "com.google.android.material:material:${versions.material}"
+
+  // PinningListView (My Bintray library)
+  implementation "work.kcs_labo:pinninglistview:${versions.pinninglistview}"
+
+  // Glide
+  implementation "com.github.bumptech.glide:glide:${versions.glide}"
+  kapt "com.github.bumptech.glide:compiler:${versions.glide}"
+
+  // Coroutines
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${versions.coroutines}"
 }
 repositories {
-    mavenCentral()
+  mavenCentral()
 }

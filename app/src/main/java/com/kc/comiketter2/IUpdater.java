@@ -5,5 +5,5 @@ package com.kc.comiketter2;
  */
 
 public interface IUpdater {
-    void update();
+  void update();
 }

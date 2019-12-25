@@ -84,6 +84,9 @@ dependencies {
 
   // Coroutines
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${versions.coroutines}"
+
+  // Mockito
+  testImplementation "org.mockito:mockito-core:${versions.mockito}"
 }
 repositories {
   mavenCentral()

@@ -1,9 +1,9 @@
 package com.kc.comiketter2.domain.usecase
 
-import twitter4j.User
+import com.kc.comiketter2.model.data.room.UserEntity
 
 interface SearchUsersUseCase {
-  suspend fun searchUsersFromScreenName(screenName: String): List<User>?
-  suspend fun searchUsersFromName(name: String): List<User>?
-  suspend fun searchUsersFromCircleName(circleName: String): List<User>?
+  suspend fun searchUsersFromScreenName(screenName: String): List<UserEntity>?
+  suspend fun searchUsersFromName(name: String): List<UserEntity>?
+  suspend fun searchUsersFromCircleName(circleName: String): List<UserEntity>?
 }

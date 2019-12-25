@@ -1,24 +1,32 @@
 package com.kc.comiketter2.model.data.room.source
 
 import androidx.room.*
-import com.kc.comiketter2.UserDTO
 import com.kc.comiketter2.domain.usecase.SearchUsersUseCase
-import twitter4j.User
+import com.kc.comiketter2.model.data.room.UserEntity
 
 @Dao
 interface AppDao : SearchUsersUseCase {
   @Query("SELECT * FROM users WHERE circle_name LIKE :circleName")
-  override suspend fun searchUsersFromCircleName(circleName: String): List<User>?
+  override suspend fun searchUsersFromCircleName(circleName: String): List<UserEntity>?
 
   @Query("SELECT * FROM users WHERE name LIKE :name")
-  override suspend fun searchUsersFromName(name: String): List<User>?
+  override suspend fun searchUsersFromName(name: String): List<UserEntity>?
 
   @Query("SELECT * FROM users WHERE screen_name LIKE :screenName")
-  override suspend fun searchUsersFromScreenName(screenName: String): List<User>?
+  override suspend fun searchUsersFromScreenName(screenName: String): List<UserEntity>?
 
   @Insert(onConflict = OnConflictStrategy.IGNORE)
-  suspend fun addUser(user: UserDTO)
+  suspend fun addUser(user: UserEntity)
+
+  @Insert(onConflict = OnConflictStrategy.IGNORE)
+  suspend fun addUsers(vararg users: UserEntity)
 
   @Update
-  suspend fun updateUser(user: UserDTO)
+  suspend fun updateUser(user: UserEntity)
+
+  @Update
+  suspend fun updateUsers(vararg users: UserEntity)
+
+  @Query("DELETE FROM users WHERE user_id = :userId")
+  suspend fun deleteUser(userId: Long)
 }

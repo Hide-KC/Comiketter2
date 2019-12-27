@@ -40,7 +40,8 @@ dependencies {
   implementation "androidx.core:core-ktx:${versions.core_ktx}"
 
   testImplementation "junit:junit:${versions.junit}"
-  androidTestImplementation "androidx.test:runner:${versions.runner}"
+  testImplementation "androidx.test:core:${versions.test_core}"
+  androidTestImplementation "androidx.test.ext:junit:${versions.junitX}"
   androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso_core}"
 
   implementation "com.google.android.material:material:${versions.material}"
@@ -87,7 +88,11 @@ dependencies {
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${versions.coroutines}"
 
   // Mockito
-  testImplementation "org.mockito:mockito-core:${versions.mockito}"
+  testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${versions.mockito_kotlin}"
+
+  // AssertJ
+  testImplementation "org.assertj:assertj-core:${versions.assertj}"
+  androidTestImplementation "org.assertj:assertj-core:${versions.assertj}"
 }
 repositories {
   mavenCentral()

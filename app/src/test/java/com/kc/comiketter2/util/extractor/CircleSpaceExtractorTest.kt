@@ -1,7 +1,5 @@
-package com.kc.comiketter2
+package com.kc.comiketter2.util.extractor
 
-import com.kc.comiketter2.util.extractor.CircleSpaceExtractor
-import com.kc.comiketter2.util.extractor.Extractor
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

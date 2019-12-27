@@ -1,7 +1,5 @@
-package com.kc.comiketter2
+package com.kc.comiketter2.util.extractor
 
-import com.kc.comiketter2.util.extractor.ComikeDateExtractor
-import com.kc.comiketter2.util.extractor.Extractor
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

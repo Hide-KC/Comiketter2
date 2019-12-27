@@ -23,6 +23,7 @@ import twitter4j.auth.AccessToken;
 /**
  * Twitterオブジェクト生成、AccessTokenのセットなど。
  */
+@Deprecated
 public class TwitterUtils {
   private static final String TOKEN = "token";
   private static final String TOKEN_SECRET = "token_secret";

@@ -1,115 +1,115 @@
 <resources>
-    <string name="app_name">CircleFinder</string>
-    <string name="txtRenkei">Twitter連携で始める\nサークルチェック</string>
-    <string name="privacy_policy_show_dialog">ダイアログを開きます</string>
-    <string name="privacy_policy">Application Privacy Policy</string>
-    <string name="privacy_policy_ja">このアプリについて</string>
-    <string name="yes">アカウントとつながる</string>
-    <string name="no">No</string>
-    <string name="twitter">Twitter</string>
-    <string name="kcpoipoi">\@kcpoipoi</string>
+  <string name="app_name">CircleFinder</string>
+  <string name="txtRenkei">Twitter連携で始める\nサークルチェック</string>
+  <string name="privacy_policy_show_dialog">ダイアログを開きます</string>
+  <string name="privacy_policy">Application Privacy Policy</string>
+  <string name="privacy_policy_ja">このアプリについて</string>
+  <string name="yes">アカウントとつながる</string>
+  <string name="no">No</string>
+  <string name="twitter">Twitter</string>
+  <string name="kcpoipoi">\@kcpoipoi</string>
 
-    <!--OAuth認証関係-->
-    <string name="callback_url">https://twittercallback</string>
-    <string name="authorize_error">認証失敗</string>
-    <string name="accesstoken_error">アカウントが取得できませんでした</string>
-    <string name="accesstoken_success">Twitter連携完了！</string>
-    <string name="open_web">※ウェブブラウザが起動し認証画面になります。</string>
+  <!--OAuth認証関係-->
+  <string name="callback_url">https://twittercallback</string>
+  <string name="authorize_error">認証失敗</string>
+  <string name="accesstoken_error">アカウントが取得できませんでした</string>
+  <string name="accesstoken_success">Twitter連携完了！</string>
+  <string name="open_web">※ウェブブラウザが起動し認証画面になります。</string>
 
-    <!--StickyListLayout関係-->
-    <string name="circle_space_hint">スペース</string>
-    <string name="busuu_hint">部数</string>
-    <string name="yosan_hint">予算</string>
-    <string name="memo_hint">メモ</string>
-    <string name="date">日にち</string>
-    <string name="profile_url">"twitter://user?screen_name="</string>
-    <string name="nichime">日目</string>
-    <string name="unknown">日にち不明</string>
-    <string name="accounts">アカウント</string>
-    <string name="pickup">買物リスト</string>
-    <string name="achievement">達成率</string>
-    <string name="achieve_ratio">達成率は...</string>
-    <string name="search_title">検索</string>
-    <string name="circle_name">サークル名</string>
-    <string name="no_users">参加者が見つかりませんでした</string>
-    <string name="empty_string">更新ボタンを押すと最新のデータを取得します</string>
-    <string name="empty_pickup">ハートを付けたアカウントが表示されます</string>
+  <!--StickyListLayout関係-->
+  <string name="circle_space_hint">スペース</string>
+  <string name="busuu_hint">部数</string>
+  <string name="yosan_hint">予算</string>
+  <string name="memo_hint">メモ</string>
+  <string name="date">日にち</string>
+  <string name="profile_url">"twitter://user?screen_name="</string>
+  <string name="nichime">日目</string>
+  <string name="unknown">日にち不明</string>
+  <string name="accounts">アカウント</string>
+  <string name="pickup">買物リスト</string>
+  <string name="achievement">達成率</string>
+  <string name="achieve_ratio">達成率は...</string>
+  <string name="search_title">検索</string>
+  <string name="circle_name">サークル名</string>
+  <string name="no_users">参加者が見つかりませんでした</string>
+  <string name="empty_string">更新ボタンを押すと最新のデータを取得します</string>
+  <string name="empty_pickup">ハートを付けたアカウントが表示されます</string>
 
-    <!--Dialog関係-->
-    <string name="loading">データ取得中です...</string>
-    <string name="cancel_now">Cancel Now...</string>
-    <string name="cancel">cancel</string>
-    <string name="target">対象</string>
-    <string name="yen">円</string>
-    <string name="dialog_title">情報を入力</string>
-    <string name="clear_message">ユーザ入力情報をクリアします。\n（サークル名は消去されません）</string>
-    <string name="clear_got_data">取得したフォローのデータをクリアします。\n（自身のアカウント情報は消去されません）</string>
-    <string name="clear_got_data_success">データのクリア成功</string>
-    <string name="clear_got_data_miss">データのクリア失敗</string>
+  <!--Dialog関係-->
+  <string name="loading">データ取得中です...</string>
+  <string name="cancel_now">Cancel Now...</string>
+  <string name="cancel">cancel</string>
+  <string name="target">対象</string>
+  <string name="yen">円</string>
+  <string name="dialog_title">情報を入力</string>
+  <string name="clear_message">ユーザ入力情報をクリアします。\n（サークル名は消去されません）</string>
+  <string name="clear_got_data">取得したフォローのデータをクリアします。\n（自身のアカウント情報は消去されません）</string>
+  <string name="clear_got_data_success">データのクリア成功</string>
+  <string name="clear_got_data_miss">データのクリア失敗</string>
 
-    <!--メニュー関係-->
-    <string name="clear">クリア</string>
-    <string name="reload">更新</string>
-    <string name="search">検索</string>
-    <string name="settings">設定</string>
+  <!--メニュー関係-->
+  <string name="clear">クリア</string>
+  <string name="reload">更新</string>
+  <string name="search">検索</string>
+  <string name="settings">設定</string>
 
-    <!--ターゲット選択-->
-    <string name="new_release">新刊</string>
-    <string name="new_and_published">新既刊</string>
-    <string name="published">既刊</string>
-    <string name="other">その他</string>
-    <string-array name="target_spinner">
-        <item>@string/new_release</item>
-        <item>@string/new_and_published</item>
-        <item>@string/published</item>
-        <item>@string/other</item>
-    </string-array>
+  <!--ターゲット選択-->
+  <string name="new_release">新刊</string>
+  <string name="new_and_published">新既刊</string>
+  <string name="published">既刊</string>
+  <string name="other">その他</string>
+  <string-array name="target_spinner">
+    <item>@string/new_release</item>
+    <item>@string/new_and_published</item>
+    <item>@string/published</item>
+    <item>@string/other</item>
+  </string-array>
 
-    <!--SearchActivity-->
-    <string name="search_activity">アカウントを検索</string>
-    <string name="search_word">名前orスクリーン名orサークル名</string>
+  <!--SearchActivity-->
+  <string name="search_activity">アカウントを検索</string>
+  <string name="search_word">名前orスクリーン名orサークル名</string>
 
-    <!--DrawerLayout-->
-    <string name="total_yosan">選択中リストの予算</string>
-    <string name="all_follow">フォロー一覧</string>
-    <string name="account_name">アカウント名</string>
-    <string name="zero_yen">0円</string>
-    <string name="subscribe_list">リストを追加</string>
+  <!--DrawerLayout-->
+  <string name="total_yosan">選択中リストの予算</string>
+  <string name="all_follow">フォロー一覧</string>
+  <string name="account_name">アカウント名</string>
+  <string name="zero_yen">0円</string>
+  <string name="subscribe_list">リストを追加</string>
 
-    <!--設定画面-->
-    <string name="category_filter_title">イベントフィルタ</string>
-    <string name="switch_pref_title">フィルタの有効化</string>
-    <string name="switch_pref_summary">設定したフィルタが有効になります。\nOFFにするとコミケ用のフィルタになります。</string>
-    <string name="filter">フィルタワードの管理</string>
-    <string name="filter_info">フィルタ情報</string>
-    <string name="filter_name_title">フィルタ名</string>
-    <string name="filter_text_title">フィルタワード</string>
-    <string name="filter_name_comike">コミックマーケット</string>
-    <string name="filter_text_comike">※コミケフィルタは編集不可です</string>
-    <string name="filter_text_eg">コミティア など</string>
-    <string name="clear_filter">フィルタのクリア</string>
-    <string name="clear_filter_message">フィルタを消去します。\nよろしいですか？</string>
-    <string name="filter_or_search">「 , 」区切りでOR検索ができます</string>
-    <string name="how_to">使い方</string>
-    <string name="clear_data">ユーザ情報のクリア</string>
-    <string name="clear_data_summary">取得したユーザ情報を削除します。</string>
-    <string name="visible_all_user">全てのユーザを表示</string>
-    <string name="visible_all_user_summary">ONにすると取得済みユーザを全て表示します。</string>
+  <!--設定画面-->
+  <string name="category_filter_title">イベントフィルタ</string>
+  <string name="switch_pref_title">フィルタの有効化</string>
+  <string name="switch_pref_summary">設定したフィルタが有効になります。\nOFFにするとコミケ用のフィルタになります。</string>
+  <string name="filter">フィルタワードの管理</string>
+  <string name="filter_info">フィルタ情報</string>
+  <string name="filter_name_title">フィルタ名</string>
+  <string name="filter_text_title">フィルタワード</string>
+  <string name="filter_name_comike">コミックマーケット</string>
+  <string name="filter_text_comike">※コミケフィルタは編集不可です</string>
+  <string name="filter_text_eg">コミティア など</string>
+  <string name="clear_filter">フィルタのクリア</string>
+  <string name="clear_filter_message">フィルタを消去します。\nよろしいですか？</string>
+  <string name="filter_or_search">「 , 」区切りでOR検索ができます</string>
+  <string name="how_to">使い方</string>
+  <string name="clear_data">ユーザ情報のクリア</string>
+  <string name="clear_data_summary">取得したユーザ情報を削除します。</string>
+  <string name="visible_all_user">全てのユーザを表示</string>
+  <string name="visible_all_user_summary">ONにすると取得済みユーザを全て表示します。</string>
 
-    <!--プリセットフィルタ-->
-    <string-array name="preset_filter0">
-        <item>COMITIA</item>
-        <item>ティア,ﾃｨｱ,ＴＩＡ,TIA</item>
-    </string-array>
-    <string-array name="preset_filter1">
-        <item>COMIC1☆</item>
-        <item>コミ１,ｺﾐ1,コミ1,ｺﾐ１,COMIC1,ＣＯＭＩＣ１</item>
-    </string-array>
-    <string-array name="preset_filter2">
-        <item>COMIC CITY</item>
-        <item>スパコミ,ｽﾊﾟｺﾐ,COMIC CITY</item>
-    </string-array>
+  <!--プリセットフィルタ-->
+  <string-array name="preset_filter0">
+    <item>COMITIA</item>
+    <item>ティア,ﾃｨｱ,ＴＩＡ,TIA</item>
+  </string-array>
+  <string-array name="preset_filter1">
+    <item>COMIC1☆</item>
+    <item>コミ１,ｺﾐ1,コミ1,ｺﾐ１,COMIC1,ＣＯＭＩＣ１</item>
+  </string-array>
+  <string-array name="preset_filter2">
+    <item>COMIC CITY</item>
+    <item>スパコミ,ｽﾊﾟｺﾐ,COMIC CITY</item>
+  </string-array>
 
-    <!--その他-->
-    <string name="no_client">There are no Twitter client.</string>
+  <!--その他-->
+  <string name="no_client">There are no Twitter client.</string>
 </resources>

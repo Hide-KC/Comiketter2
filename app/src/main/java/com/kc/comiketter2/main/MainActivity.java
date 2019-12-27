@@ -40,6 +40,7 @@ import com.kc.comiketter2.drawer.ListDTO;
 import com.kc.comiketter2.drawer.ListDTOAdapter;
 import com.kc.comiketter2.model.data.database_helper.DatabaseHelper;
 import com.kc.comiketter2.oauth.ConfirmOAuthActivity;
+import com.kc.comiketter2.oauth.OAuthCallbackActivity;
 import com.kc.comiketter2.prefs.EditAndCheckablePreference;
 import com.kc.comiketter2.prefs.MyPreferenceActivity;
 import com.kc.comiketter2.search.SearchUserActivity;
@@ -724,8 +725,11 @@ public class MainActivity extends AppCompatActivity
 
   private void startOAuthActivity() {
     //認証画面を展開
-    Intent intent = new Intent(this, ConfirmOAuthActivity.class);
-    startActivityForResult(intent, ConfirmOAuthActivity.REQUEST_CODE);
+//    Intent intent = new Intent(this, ConfirmOAuthActivity.class);
+//    startActivityForResult(intent, ConfirmOAuthActivity.REQUEST_CODE);
+
+    Intent intent = new Intent(this, OAuthCallbackActivity.class);
+    startActivity(intent);
   }
 
   @Override

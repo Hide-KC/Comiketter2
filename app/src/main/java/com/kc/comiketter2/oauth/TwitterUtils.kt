@@ -14,13 +14,10 @@ object TwitterUtils {
   fun getTwitter(context: Context): Twitter {
     val twitter = TwitterFactory().instance
     twitter.setOAuthConsumer(context.getString(R.string.consumer_key), context.getString(R.string.consumer_secret))
-    loadAccessToken(context)?.let {token ->
-      twitter.oAuthAccessToken = token
-    }
     return twitter
   }
 
-  private fun loadAccessToken(context: Context): AccessToken? {
+  fun loadAccessToken(context: Context): AccessToken? {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     val token = prefs.getString(TOKEN, null)
     val tokenSecret = prefs.getString(TOKEN_SECRET, null)
@@ -36,6 +33,15 @@ object TwitterUtils {
     prefs.edit().let {
       it.putString(TOKEN, accessToken.token)
       it.putString(TOKEN_SECRET, accessToken.tokenSecret)
+      it.apply()
+    }
+  }
+
+  fun deleteAccessToken(context: Context) {
+    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    prefs.edit().let {
+      it.remove(TOKEN)
+      it.remove(TOKEN_SECRET)
       it.apply()
     }
   }

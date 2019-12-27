@@ -16,6 +16,7 @@ import com.kc.comiketter2.util.TwitterOAuth;
 /**
  * OAuth認証開始の確認画面。
  */
+@Deprecated
 public class ConfirmOAuthActivity extends AppCompatActivity {
   private TwitterOAuth mOAuth;
   public static final Integer REQUEST_CODE = 3000;

@@ -1,5 +1,5 @@
 package com.kc.comiketter2.domain.usecase
 
 interface TwitterAuthUseCase {
-  suspend fun getAccessToken(): String
+  suspend fun getAccessTokenAndSecret(): Array<String>
 }

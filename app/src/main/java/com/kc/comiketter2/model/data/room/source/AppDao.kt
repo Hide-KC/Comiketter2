@@ -27,6 +27,12 @@ interface AppDao : SearchUsersUseCase {
   @Update
   suspend fun updateUsers(vararg users: UserEntity)
 
-  @Query("DELETE FROM users WHERE user_id = :userId")
-  suspend fun deleteUser(userId: Long)
+  @Delete
+  suspend fun deleteUser(user: UserEntity)
+
+  @Delete
+  suspend fun deleteUsers(vararg users: UserEntity)
+
+  @Query("DELETE FROM users")
+  suspend fun deleteAllUsers()
 }

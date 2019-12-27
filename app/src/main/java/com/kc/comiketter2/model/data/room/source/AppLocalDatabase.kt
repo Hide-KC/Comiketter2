@@ -25,7 +25,6 @@ abstract class AppLocalDatabase : RoomDatabase() {
       }
 
     fun destroyInstance() {
-      AppLocalDataSource.destroyInstance()
       INSTANCE = null
     }
   }

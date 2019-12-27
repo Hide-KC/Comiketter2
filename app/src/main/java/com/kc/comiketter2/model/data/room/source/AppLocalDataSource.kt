@@ -16,6 +16,34 @@ class AppLocalDataSource(private val appDao: AppDao) : AppDataSource {
     return appDao.searchUsersFromCircleName(circleName)
   }
 
+  override suspend fun addUser(user: UserEntity) {
+    appDao.addUser(user)
+  }
+
+  override suspend fun addUsers(vararg users: UserEntity) {
+    appDao.addUsers(*users)
+  }
+
+  override suspend fun updateUser(user: UserEntity) {
+    appDao.updateUser(user)
+  }
+
+  override suspend fun updateUsers(vararg users: UserEntity) {
+    appDao.updateUsers(*users)
+  }
+
+  override suspend fun deleteUser(user: UserEntity) {
+    appDao.deleteUser(user)
+  }
+
+  override suspend fun deleteUsers(vararg users: UserEntity) {
+    appDao.deleteUsers(*users)
+  }
+
+  override suspend fun deleteAllUsers() {
+    appDao.deleteAllUsers()
+  }
+
   companion object {
     private var INSTANCE: AppLocalDataSource? = null
     private val lock = Any()

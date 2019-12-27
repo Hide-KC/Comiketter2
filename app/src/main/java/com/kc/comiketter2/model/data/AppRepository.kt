@@ -27,6 +27,34 @@ class AppRepository(
     return appLocalDataSource.searchUsersFromScreenName(screenName)
   }
 
+  override suspend fun addUser(user: UserEntity) {
+    appLocalDataSource.addUser(user)
+  }
+
+  override suspend fun addUsers(vararg users: UserEntity) {
+    appLocalDataSource.addUsers(*users)
+  }
+
+  override suspend fun updateUser(user: UserEntity) {
+    appLocalDataSource.updateUser(user)
+  }
+
+  override suspend fun updateUsers(vararg users: UserEntity) {
+    appLocalDataSource.updateUsers(*users)
+  }
+
+  override suspend fun deleteUser(user: UserEntity) {
+    appLocalDataSource.deleteUser(user)
+  }
+
+  override suspend fun deleteUsers(vararg users: UserEntity) {
+    appLocalDataSource.deleteUsers(*users)
+  }
+
+  override suspend fun deleteAllUsers() {
+    appLocalDataSource.deleteAllUsers()
+  }
+
   companion object {
     private var INSTANCE: AppRepository? = null
     private val lock = Any()
@@ -41,6 +69,7 @@ class AppRepository(
 
     fun destroyInstance() {
       AppLocalDatabase.destroyInstance()
+      AppLocalDataSource.destroyInstance()
       INSTANCE = null
     }
   }

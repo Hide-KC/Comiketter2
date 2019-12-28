@@ -7,4 +7,65 @@
   tools:context=".oauth.OAuthCallbackActivity"
   android:id="@+id/root">
 
+  <TextView
+    android:id="@+id/textView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="128dp"
+    android:text="@string/txtRenkei"
+    android:textAlignment="center"
+    android:textSize="24sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <Button
+    android:id="@+id/btnYes"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/button_design"
+    android:text="@string/yes"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+  <TextView
+    android:id="@+id/textView2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="36dp"
+    android:text="@string/privacy_policy_ja"
+    android:textSize="18sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnYes"
+    app:layout_constraintStart_toStartOf="@+id/btnYes"
+    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+  <Button
+    android:id="@+id/btn_explain"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/ripple_show_dialog"
+    android:text="@string/privacy_policy_show_dialog"
+    android:textAlignment="center"
+    app:layout_constraintEnd_toEndOf="@+id/textView2"
+    app:layout_constraintStart_toStartOf="@+id/textView2"
+    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+  <TextView
+    android:id="@+id/textView4"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="@string/open_web"
+    android:textSize="12sp"
+    app:layout_constraintEnd_toEndOf="@+id/btnYes"
+    app:layout_constraintStart_toStartOf="@+id/btnYes"
+    app:layout_constraintTop_toBottomOf="@+id/btnYes" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

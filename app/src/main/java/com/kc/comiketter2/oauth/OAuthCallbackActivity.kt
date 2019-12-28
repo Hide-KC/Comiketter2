@@ -6,8 +6,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.snackbar.Snackbar
 import com.kc.comiketter2.R
+import com.kc.comiketter2.ui.dialog.ExplainDialogFragment
 import kotlinx.android.synthetic.main.activity_oauth_callback.*
 
 class OAuthCallbackActivity : AppCompatActivity() {
@@ -18,20 +18,33 @@ class OAuthCallbackActivity : AppCompatActivity() {
     setContentView(R.layout.activity_oauth_callback)
 
     viewModel = ViewModelProviders.of(this).get(OAuthCallbackViewModel::class.java)
-    viewModel.accessTokenLiveData.observe(this, Observer { accessToken ->
-      TwitterUtils.storeAccessToken(this, accessToken)
-      this.finish()
-    })
-    viewModel.nullValueEvent.observe(this, Observer {
-      Toast.makeText(this, "Twitterとの連携に失敗しました", Toast.LENGTH_SHORT).show()
-      this.finish()
-    })
-    viewModel.onStartBrowserEvent.observe(this, Observer { intent ->
-      if (intent != null) {
-        startActivity(intent)
+      .also {
+        it.accessTokenLiveData.observe(this, Observer { accessToken ->
+          TwitterUtils.storeAccessToken(this, accessToken)
+          this.finish()
+        })
+        it.nullValueEvent.observe(this, Observer {
+          Toast.makeText(this, "Twitterとの連携に失敗しました", Toast.LENGTH_SHORT).show()
+          this.finish()
+        })
+        it.onStartBrowserEvent.observe(this, Observer { intent ->
+          if (intent != null) {
+            startActivity(intent)
+          }
+        })
+        it.onOpenExplainDialogEvent.observe(this, Observer {
+          val fragment = ExplainDialogFragment.newInstance()
+          fragment.show(supportFragmentManager, this.javaClass.simpleName)
+        })
       }
-    })
-    viewModel.startAuthorization()
+
+    btnYes.setOnClickListener {
+      viewModel.onStartAuthorization()
+    }
+
+    btn_explain.setOnClickListener {
+      viewModel.onOpenExplainDialog()
+    }
   }
 
   override fun onNewIntent(intent: Intent?) {

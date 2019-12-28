@@ -1,6 +1,6 @@
-package com.kc.comiketter2.domain.interactor
+package com.kc.comiketter2.domain.interactor.data
 
-import com.kc.comiketter2.domain.usecase.SearchUsersUseCase
+import com.kc.comiketter2.domain.usecase.data.SearchUsersUseCase
 import com.kc.comiketter2.model.data.AppRepository
 import com.kc.comiketter2.model.data.room.UserEntity
 

@@ -1,7 +1,7 @@
 package com.kc.comiketter2.model.data.room.source
 
 import androidx.room.*
-import com.kc.comiketter2.domain.usecase.SearchUsersUseCase
+import com.kc.comiketter2.domain.usecase.data.SearchUsersUseCase
 import com.kc.comiketter2.model.data.room.UserEntity
 
 @Dao

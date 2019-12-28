@@ -1,6 +1,7 @@
 package com.kc.comiketter2.domain.interactor
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.kc.comiketter2.domain.interactor.auth.TwitterAuthInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

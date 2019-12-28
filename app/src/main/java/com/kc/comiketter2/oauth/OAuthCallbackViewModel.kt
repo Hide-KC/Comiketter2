@@ -8,13 +8,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.kc.comiketter2.domain.interactor.TwitterAuthInteractor
-import kotlinx.coroutines.CoroutineScope
+import com.kc.comiketter2.domain.interactor.auth.TwitterAuthInteractor
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import twitter4j.auth.AccessToken
-import kotlin.coroutines.CoroutineContext
 
 class OAuthCallbackViewModel(val app: Application) : AndroidViewModel(app) {
   private val _nullValueEvent = MutableLiveData<Unit>()

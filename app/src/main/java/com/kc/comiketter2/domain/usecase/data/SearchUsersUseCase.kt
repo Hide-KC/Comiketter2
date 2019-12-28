@@ -1,4 +1,4 @@
-package com.kc.comiketter2.domain.usecase
+package com.kc.comiketter2.domain.usecase.data
 
 import com.kc.comiketter2.model.data.room.UserEntity
 

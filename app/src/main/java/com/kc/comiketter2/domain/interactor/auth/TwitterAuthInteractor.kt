@@ -1,8 +1,8 @@
-package com.kc.comiketter2.domain.interactor
+package com.kc.comiketter2.domain.interactor.auth
 
 import android.content.Context
 import com.kc.comiketter2.R
-import com.kc.comiketter2.domain.usecase.TwitterAuthUseCase
+import com.kc.comiketter2.domain.usecase.auth.TwitterAuthUseCase
 import com.kc.comiketter2.oauth.TwitterUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

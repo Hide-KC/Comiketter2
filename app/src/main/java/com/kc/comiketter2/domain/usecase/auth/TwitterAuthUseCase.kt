@@ -1,4 +1,4 @@
-package com.kc.comiketter2.domain.usecase
+package com.kc.comiketter2.domain.usecase.auth
 
 import kotlinx.coroutines.CoroutineScope
 import twitter4j.auth.AccessToken

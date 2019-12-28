@@ -16,7 +16,7 @@ class TwitterAuthInteractor(private val context: Context) : TwitterAuthUseCase {
   private lateinit var requestToken: RequestToken
 
   override val coroutineContext: CoroutineContext
-    get() = Dispatchers.IO + Job()
+    get() = Dispatchers.Default + Job()
 
   override suspend fun getAuthenticationUrl(): String? {
     val callbackUrl = context.getString(R.string.callback_url)

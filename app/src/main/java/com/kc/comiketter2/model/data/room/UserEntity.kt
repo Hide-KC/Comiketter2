@@ -27,9 +27,6 @@ data class UserEntity(
   @ColumnInfo(name = "profile_description")
   val profileDescription: String,
 
-  @ColumnInfo(name = "user_url")
-  val userUrl: String,
-
   @ColumnInfo(name = "circle_name")
   val circleName: String = ""
 )
